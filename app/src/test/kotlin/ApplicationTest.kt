@@ -1,16 +1,9 @@
 package nova.api
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.features.*
-import io.ktor.routing.*
 import io.ktor.http.*
-import io.ktor.auth.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.jackson.*
-import kotlin.test.*
 import io.ktor.server.testing.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class ApplicationTest {
     @Test
