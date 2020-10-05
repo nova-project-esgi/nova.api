@@ -1,9 +1,10 @@
 package nova.api.domain
 
 import com.google.inject.AbstractModule
+import nova.api.ports.provided.IUserService
 
 class DomainModule : AbstractModule() {
     override fun configure() {
-//        bind(Greeter::class.java).to(SimpleGreeter::class.java)
+        bind(IUserService::class.java).to(UserService::class.java)
     }
 }

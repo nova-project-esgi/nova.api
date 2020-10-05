@@ -3,14 +3,15 @@ plugins {
 }
 apply plugin: "com.github.johnrengelman.shadow"
 application {
+    applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
     mainClassName = "io.ktor.server.netty.EngineMain"
 }
 
 dependencies {
     compile(project(":domain"))
     compile(project(":ports"))
-//    compile project(path: ':adapters', configuration: 'shadow')
-    compile(project(":adapters"))
+    compile(project(":adapters:nova-web"))
+    compile(project(":adapters:nova-persistence"))
     compile("com.google.inject:guice:$guice_version")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "io.ktor:ktor-server-netty:$ktor_version"

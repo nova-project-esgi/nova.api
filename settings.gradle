@@ -6,4 +6,6 @@ pluginManagement {
     }
 }
 rootProject.name = "nova.api"
-include("domain", "ports", "adapters", "app")
+include("domain", "ports", "adapters", "app", "adapters:nova-persistence", "adapters:nova-web")
+
+

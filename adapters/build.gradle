@@ -1,18 +1,15 @@
-dependencies {
-    compile(project(":ports"))
-    compile("com.google.inject:guice:$guice_version")
-    compile("org.jetbrains.exposed:exposed-core:0.24.1")
-    compile("org.jetbrains.exposed:exposed-dao:0.24.1")
-    compile("org.jetbrains.exposed:exposed-jdbc:0.24.1")
-    compile("com.microsoft.sqlserver:mssql-jdbc:6.4.0.jre7")
-    compile 'org.jetbrains.exposed:exposed-java-time:0.24.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "io.ktor:ktor-server-netty:$ktor_version"
-    implementation "ch.qos.logback:logback-classic:$logback_version"
-    implementation "io.ktor:ktor-server-core:$ktor_version"
-    implementation "io.ktor:ktor-server-host-common:$ktor_version"
-    implementation "io.ktor:ktor-auth:$ktor_version"
-    implementation "io.ktor:ktor-auth-jwt:$ktor_version"
-    implementation "io.ktor:ktor-jackson:$ktor_version"
-    testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+plugins{
+    id "org.jetbrains.kotlin.kapt"
 }
+
+subprojects {
+    apply plugin: 'kotlin-kapt'
+    dependencies {
+        compile(project(":ports"))
+        compile("com.google.inject:guice:$guice_version")
+        implementation("org.mapstruct:mapstruct:1.4.0.Final")
+        kapt("org.mapstruct:mapstruct-processor:1.4.0.Final")
+    }
+}
+
+
