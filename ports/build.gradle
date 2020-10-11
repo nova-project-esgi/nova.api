@@ -1,5 +1,0 @@
-
-dependencies {
-    compile("com.google.inject:guice:$guice_version")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-}
