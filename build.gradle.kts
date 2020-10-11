@@ -28,8 +28,6 @@ configure(subprojects) {
 }
 
 configure(subprojects.filter { it.name == "exposed" || it.name == "web" }) {
-//    apply(plugin = "kapt")
-
     dependencies {
         kapt("org.mapstruct:mapstruct-processor:1.4.0.Final")
         implementation("org.mapstruct:mapstruct:1.4.0.Final")
@@ -61,6 +59,7 @@ project("app") {
     repositories {
         maven { url = uri("https://kotlin.bintray.com/ktor") }
     }
+
     dependencies {
         implementation(project(":ports"))
         implementation(project(":domain"))

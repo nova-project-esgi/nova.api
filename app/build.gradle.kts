@@ -1,9 +1,8 @@
-//import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 
 plugins {
     application
-//    id("com.github.johnrengelman.shadow") version "4.0.3"
+    id("com.github.johnrengelman.shadow") version "4.0.3"
 }
 application {
     applicationDefaultJvmArgs = listOf("--add-opens", "java.base/java.lang=ALL-UNNAMED")
@@ -11,15 +10,15 @@ application {
 }
 
 
-//tasks {
-//    named<ShadowJar>("shadowJar") {
-//        archiveBaseName.set("com.esgi")
-//        mergeServiceFiles()
-//        manifest {
-//            attributes(mapOf("Main-Class" to "com.esgi.nova"))
-//        }
-//    }
-//}
+tasks {
+    named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+        archiveBaseName.set("com.esgi.nova")
+        mergeServiceFiles()
+        manifest {
+            attributes(mapOf("Main-Class" to "com.esgi.nova"))
+        }
+    }
+}
 //
 //tasks {
 //    build {
