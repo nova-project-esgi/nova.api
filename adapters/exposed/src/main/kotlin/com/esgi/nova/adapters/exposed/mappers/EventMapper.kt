@@ -11,5 +11,6 @@ import org.mapstruct.Mapper
 interface EventMapper {
 
     fun toDto(eventEntity: EventEntity): EventDto
-    fun map(gameEntities: SizedIterable<GameEntity>): Iterable<GameDto>
+    fun map(gameEntities: SizedIterable<EventEntity>): Iterable<EventDto>
+
 }

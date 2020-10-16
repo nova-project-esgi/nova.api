@@ -11,7 +11,5 @@ import org.mapstruct.Mapper
 interface ChoiceMapper {
 
     fun toDto(choice: ChoiceEntity): ChoiceDto
-    fun map(gameEntities: SizedIterable<ResourceEntity>): Iterable<ResourceDto>
-
-
+    fun map(gameEntities: SizedIterable<ChoiceEntity>): Iterable<ChoiceDto>
 }
