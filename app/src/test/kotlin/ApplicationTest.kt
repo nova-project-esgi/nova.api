@@ -1,5 +1,6 @@
 package nova.api
 
+import com.esgi.nova.app.module
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import kotlin.test.Test

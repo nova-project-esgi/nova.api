@@ -1,5 +1,3 @@
-
-
 plugins {
     application
     id("com.github.johnrengelman.shadow") version "4.0.3"

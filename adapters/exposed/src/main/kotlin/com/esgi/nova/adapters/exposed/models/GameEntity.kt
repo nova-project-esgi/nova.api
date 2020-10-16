@@ -12,6 +12,6 @@ class GameEntity(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var user by UserEntity referencedOn Game.user
     var startDate by Game.startDate
-    var core by Game.core
+    var core by Game.score
     var events by EventEntity via GameEvent
 }

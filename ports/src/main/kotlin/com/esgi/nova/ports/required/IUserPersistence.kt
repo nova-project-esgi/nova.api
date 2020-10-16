@@ -1,8 +1,8 @@
 package com.esgi.nova.ports.required
 
-import com.esgi.nova.ports.provided.UserDto
+import com.esgi.nova.ports.provided.dtos.UserDto
 
 interface IUserPersistence {
-    fun getAllUsers(): List<UserDto>
-    fun getOrPutUser(userDto: UserDto): UserDto
+    fun getAll(): List<UserDto>
+    fun getOrPut(userDto: UserDto): UserDto
 }

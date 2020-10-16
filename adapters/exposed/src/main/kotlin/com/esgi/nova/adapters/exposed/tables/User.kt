@@ -1,6 +1,6 @@
 package com.esgi.nova.adapters.exposed.tables
 
-import com.esgi.nova.adapters.exposed.StringLength
+import com.esgi.nova.common.StringLength
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 

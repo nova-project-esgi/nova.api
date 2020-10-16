@@ -10,5 +10,5 @@ import java.util.*
 object Game : UUIDTable() {
     val user: Column<EntityID<UUID>> = reference("User", User)
     val startDate: Column<LocalDateTime> = datetime("start_date")
-    val core: Column<Int> = integer("score")
+    val score: Column<Int> = integer("score")
 }
