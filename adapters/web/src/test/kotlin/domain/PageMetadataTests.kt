@@ -1,8 +1,8 @@
 package domain
 
-import com.esgi.nova.adapters.web.domain.Page
-import com.esgi.nova.adapters.web.domain.PageMetadata
-import com.esgi.nova.adapters.web.domain.Relation
+import com.esgi.nova.adapters.web.domain.pagination.Page
+import com.esgi.nova.adapters.web.domain.pagination.PageMetadata
+import com.esgi.nova.adapters.web.domain.pagination.Relation
 import io.ktor.http.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

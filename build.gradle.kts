@@ -2,17 +2,12 @@ val ktorVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
 val guiceVersion: String by project
-
+val arrowVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.4.0"
     kotlin("kapt") version "1.4.0"
 }
-//java {
-//    sourceCompatibility = JavaVersion.VERSION_11
-//    targetCompatibility = JavaVersion.VERSION_11
-//}
-
 
 configure(subprojects) {
     group = "com.esgi"
@@ -43,6 +38,7 @@ configure(subprojects) {
     tasks {
         withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
             kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+
         }
     }
 }
@@ -69,14 +65,26 @@ configure(subprojects.filter { it.name != "ports" }) {
 }
 
 configure(subprojects.filter { it.name == "web" || it.name == "app" }) {
+    repositories{
+        maven { url =uri("https://dl.bintray.com/arrow-kt/arrow-kt/") }
+        maven { url = uri("https://oss.jfrog.org/artifactory/oss-snapshot-local/") }
+    }
+    dependencies {
+        implementation("io.arrow-kt:arrow-core:${arrowVersion}")
+        implementation("io.arrow-kt:arrow-syntax:${arrowVersion}")
+        kapt("io.arrow-kt:arrow-meta:${arrowVersion}")
+    }
     dependencies {
         implementation("io.ktor:ktor-server-netty:$ktorVersion")
         implementation("ch.qos.logback:logback-classic:$logbackVersion")
         implementation("io.ktor:ktor-server-core:$ktorVersion")
         implementation("io.ktor:ktor-server-host-common:$ktorVersion")
         implementation("io.ktor:ktor-auth:$ktorVersion")
+        implementation("io.ktor:ktor-locations:$ktorVersion")
         implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
         implementation("io.ktor:ktor-jackson:$ktorVersion")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5")
+        implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.5")
         testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     }
 }

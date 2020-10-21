@@ -1,7 +1,7 @@
 package domain
 
-import com.esgi.nova.adapters.web.domain.Link
-import com.esgi.nova.adapters.web.domain.Relation
+import com.esgi.nova.adapters.web.domain.pagination.Link
+import com.esgi.nova.adapters.web.domain.pagination.Relation
 import io.netty.handler.codec.http.HttpMethod
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -7,8 +7,8 @@ import org.jetbrains.exposed.sql.`java-time`.datetime
 import java.time.LocalDateTime
 import java.util.*
 
-object GameEvent : UUIDTable() {
+object GameEvent : UUIDTable("Game_Event") {
     val game: Column<EntityID<UUID>> = reference("game_id", Game)
     val event: Column<EntityID<UUID>> = reference("event_id", Event)
-    val linkTime: Column<LocalDateTime> = datetime("link_time")
+    val linkTime: Column<LocalDateTime> = datetime("link_time").default(LocalDateTime.now())
 }

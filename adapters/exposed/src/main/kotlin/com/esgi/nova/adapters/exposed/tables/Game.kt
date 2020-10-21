@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 object Game : UUIDTable() {
-    val user: Column<EntityID<UUID>> = reference("User", User)
+    val user: Column<EntityID<UUID>> = reference("user_id", User)
     val startDate: Column<LocalDateTime> = datetime("start_date")
     val score: Column<Int> = integer("score")
 }

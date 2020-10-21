@@ -9,9 +9,13 @@ import java.util.*
 
 class ChoiceEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<ChoiceEntity>(Choice)
-
+    private var _resources: List<ResourceEntity>? = null
     var title by Choice.title
     var description by Choice.description
-    var resources by ResourceEntity via ChoiceResource
+    var resourcesIterable by ResourceEntity via ChoiceResource
+    val resources get() :List<ResourceEntity>{
+        _resources = _resources?:resourcesIterable.toList()
+        return _resources!!
+    }
     var event by EventEntity referencedOn Choice.event
 }

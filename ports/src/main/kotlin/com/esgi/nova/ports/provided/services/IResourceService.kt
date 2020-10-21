@@ -1,7 +1,7 @@
 package com.esgi.nova.ports.provided.services
 
-import com.esgi.nova.ports.provided.dtos.ResourceDto
+import com.esgi.nova.ports.provided.dtos.resource.ResourceDto
+import com.esgi.nova.ports.required.IGetAll
 
-interface IResourceService {
-    fun getAll(): List<ResourceDto>
+interface IResourceService: IGetAll<ResourceDto> {
 }

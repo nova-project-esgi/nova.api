@@ -8,7 +8,7 @@ import java.util.*
 
 class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<UserEntity>(User)
-
     var username by User.username
     var password by User.password
+    var role by User.role
 }

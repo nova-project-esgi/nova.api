@@ -4,25 +4,19 @@ import com.esgi.nova.adapters.exposed.mappers.*
 import com.esgi.nova.adapters.exposed.port_implementation.*
 import com.esgi.nova.ports.required.*
 import com.google.inject.AbstractModule
-import org.jetbrains.exposed.sql.Database
 import org.mapstruct.factory.Mappers
 
 class PersistenceModule(
     databaseUrl: String,
     databaseDriver: String,
     databaseUsr: String,
-    databasePwd: String
+    databasePwd: String,
 ) : AbstractModule() {
-    init {
-        Database.connect(
-            databaseUrl, databaseDriver,
-            user = databaseUsr, password = databasePwd
-        )
-    }
+    val dbContext: DatabaseContext = DatabaseContext(databaseUrl, databaseDriver, databaseUsr,databasePwd);
 
     override fun configure() {
 
-        //PERSISTENCE
+        //PERSISTENCE: DatabaseContext
         bind(IUserPersistence::class.java).to(UserPersistence::class.java)
         bind(IGamePersistence::class.java).to(GamePersistence::class.java)
         bind(IChoicePersistence::class.java).to(ChoicePersistence::class.java)
@@ -39,6 +33,11 @@ class PersistenceModule(
         bind(ResourceMapper::class.java).to(Mappers.getMapperClass(ResourceMapper::class.java))
         bind(GameEventMapper::class.java).to(Mappers.getMapperClass(GameEventMapper::class.java))
         bind(EventMapper::class.java).to(Mappers.getMapperClass(EventMapper::class.java))
+        bind(EntityMapper::class.java).to(Mappers.getMapperClass(EntityMapper::class.java))
+
+
+
+        bind(DatabaseContext::class.java).toInstance(dbContext)
     }
 
 

@@ -1,8 +1,9 @@
 package domain
 
-import com.esgi.nova.adapters.web.domain.Page
+import com.esgi.nova.adapters.web.domain.pagination.Page
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+
 
 class PageTests {
 
