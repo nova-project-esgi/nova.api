@@ -5,4 +5,4 @@ import java.util.*
 
 @KtorExperimentalLocationsAPI
 @Location("/events/{id}")
-data class EventLocation(val id: UUID)
+data class EventLocation(val id: UUID) {}

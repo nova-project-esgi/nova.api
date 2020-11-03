@@ -1,7 +1,12 @@
 package com.esgi.nova.ports.provided.dtos.user
 
+import com.esgi.nova.ports.provided.dtos.IId
 import com.esgi.nova.ports.provided.enums.Role
-import com.github.pozo.KotlinBuilder
 import java.util.*
 
-class UserDto(var id: UUID, var username: String, var password: String, var role: Role)
+class UserDto(
+    override var id: UUID,
+    override var username: String,
+    override var password: String,
+    override var role: Role
+) : IUser, IId<UUID>

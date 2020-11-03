@@ -9,13 +9,15 @@ import java.util.*
 
 class GameEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<GameEntity>(Game)
+
     private var _events: List<EventEntity>? = null
     var user by UserEntity referencedOn Game.user
     var startDate by Game.startDate
     var score by Game.score
     var eventsIterable by EventEntity via GameEvent
-    val events get(): List<EventEntity>{
-        _events = _events ?: eventsIterable.toList()
-        return _events!!
-    }
+    val events
+        get(): List<EventEntity> {
+            _events = _events ?: eventsIterable.toList()
+            return _events!!
+        }
 }

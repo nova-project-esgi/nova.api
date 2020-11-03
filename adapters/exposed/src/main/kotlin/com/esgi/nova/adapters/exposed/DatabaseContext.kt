@@ -21,7 +21,8 @@ class DatabaseContext(
         databaseUrl, databaseDriver,
         user = databaseUsr, password = databasePwd
     )
-    fun <T>transactionCommitAndCatch(statement: Transaction.()->T) = transaction {
+
+    fun <T> transactionCommitAndCatch(statement: Transaction.() -> T) = transaction {
         try {
             statement()
             commit()

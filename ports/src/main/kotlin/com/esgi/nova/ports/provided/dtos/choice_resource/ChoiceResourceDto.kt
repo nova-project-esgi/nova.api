@@ -1,7 +1,7 @@
 package com.esgi.nova.ports.provided.dtos.choice_resource
 
-import com.esgi.nova.ports.provided.dtos.resource.ResourceDto
 import com.esgi.nova.ports.provided.dtos.choice.ChoiceDto
-import com.github.pozo.KotlinBuilder
+import com.esgi.nova.ports.provided.dtos.resource.ResourceDto
 
-class ChoiceResourceDto(var choice: ChoiceDto, var resouce: ResourceDto, var changeValue: Int)
+class ChoiceResourceDto(var choice: ChoiceDto, var resource: ResourceDto, override var changeValue: Int) :
+    IChoiceResource

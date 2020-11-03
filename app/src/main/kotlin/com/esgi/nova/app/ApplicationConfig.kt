@@ -2,10 +2,11 @@ package com.esgi.nova.app
 
 import arrow.core.Either
 import com.esgi.nova.adapters.web.authentication.JWTAuthentication
-import com.esgi.nova.adapters.web.authorization.RoleAuthorization
+import com.esgi.nova.adapters.web.features.authorization.RoleAuthorization
 import com.esgi.nova.ports.provided.services.IUserService
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -17,7 +18,6 @@ import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.util.*
 import java.text.DateFormat
-import com.fasterxml.jackson.module.kotlin.*
 import java.util.*
 import javax.naming.AuthenticationException
 
@@ -65,6 +65,13 @@ class ApplicationConfig @Inject constructor(
                 }
             }
 
+//            install(HeaderNames){
+//                filter{ headerNames ->
+//
+//                    Either.right(Unit)
+//                }
+//            }
+
             install(DataConversion) {
                 convert<UUID> {
                     decode { values, _ ->
@@ -85,6 +92,10 @@ class ApplicationConfig @Inject constructor(
 
             install(ContentNegotiation) {
                 jackson {
+                    register(
+                        ContentType("application", "*"),
+                        JacksonConverter(this)
+                    )
                     enable(SerializationFeature.INDENT_OUTPUT)
                     registerModule(KotlinModule())
                     registerModule(JavaTimeModule())

@@ -1,12 +1,13 @@
 package com.esgi.nova.adapters.web.domain.pagination
 
+import com.esgi.nova.ports.provided.IPage
 import io.ktor.http.*
 import io.netty.handler.codec.http.HttpMethod
 
-class PageMetadata<T>(page: Page<T>, url: String) {
+class PageMetadata<T>(page: IPage<T>, url: String) {
 
     val links = mutableListOf<Link>()
-    val values: List<T> = page.currentPageElements
+    val values: IPage<T> = page
 
     init {
         links += Link(Relation.CURRENT, getUrl(page, 0, url), HttpMethod.GET)
@@ -18,11 +19,11 @@ class PageMetadata<T>(page: Page<T>, url: String) {
         }
     }
 
-    private fun getUrl(page: Page<T>, contiguousPage: Int, url: String) =
+    private fun getUrl(page: IPage<T>, contiguousPage: Int, url: String) =
         URLBuilder(url).also { urlBuilder ->
             urlBuilder.parameters.also { parameterBuilder ->
-                parameterBuilder.append("size", "${page.pageSize}")
-                parameterBuilder.append("page", "${page.currentPage + contiguousPage}")
+                parameterBuilder["size"] = "${page.pageSize}"
+                parameterBuilder["page"] = "${page.currentPage + contiguousPage}"
             }
         }.buildString()
 }

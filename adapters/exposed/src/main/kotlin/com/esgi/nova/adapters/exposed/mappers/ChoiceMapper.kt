@@ -2,7 +2,6 @@ package com.esgi.nova.adapters.exposed.mappers
 
 import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.ports.provided.dtos.choice.ChoiceDto
-import org.jetbrains.exposed.sql.SizedIterable
 import org.mapstruct.Context
 import org.mapstruct.Mapper
 
@@ -10,8 +9,15 @@ import org.mapstruct.Mapper
     componentModel = "jsr330",
     uses = [ResourceMapper::class, EventMapper::class, EntityMapper::class, GameMapper::class]
 )
-abstract class ChoiceMapper() {
+interface ChoiceMapper {
 
-    abstract fun toDto(choice: ChoiceEntity?,@Context context:CycleAvoidingMappingContext = CycleAvoidingMappingContext()): ChoiceDto?
-    abstract fun toDtos(choices: List<ChoiceEntity>,@Context context:CycleAvoidingMappingContext = CycleAvoidingMappingContext()): List<ChoiceDto>
+    fun toDto(
+        choice: ChoiceEntity?,
+        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext()
+    ): ChoiceDto?
+
+    fun toDtos(
+        choices: Collection<ChoiceEntity>,
+        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext(ignoreFirstLevelIterable = false)
+    ): Collection<ChoiceDto>
 }

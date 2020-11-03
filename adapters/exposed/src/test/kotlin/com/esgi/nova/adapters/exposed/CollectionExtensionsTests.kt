@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test
 class CollectionExtensionsTests {
 
     @Test
-    fun insideTypeShouldReturnValidType(){
+    fun insideTypeShouldReturnValidType() {
         val testList = listOf<String>("TOTO")
-        testList.getInsideType();
+        testList.getInsideType()
     }
 }

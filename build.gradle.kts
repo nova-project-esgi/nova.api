@@ -3,6 +3,10 @@ val kotlinVersion: String by project
 val logbackVersion: String by project
 val guiceVersion: String by project
 val arrowVersion: String by project
+val autoServiceVersion: String by project
+val jacksonVersion: String by project
+val jupiterVersion: String by project
+val kotlinPoetVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.4.0"
@@ -27,10 +31,10 @@ configure(subprojects) {
         kapt("com.github.pozo:mapstruct-kotlin-processor:1.3.1.2")
         implementation(kotlin("stdlib-jdk8"))
         implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
+        testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
         testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
         tasks.test {
             useJUnitPlatform()
         }
@@ -64,17 +68,17 @@ configure(subprojects.filter { it.name != "ports" }) {
     }
 }
 
+
+
 configure(subprojects.filter { it.name == "web" || it.name == "app" }) {
-    repositories{
-        maven { url =uri("https://dl.bintray.com/arrow-kt/arrow-kt/") }
+    repositories {
+        maven { url = uri("https://dl.bintray.com/arrow-kt/arrow-kt/") }
         maven { url = uri("https://oss.jfrog.org/artifactory/oss-snapshot-local/") }
     }
     dependencies {
-        implementation("io.arrow-kt:arrow-core:${arrowVersion}")
-        implementation("io.arrow-kt:arrow-syntax:${arrowVersion}")
-        kapt("io.arrow-kt:arrow-meta:${arrowVersion}")
-    }
-    dependencies {
+        kapt("io.arrow-kt:arrow-meta:$arrowVersion")
+        implementation("io.arrow-kt:arrow-core:$arrowVersion")
+        implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
         implementation("io.ktor:ktor-server-netty:$ktorVersion")
         implementation("ch.qos.logback:logback-classic:$logbackVersion")
         implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -83,8 +87,8 @@ configure(subprojects.filter { it.name == "web" || it.name == "app" }) {
         implementation("io.ktor:ktor-locations:$ktorVersion")
         implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
         implementation("io.ktor:ktor-jackson:$ktorVersion")
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5")
-        implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.5")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+        implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
         testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     }
 }

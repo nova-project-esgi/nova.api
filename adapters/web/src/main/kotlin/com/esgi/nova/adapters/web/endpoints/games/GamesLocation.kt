@@ -5,5 +5,5 @@ import io.ktor.locations.*
 
 @KtorExperimentalLocationsAPI
 @Location("/games")
-data class GamesLocation(override val page: Int, override val size: Int) : IPagination {
+data class GamesLocation(override val page: Long, override val size: Long) : IPagination {
 }

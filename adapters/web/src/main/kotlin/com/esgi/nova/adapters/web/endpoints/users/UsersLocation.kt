@@ -5,4 +5,4 @@ import io.ktor.locations.*
 
 @KtorExperimentalLocationsAPI
 @Location("/users")
-data class UsersLocation(override val page: Int = 0, override val size: Int = 10) : IPagination
+data class UsersLocation(override val page: Long = 0, override val size: Long = 10) : IPagination

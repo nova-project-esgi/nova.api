@@ -1,8 +1,11 @@
 package com.esgi.nova.adapters.web.endpoints.events
 
-import com.esgi.nova.ports.provided.Query
+import com.esgi.nova.adapters.web.domain.pagination.PageMetadata
+import com.esgi.nova.adapters.web.extensions.createdIn
+import com.esgi.nova.adapters.web.extensions.exceptHeaderNames
+import com.esgi.nova.adapters.web.extensions.withHeaderNames
 import com.esgi.nova.ports.provided.dtos.event.EventCmdDto
-import com.esgi.nova.ports.provided.dtos.event.EventDto
+import com.esgi.nova.ports.provided.dtos.event.TranslatedEventCmdDto
 import com.esgi.nova.ports.provided.services.IEventService
 import com.google.inject.Inject
 import io.ktor.application.*
@@ -18,28 +21,72 @@ class EventsRoute @Inject constructor(application: Application, eventService: IE
 
     init {
         application.routing {
-                authenticate {
+            authenticate {
+                withHeaderNames(HttpHeaders.ContentLanguage) {
+                    post("/events") {
+                        val eventDto = call.receive<TranslatedEventCmdDto>()
+                        val event = eventService.createTranslatedEvent(
+                            eventDto,
+                            call.request.headers[HttpHeaders.ContentLanguage]!!
+                        )
+                        event?.let {
+                            call.createdIn(EventLocation(id = event.id))
+                        }
+                    }
+                }
+                exceptHeaderNames(HttpHeaders.ContentLanguage) {
                     post("/events") {
                         val eventDto = call.receive<EventCmdDto>()
                         val event = eventService.create(eventDto)
                         event?.let {
-                            val url = application.locations.href(EventLocation(id = event.id))
-                            call.response.headers.append(HttpHeaders.Location, url)
-                            call.respondText("Created")
+                            call.createdIn(EventLocation(id = event.id))
                         }
-
-                    }
-                    get<EventsLocation> {
-                        call.respond(eventService.getAll(Query(it)))
-                    }
-                    get<EventLocation> {
-                        val event = eventService.getOne(it.id)
-                        event?.let{
-                            call.respond(event)
-                        }
-
                     }
                 }
+                withHeaderNames(HttpHeaders.AcceptLanguage) {
+                    get<EventLocation> {
+                        val event =
+                            eventService.getTranslatedEventDetailed(
+                                it.id,
+                                call.request.headers[HttpHeaders.AcceptLanguage]!!,
+                                includeChoices = true,useDefaultLanguage = false,
+                            )
+                        event?.let {
+                            call.respond(event)
+                        }
+                    }
+                    get<EventsLocation> {
+                        val eventsPage =
+                            eventService.getTranslatedEventsPage(
+                                it,
+                                call.request.headers[HttpHeaders.AcceptLanguage]!!,includeChoices = false
+                            )
+                        val meta = PageMetadata(eventsPage, call.request.uri)
+                        try {
+                            call.respond(meta)
+                        } catch (e: Exception) {
+                            println(e)
+                        }
+                    }
+                }
+                exceptHeaderNames(HttpHeaders.AcceptLanguage) {
+                    get<EventLocation> {
+                        val event = eventService.getOne(it.id)
+                        event?.let {
+                            call.respond(event)
+                        }
+                    }
+                    get<EventsLocation> {
+                        val eventsPage = eventService.getPage(it)
+                        val meta = PageMetadata(eventsPage, call.request.uri)
+                        try {
+                            call.respond(meta)
+                        } catch (e: Exception) {
+                            println(e)
+                        }
+                    }
+                }
+            }
 
         }
     }

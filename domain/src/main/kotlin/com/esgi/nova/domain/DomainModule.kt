@@ -13,5 +13,9 @@ class DomainModule : AbstractModule() {
         bind(IChoiceResourceService::class.java).to(ChoiceResourceService::class.java)
         bind(IGameService::class.java).to(GameService::class.java)
         bind(IGameEventService::class.java).to(GameEventService::class.java)
+        bind(ILanguageService::class.java).to(LanguageService::class.java)
+        bind(IChoiceTranslationService::class.java).to(ChoiceTranslationService::class.java)
+        bind(IEventTranslationService::class.java).to(EventTranslationService::class.java)
+        bind(IResourceTranslationService::class.java).to(ResourceTranslationService::class.java)
     }
 }
