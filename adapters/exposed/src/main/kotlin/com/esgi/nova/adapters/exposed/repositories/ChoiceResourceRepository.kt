@@ -17,7 +17,8 @@ class ChoiceResourceRepository @Inject constructor(private val dbContext: Databa
     fun create(element: ChoiceResourceCmdDto): ChoiceResourceEntity = transaction {
         ChoiceResourceEntity.new {
             changeValue = element.changeValue
-            choice = ChoiceEntity[element.choiceId]
+            ChoiceEntity.findById(element.choiceId)?.let { choiceEntity -> choice = choiceEntity }
+            ResourceEntity.findById(element.resourceId)?.let { resourceEntity -> resource = resourceEntity }
             resource = ResourceEntity[element.resourceId]
         }
     }
@@ -26,6 +27,17 @@ class ChoiceResourceRepository @Inject constructor(private val dbContext: Databa
         ChoiceResourceEntity.find { (ChoiceResource.resource eq id.resourceId) and (ChoiceResource.choice eq id.choiceId) }
             .singleOrNull()
 
-    fun getAllByChoiceId(choiceId: UUID) = transaction { ChoiceResourceEntity.find { ChoiceResource.choice eq choiceId } }
-    fun getAllByResourceId(resourceId: UUID) = transaction { ChoiceResourceEntity.find { ChoiceResource.resource eq resourceId } }
+    fun getAllByChoiceId(choiceId: UUID) =
+        transaction { ChoiceResourceEntity.find { ChoiceResource.choice eq choiceId } }
+
+    fun getAllByResourceId(resourceId: UUID) =
+        transaction { ChoiceResourceEntity.find { ChoiceResource.resource eq resourceId } }
+
+    fun updateOne(id: ChoiceResourcesKey, element: ChoiceResourceCmdDto) = transaction {
+        getOne(id)?.also { choiceResource ->
+            ResourceEntity.findById(element.resourceId)?.let { resourceEntity -> choiceResource.resource = resourceEntity }
+            ChoiceEntity.findById(element.choiceId)?.let { choiceEntity -> choiceResource.choice = choiceEntity }
+            choiceResource.changeValue = element.changeValue
+        }
+    }
 }

@@ -27,4 +27,10 @@ class EventRepository @Inject constructor(private val dbContext: DatabaseContext
     fun getOne(id: UUID): EventEntity? = transaction { EventEntity[id] }
 
     fun getAllByIds(ids: List<UUID>) = transaction { EventEntity.forIds(ids) }
+    fun updateOne(id: UUID, element: EventCmdDto) = transaction{
+        getOne(id)?.also { event ->
+            event.isActive = element.isActive
+            event.isDaily = element.isDaily
+        }
+    }
 }

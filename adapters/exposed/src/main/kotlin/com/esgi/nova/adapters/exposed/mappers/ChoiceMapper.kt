@@ -1,7 +1,7 @@
 package com.esgi.nova.adapters.exposed.mappers
 
 import com.esgi.nova.adapters.exposed.models.ChoiceEntity
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceDto
+import com.esgi.nova.ports.provided.dtos.choice.queries.ChoiceDto
 import org.mapstruct.Context
 import org.mapstruct.Mapper
 

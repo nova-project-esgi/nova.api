@@ -29,4 +29,10 @@ class GamePersistence @Inject constructor(
     override fun getAllTotal(pagination: IPagination): ITotalCollection<GameDto> {
         TODO("Not yet implemented")
     }
+
+    override fun updateOne(element: GameCmdDto, id: UUID): GameDto? = dbContext.connectAndExec{
+        gameRepository.updateOne(id, element)?.let{game ->
+            gameMapper.toDto(game)
+        }
+    }
 }

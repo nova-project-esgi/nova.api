@@ -9,6 +9,7 @@ import com.esgi.nova.ports.provided.dtos.user.UserCmdDto
 import com.google.inject.Inject
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 
 class UserRepository @Inject constructor(private val dbContext: DatabaseContext) {
     fun getAll(): List<UserEntity> = transaction {
@@ -38,5 +39,14 @@ class UserRepository @Inject constructor(private val dbContext: DatabaseContext)
     fun getAllTotal(pagination: DatabasePagination) = transaction {
         val elements = UserEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
+    }
+
+    fun getOne(id: UUID) = transaction { UserEntity.findById(id) }
+
+    fun updateOne(id: UUID, user: UserCmdDto) = transaction {
+        getOne(id)?.also { userEntity ->
+            userEntity.username = user.username
+            userEntity.password = user.password
+        }
     }
 }

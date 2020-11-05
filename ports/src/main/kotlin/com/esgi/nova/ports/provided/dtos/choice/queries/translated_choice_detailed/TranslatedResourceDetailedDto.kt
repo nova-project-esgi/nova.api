@@ -1,4 +1,4 @@
-package com.esgi.nova.ports.provided.dtos.choice.translated_choice_detailed
+package com.esgi.nova.ports.provided.dtos.choice.queries.translated_choice_detailed
 
 import com.esgi.nova.ports.provided.dtos.IId
 import com.esgi.nova.ports.provided.dtos.choice_resource.IChoiceResource

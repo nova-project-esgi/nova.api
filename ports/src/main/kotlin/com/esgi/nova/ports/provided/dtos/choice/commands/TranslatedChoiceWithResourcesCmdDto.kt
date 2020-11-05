@@ -1,5 +1,6 @@
-package com.esgi.nova.ports.provided.dtos.choice
+package com.esgi.nova.ports.provided.dtos.choice.commands
 
+import com.esgi.nova.ports.provided.dtos.choice.queries.ResourceChangeDto
 import java.util.*
 
 class TranslatedChoiceWithResourcesCmdDto(

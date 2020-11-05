@@ -1,4 +1,4 @@
-package com.esgi.nova.ports.provided.dtos.choice
+package com.esgi.nova.ports.provided.dtos.choice.queries
 
 import com.esgi.nova.ports.provided.dtos.event.EventDto
 import com.esgi.nova.ports.provided.dtos.resource.ResourceDto

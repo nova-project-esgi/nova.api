@@ -13,7 +13,7 @@ import java.util.*
 
 class LanguageRepository {
     fun getAll(): SizedIterable<LanguageEntity> = transaction { LanguageEntity.all() }
-    fun getOne(id: UUID): LanguageEntity? = transaction { LanguageEntity[id] }
+    fun getOne(id: UUID): LanguageEntity? = transaction { LanguageEntity.findById(id) }
     fun getOneByCodes(code: String, subCode: String?): LanguageEntity? {
         val languages = getAllByCodes(code, subCode)
         if (subCode == null) {
@@ -50,5 +50,11 @@ class LanguageRepository {
             LanguageEntity.find { Language.code eq code }
         }
     }
+
+
+    fun updateOne(id: UUID, language: LanguageCmdDto) = transaction { getOne(id)?.also { languageEntity ->
+        languageEntity.code = language.code
+        languageEntity.subCode = language.subCode
+    } }
 
 }

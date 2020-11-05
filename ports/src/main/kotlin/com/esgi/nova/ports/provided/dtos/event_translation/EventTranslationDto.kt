@@ -2,7 +2,7 @@ package com.esgi.nova.ports.provided.dtos.event_translation
 
 import com.esgi.nova.ports.common.extensions.toAggregatedCode
 import com.esgi.nova.ports.provided.dtos.IId
-import com.esgi.nova.ports.provided.dtos.choice.TranslatedChoiceDto
+import com.esgi.nova.ports.provided.dtos.choice.queries.TranslatedChoiceDto
 import com.esgi.nova.ports.provided.dtos.event.EventDto
 import com.esgi.nova.ports.provided.dtos.event.TranslatedEventDto
 import com.esgi.nova.ports.provided.dtos.language.LanguageDto

@@ -6,8 +6,8 @@ import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.ChoiceTranslationEntity
 import com.esgi.nova.adapters.exposed.models.LanguageEntity
 import com.esgi.nova.adapters.exposed.tables.ChoiceTranslation
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceTranslationKey
-import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationLanguageIdCmdDto
+import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
+import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
 import com.esgi.nova.ports.required.ITotalCollection
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.and
@@ -17,18 +17,18 @@ import java.util.*
 class ChoiceTranslationRepository {
     fun getAll(): SizedIterable<ChoiceTranslationEntity> = transaction { ChoiceTranslationEntity.all() }
     fun getOne(id: UUID): ChoiceTranslationEntity? = transaction { ChoiceTranslationEntity[id] }
-    fun getOne(id: ChoiceTranslationKey): ChoiceTranslationEntity? =
+    fun getOne(id: ChoiceTranslationKey<UUID>): ChoiceTranslationEntity? =
         transaction {
-            ChoiceTranslationEntity.find { (ChoiceTranslation.choice eq id.choiceId) and (ChoiceTranslation.language eq id.languageId) }
+            ChoiceTranslationEntity.find { (ChoiceTranslation.choice eq id.choiceId) and (ChoiceTranslation.language eq id.language) }
                 .firstOrNull()
         }
 
-    fun create(choiceTranslation: ChoiceTranslationLanguageIdCmdDto): ChoiceTranslationEntity? = transaction {
+    fun create(choiceTranslation: ChoiceTranslationCmdDto<UUID>): ChoiceTranslationEntity? = transaction {
         ChoiceTranslationEntity.new {
             description = choiceTranslation.description
             title = choiceTranslation.title
-            choice = ChoiceEntity[choiceTranslation.choiceId]
-            language = LanguageEntity[choiceTranslation.languageId]
+            ChoiceEntity.findById(choiceTranslation.choiceId)?.let { choiceEntity -> choice = choiceEntity }
+            LanguageEntity.findById(choiceTranslation.language)?.let { languageEntity -> language = languageEntity }
         }
     }
 
@@ -49,4 +49,13 @@ class ChoiceTranslationRepository {
 
     fun getAllByChoiceIdsAndLanguageId(choiceIds: List<UUID>, languageId: UUID) =
         transaction { ChoiceTranslationEntity.find { (ChoiceTranslation.choice inList choiceIds) and (ChoiceTranslation.language eq languageId) } }
+
+    fun updateOne(id: ChoiceTranslationKey<UUID>, element: ChoiceTranslationCmdDto<UUID>) = transaction {
+        getOne(id)?.also { choiceTranslationEntity ->
+            choiceTranslationEntity.description = element.description
+            ChoiceEntity.findById(element.choiceId)?.let { choiceEntity -> choiceTranslationEntity.choice = choiceEntity }
+            LanguageEntity.findById(element.language)?.let { languageEntity -> choiceTranslationEntity.language = languageEntity }
+            choiceTranslationEntity.title = element.title
+        }
+    }
 }

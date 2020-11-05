@@ -6,10 +6,9 @@ import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.EventTranslationMapper
 import com.esgi.nova.adapters.exposed.repositories.EventTranslationRepository
 import com.esgi.nova.ports.provided.IPagination
+import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
-import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationLanguageIdCmdDto
-import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
 import com.esgi.nova.ports.required.IEventTranslationPersistence
 import com.esgi.nova.ports.required.ILanguagePersistence
 import com.esgi.nova.ports.required.ITotalCollection
@@ -45,7 +44,7 @@ class EventTranslationPersistence @Inject constructor(
             )
         }
 
-    override fun create(element: EventTranslationLanguageIdCmdDto): EventTranslationDto? =
+    override fun create(element: EventTranslationCmdDto<UUID>): EventTranslationDto? =
         dbContext.connectAndExec { eventTranslationMapper.toDto(eventTranslationRepository.create(element)) }
 
     override fun getAllTotal(pagination: IPagination): ITotalCollection<EventTranslationDto> =
@@ -59,11 +58,16 @@ class EventTranslationPersistence @Inject constructor(
             )
         }
 
-    override fun getOne(id: EventTranslationKey): EventTranslationDto? =
+    override fun getOne(id: EventTranslationKey<UUID>): EventTranslationDto? =
         dbContext.connectAndExec {
             eventTranslationRepository.getOne(id)
                 ?.let { eventTranslation -> eventTranslationMapper.toDto(eventTranslation) }
         }
+
+    override fun updateOne(element: EventTranslationCmdDto<UUID>, id: EventTranslationKey<UUID>): EventTranslationDto?  = dbContext.connectAndExec{
+        eventTranslationRepository.updateOne(id, element)?.let { entity -> eventTranslationMapper.toDto(entity)}
+    }
+
     override fun getAllByEventIdAndLanguageId(eventId: UUID, languageId: UUID) = dbContext.connectAndExec {
         eventTranslationMapper.toDtos(eventTranslationRepository.getAllByEventIdAndLanguageId(eventId, languageId))
     }
@@ -72,7 +76,7 @@ class EventTranslationPersistence @Inject constructor(
         languagePersistence.getDefault()?.let { languageDto ->
             eventTranslationMapper.toDto(
                 eventTranslationRepository.getOne(
-                    EventTranslationKey(
+                    EventTranslationKey<UUID>(
                         eventId,
                         languageDto.id
                     )

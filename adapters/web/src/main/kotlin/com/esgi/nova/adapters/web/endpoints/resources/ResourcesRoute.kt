@@ -10,6 +10,7 @@ import com.esgi.nova.ports.provided.dtos.resource.ResourceCmdDto
 import com.esgi.nova.ports.provided.dtos.resource.TranslatedResourceCmdDto
 import com.esgi.nova.ports.provided.enums.Role
 import com.esgi.nova.ports.provided.services.IResourceService
+import com.esgi.nova.ports.provided.services.ITranslatedResourceService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -20,7 +21,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
-class ResourcesRoute @Inject constructor(application: Application, resourceService: IResourceService) {
+class ResourcesRoute @Inject constructor(application: Application, resourceService: IResourceService, translatedResourceService: ITranslatedResourceService) {
     init {
         application.routing {
             authenticate {
@@ -28,7 +29,7 @@ class ResourcesRoute @Inject constructor(application: Application, resourceServi
                     withHeaderNames(HttpHeaders.ContentLanguage) {
                         post("/resources") {
                             val resource = call.receive<TranslatedResourceCmdDto>()
-                            resourceService.createTranslatedResource(
+                            translatedResourceService.createTranslatedResource(
                                 resource,
                                 call.request.headers[HttpHeaders.ContentLanguage]!!
                             )?.let { createdResource ->
@@ -53,7 +54,7 @@ class ResourcesRoute @Inject constructor(application: Application, resourceServi
                 }
                 withHeaderNames(HttpHeaders.AcceptLanguage) {
                     get<ResourceLocation> { location ->
-                        resourceService.getTranslatedResourceDetailedDto(
+                        translatedResourceService.getTranslatedResourceDetailedDto(
                             id = location.id,
                             codes = call.request.headers[HttpHeaders.AcceptLanguage]!!, includeChoices = true,
                             useDefaultLanguage = true
@@ -62,7 +63,7 @@ class ResourcesRoute @Inject constructor(application: Application, resourceServi
                         }
                     }
                     get<ResourcesLocation> { location ->
-                        resourceService.getTranslatedResourcesPage(
+                        translatedResourceService.getTranslatedResourcesPage(
                             location,
                             call.request.headers[HttpHeaders.AcceptLanguage]!!, includeChoices = false
                         ).let { translatedResources ->

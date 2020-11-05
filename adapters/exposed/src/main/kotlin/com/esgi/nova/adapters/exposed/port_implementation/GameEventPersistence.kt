@@ -37,4 +37,8 @@ class GameEventPersistence @Inject constructor(
     override fun getOne(id: UUID): GameEventDto? = dbContext.connectAndExec {
         gameEventRepository.getOne(id)?.let { gameEvent -> gameEventMapper.toDto(gameEvent) }
     }
+
+    override fun updateOne(element: GameEventCmdDto, id: UUID): GameEventDto? = dbContext.connectAndExec {
+        gameEventRepository.updateOne(id, element)?.let { choice -> gameEventMapper.toDto(choice) }
+    }
 }

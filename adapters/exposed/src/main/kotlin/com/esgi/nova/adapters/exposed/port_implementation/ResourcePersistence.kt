@@ -33,4 +33,7 @@ class ResourcePersistence @Inject constructor(
     override fun getOne(id: UUID): ResourceDto? =
         dbContext.connectAndExec { resourceRepository.getOne(id)?.let { resource -> resourceMapper.toDto(resource) } }
 
+    override fun updateOne(element: ResourceCmdDto, id: UUID): ResourceDto? = dbContext.connectAndExec {
+        resourceRepository.updateOne(id, element)?.let { resource -> resourceMapper.toDto(resource) }
+    }
 }

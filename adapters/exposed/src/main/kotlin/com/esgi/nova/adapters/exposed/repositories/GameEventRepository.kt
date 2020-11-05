@@ -15,8 +15,8 @@ public class GameEventRepository @Inject constructor() {
     fun getAll(): List<GameEventEntity> = transaction { GameEventEntity.all().toList() }
     fun create(gameEvent: GameEventCmdDto) = transaction {
         GameEventEntity.new {
-            game = GameEntity[gameEvent.gameId]
-            event = EventEntity[gameEvent.eventId]
+            GameEntity.findById(gameEvent.gameId)?.let { gameEntity -> game = gameEntity }
+            EventEntity.findById(gameEvent.eventId)?.let { eventEntity -> event = eventEntity }
             gameEvent.linkTime?.let { date ->
                 linkTime = date
             }
@@ -28,5 +28,13 @@ public class GameEventRepository @Inject constructor() {
             GameEventEntity.find { (GameEvent.event eq id.eventId) and (GameEvent.game eq id.gameId) }.toList()
         }
 
-    fun getOne(id: UUID): GameEventEntity? = transaction { GameEventEntity[id] }
+    fun getOne(id: UUID): GameEventEntity? = transaction { GameEventEntity.findById(id) }
+
+    fun updateOne(id: UUID, gameEvent: GameEventCmdDto) = transaction {
+        getOne(id)?.also { gameEventEntity ->
+            gameEvent.linkTime?.let { time -> gameEventEntity.linkTime = time }
+            EventEntity.findById(gameEvent.eventId)?.let { eventEntity -> gameEventEntity.event = eventEntity }
+            GameEntity.findById(gameEvent.gameId)?.let { gameEntity -> gameEventEntity.game = gameEntity }
+        }
+    }
 }

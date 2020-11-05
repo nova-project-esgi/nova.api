@@ -65,4 +65,6 @@ class LanguageService @Inject constructor(private val languagePersistence: ILang
     override fun getOne(id: UUID): LanguageDto? = languagePersistence.getOne(id)
     override fun getPage(pagination: IPagination): IPage<LanguageDto> =
         languagePersistence.getAllTotal(pagination).toStaticPage(pagination)
+
+    override fun updateOne(element: LanguageCmdDto, id: UUID): LanguageDto? = languagePersistence.updateOne(element, id)
 }

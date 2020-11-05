@@ -4,52 +4,36 @@ import com.esgi.nova.common.extensions.mergeDiff
 import com.esgi.nova.domain.extensions.toStaticPage
 import com.esgi.nova.ports.provided.IPage
 import com.esgi.nova.ports.provided.IPagination
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceTranslationKey
+import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
+import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationDto
-import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationLanguageCodesCmdDto
-import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationLanguageIdCmdDto
 import com.esgi.nova.ports.provided.services.IChoiceTranslationService
-import com.esgi.nova.ports.provided.services.ILanguageService
 import com.esgi.nova.ports.required.IChoiceTranslationPersistence
 import com.google.inject.Inject
 import java.util.*
 
 class ChoiceTranslationService @Inject constructor(
     private val choiceTranslationPersistence: IChoiceTranslationPersistence,
-    private val languageService: ILanguageService
 ) : IChoiceTranslationService {
-    override fun createWithCodes(choiceTranslation: ChoiceTranslationLanguageCodesCmdDto): ChoiceTranslationDto? {
-        languageService.getOneByCodes(choiceTranslation.languageCodes)?.let { l ->
-            return choiceTranslationPersistence.create(
-                ChoiceTranslationLanguageIdCmdDto(
-                    choiceTranslation.title,
-                    choiceTranslation.description,
-                    choiceTranslation.choiceId,
-                    l.id
-                )
-            )
-        }
-        return null
-    }
 
-    override fun getOneWithCodes(choiceId: UUID, languageCodes: String): ChoiceTranslationDto? {
-        languageService.getOneByCodes(languageCodes)?.let { l ->
-            return choiceTranslationPersistence.getOne(ChoiceTranslationKey(choiceId, l.id))
-        }
-        return null
-    }
 
     override fun getAll(): Collection<ChoiceTranslationDto> = choiceTranslationPersistence.getAll()
 
-    override fun getOne(id: ChoiceTranslationKey): ChoiceTranslationDto? = choiceTranslationPersistence.getOne(id)
+    override fun getOne(id: ChoiceTranslationKey<UUID>): ChoiceTranslationDto? = choiceTranslationPersistence.getOne(id)
 
-    override fun create(element: ChoiceTranslationLanguageIdCmdDto): ChoiceTranslationDto? =
+    override fun create(element: ChoiceTranslationCmdDto<UUID>): ChoiceTranslationDto? =
         choiceTranslationPersistence.create(element)
 
     override fun getPage(pagination: IPagination): IPage<ChoiceTranslationDto> =
         choiceTranslationPersistence.getAllTotal(pagination).toStaticPage(pagination)
 
-    override fun getOneOrDefault(id: ChoiceTranslationKey) = choiceTranslationPersistence.getOne(id)
+    override fun updateOne(
+        element: ChoiceTranslationCmdDto<UUID>,
+        id: ChoiceTranslationKey<UUID>
+    ): ChoiceTranslationDto? = choiceTranslationPersistence.updateOne(element, id)
+
+
+    override fun getOneOrDefault(id: ChoiceTranslationKey<UUID>) = choiceTranslationPersistence.getOne(id)
         ?: choiceTranslationPersistence.getOneDefault(id.choiceId)
 
     override fun getAllByChoiceIdsAndLanguageIdWithDefaults(

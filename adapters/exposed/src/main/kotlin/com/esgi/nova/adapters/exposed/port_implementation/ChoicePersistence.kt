@@ -6,8 +6,8 @@ import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ChoiceMapper
 import com.esgi.nova.adapters.exposed.repositories.ChoiceRepository
 import com.esgi.nova.ports.provided.IPagination
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceCmdDto
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceDto
+import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceCmdDto
+import com.esgi.nova.ports.provided.dtos.choice.queries.ChoiceDto
 import com.esgi.nova.ports.required.IChoicePersistence
 import com.esgi.nova.ports.required.ITotalCollection
 import com.google.inject.Inject
@@ -29,8 +29,15 @@ class ChoicePersistence @Inject constructor(
         TotalCollection(elements.total, choiceMapper.toDtos(elements))
     }
 
-    override fun getAllByEventId(eventId: UUID) = dbContext.connectAndExec { choiceMapper.toDtos(choiceRepository.getAllByEventId(eventId).toList()) }
+    override fun getAllByEventId(eventId: UUID) =
+        dbContext.connectAndExec { choiceMapper.toDtos(choiceRepository.getAllByEventId(eventId).toList()) }
+
     override fun getOne(id: UUID): ChoiceDto? =
         dbContext.connectAndExec { choiceRepository.getOne(id)?.let { choice -> choiceMapper.toDto(choice) } }
+
+    override fun updateOne(element: ChoiceCmdDto, id: UUID): ChoiceDto? = dbContext.connectAndExec {
+        choiceRepository.updateOne(id, element)?.let { choice -> choiceMapper.toDto(choice) }
+    }
+
 
 }

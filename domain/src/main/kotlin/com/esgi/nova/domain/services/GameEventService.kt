@@ -14,5 +14,9 @@ class GameEventService @Inject constructor(private val gameEventPersistence: IGa
     override fun create(element: GameEventCmdDto): GameEventDto? = gameEventPersistence.create(element)
     override fun getAllFiltered(filter: GameEventsId) = gameEventPersistence.getAllFiltered(filter)
     override fun getOne(id: UUID): GameEventDto? = gameEventPersistence.getOne(id)
+    override fun updateOne(element: GameEventCmdDto, id: UUID): GameEventDto? = gameEventPersistence.updateOne(
+        element,
+        id
+    )
 
 }

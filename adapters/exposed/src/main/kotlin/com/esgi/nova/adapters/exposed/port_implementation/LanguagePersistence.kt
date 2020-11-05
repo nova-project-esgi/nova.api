@@ -66,5 +66,9 @@ class LanguagePersistence @Inject constructor(
         }
     }
 
+    override fun updateOne(element: LanguageCmdDto, id: UUID): LanguageDto? = dbContext.connectAndExec {
+        languageRepository.updateOne(id, element)?.let { language -> languageMapper.toDto(language) }
+    }
+
 
 }

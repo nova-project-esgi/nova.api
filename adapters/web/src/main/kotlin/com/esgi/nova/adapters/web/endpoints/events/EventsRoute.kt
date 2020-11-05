@@ -7,6 +7,7 @@ import com.esgi.nova.adapters.web.extensions.withHeaderNames
 import com.esgi.nova.ports.provided.dtos.event.EventCmdDto
 import com.esgi.nova.ports.provided.dtos.event.TranslatedEventCmdDto
 import com.esgi.nova.ports.provided.services.IEventService
+import com.esgi.nova.ports.provided.services.ITranslatedEventService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -17,7 +18,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
-class EventsRoute @Inject constructor(application: Application, eventService: IEventService) {
+class EventsRoute @Inject constructor(application: Application, eventService: IEventService, translatedEventService: ITranslatedEventService) {
 
     init {
         application.routing {
@@ -25,7 +26,7 @@ class EventsRoute @Inject constructor(application: Application, eventService: IE
                 withHeaderNames(HttpHeaders.ContentLanguage) {
                     post("/events") {
                         val eventDto = call.receive<TranslatedEventCmdDto>()
-                        val event = eventService.createTranslatedEvent(
+                        val event = translatedEventService.createTranslatedEvent(
                             eventDto,
                             call.request.headers[HttpHeaders.ContentLanguage]!!
                         )
@@ -46,7 +47,7 @@ class EventsRoute @Inject constructor(application: Application, eventService: IE
                 withHeaderNames(HttpHeaders.AcceptLanguage) {
                     get<EventLocation> {
                         val event =
-                            eventService.getTranslatedEventDetailed(
+                            translatedEventService.getTranslatedEventDetailed(
                                 it.id,
                                 call.request.headers[HttpHeaders.AcceptLanguage]!!,
                                 includeChoices = true,useDefaultLanguage = false,
@@ -57,7 +58,7 @@ class EventsRoute @Inject constructor(application: Application, eventService: IE
                     }
                     get<EventsLocation> {
                         val eventsPage =
-                            eventService.getTranslatedEventsPage(
+                            translatedEventService.getTranslatedEventsPage(
                                 it,
                                 call.request.headers[HttpHeaders.AcceptLanguage]!!,includeChoices = false
                             )

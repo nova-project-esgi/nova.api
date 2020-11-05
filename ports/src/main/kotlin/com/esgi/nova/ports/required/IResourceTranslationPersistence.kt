@@ -3,15 +3,17 @@ package com.esgi.nova.ports.required
 import com.esgi.nova.ports.common.ICreate
 import com.esgi.nova.ports.common.IGetAll
 import com.esgi.nova.ports.common.IGetOne
+import com.esgi.nova.ports.common.IUpdateOne
 import com.esgi.nova.ports.provided.IPagination
+import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationDto
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
-import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationLanguageIdCmdDto
 import java.util.*
 
 interface IResourceTranslationPersistence : IGetAll<ResourceTranslationDto>,
-    ICreate<ResourceTranslationLanguageIdCmdDto, ResourceTranslationDto>,
-    IGetAllTotal<ResourceTranslationDto>, IGetOne<ResourceTranslationKey, ResourceTranslationDto> {
+    ICreate<ResourceTranslationCmdDto<UUID>, ResourceTranslationDto>,
+    IUpdateOne<ResourceTranslationCmdDto<UUID>, ResourceTranslationKey<UUID>, ResourceTranslationDto>,
+    IGetAllTotal<ResourceTranslationDto>, IGetOne<ResourceTranslationKey<UUID>, ResourceTranslationDto> {
     fun getTotalByLanguages(pagination: IPagination, languageIds: List<UUID>): ITotalCollection<ResourceTranslationDto>
     fun getAllByResourceIdAndLanguageId(resourceId: UUID, languageId: UUID): List<ResourceTranslationDto>
     fun getAllByChoiceIdAndLanguageId(choiceId: UUID, languageId: UUID): Collection<ResourceTranslationDto>

@@ -12,12 +12,20 @@ import java.util.*
 class ResourceRepository @Inject constructor(private val dbContext: DatabaseContext) {
     fun getAll(): List<ResourceEntity> = transaction { ResourceEntity.all().toList() }
     fun create(resource: ResourceCmdDto) = transaction {
-        ResourceEntity.new {}
+        ResourceEntity.new {
+
+        }
     }
 
     fun getOne(id: UUID) = transaction { ResourceEntity.findById(id) }
     fun getAllTotal(pagination: DatabasePagination) = transaction {
         val elements = ResourceEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
+    }
+
+    fun updateOne(id: UUID, resource: ResourceCmdDto) = transaction {
+        ResourceEntity.findById(id)?.also {
+
+        }
     }
 }

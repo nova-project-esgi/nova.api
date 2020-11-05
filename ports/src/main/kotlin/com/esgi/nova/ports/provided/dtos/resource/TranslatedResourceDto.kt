@@ -1,7 +1,7 @@
 package com.esgi.nova.ports.provided.dtos.resource
 
 import com.esgi.nova.ports.provided.dtos.IId
-import com.esgi.nova.ports.provided.dtos.choice.TranslatedChoiceDto
+import com.esgi.nova.ports.provided.dtos.choice.queries.TranslatedChoiceDto
 import com.esgi.nova.ports.provided.dtos.language.ILanguageCode
 import com.esgi.nova.ports.provided.dtos.resource_translation.IResourceTranslation
 import java.util.*

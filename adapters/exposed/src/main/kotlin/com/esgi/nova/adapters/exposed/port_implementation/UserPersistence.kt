@@ -12,6 +12,7 @@ import com.esgi.nova.ports.provided.dtos.user.UserDto
 import com.esgi.nova.ports.required.ITotalCollection
 import com.esgi.nova.ports.required.IUserPersistence
 import com.google.inject.Inject
+import java.util.*
 
 class UserPersistence @Inject constructor(
     private val userRepository: UserRepository,
@@ -30,6 +31,11 @@ class UserPersistence @Inject constructor(
         TotalCollection(elements.total, userMapper.toDtos(elements))
     }
 
+    override fun updateOne(element: UserCmdDto, id: UUID): UserDto? = dbContext.connectAndExec {
+        userRepository.updateOne(id, element)
+            ?.let { user -> userMapper.toDto(user) }
+    }
+
     override fun getByName(username: String): UserDto? = dbContext.connectAndExec {
         userMapper.toDto(userRepository.getByName(username) as UserEntity)
     }
@@ -40,5 +46,6 @@ class UserPersistence @Inject constructor(
             userMapper.toDto(editedUser)
         }
     }
+
 
 }

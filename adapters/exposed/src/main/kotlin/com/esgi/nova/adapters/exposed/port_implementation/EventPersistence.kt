@@ -41,4 +41,8 @@ class EventPersistence @Inject constructor(
 
     override fun getOne(id: UUID): EventDto? =
         dbContext.connectAndExec { eventRepository.getOne(id)?.let { event -> eventMapper.toDto(event) } }
+
+    override fun updateOne(element: EventCmdDto, id: UUID): EventDto? = dbContext.connectAndExec{
+        eventRepository.updateOne(id, element).let { event -> eventMapper.toDto(event)  }
+    }
 }

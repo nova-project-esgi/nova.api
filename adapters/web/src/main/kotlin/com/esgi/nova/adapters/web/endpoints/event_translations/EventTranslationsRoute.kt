@@ -3,8 +3,10 @@ package com.esgi.nova.adapters.web.endpoints.event_translations
 import com.esgi.nova.adapters.web.domain.EventTranslationCmd
 import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
-import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationLanguageCodesCmdDto
+import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDto
+import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
 import com.esgi.nova.ports.provided.enums.Role
+import com.esgi.nova.ports.provided.services.IEventTranslationCodesService
 import com.esgi.nova.ports.provided.services.IEventTranslationService
 import com.google.inject.Inject
 import io.ktor.application.*
@@ -17,7 +19,8 @@ import io.ktor.routing.*
 @KtorExperimentalLocationsAPI
 class EventTranslationsRoute @Inject constructor(
     application: Application,
-    eventTranslationService: IEventTranslationService
+    eventTranslationService: IEventTranslationService,
+    eventTranslationCodesService: IEventTranslationCodesService
 ) {
     init {
         application.routing {
@@ -25,13 +28,13 @@ class EventTranslationsRoute @Inject constructor(
                 rolesAllowed(Role.ADMIN) {
                     post<EventTranslationLocation> { location ->
                         val eventTranslationForCreation = call.receive<EventTranslationCmd>()
-                        val createdEventTranslation = eventTranslationService.createOneWithCodes(
-                            EventTranslationLanguageCodesCmdDto(
-                                eventTranslationForCreation.title,
-                                eventTranslationForCreation.description,
-                                location.codes,
-                                location.eId
-                            )
+                        val createdEventTranslation = eventTranslationCodesService.create(
+                            EventTranslationCmdDto(
+                                title = eventTranslationForCreation.title,
+                                description = eventTranslationForCreation.description,
+                                eventId = location.eId,
+                                language = location.codes
+                                )
                         )
                         createdEventTranslation?.let {
                             call.createdIn(location)
@@ -39,7 +42,7 @@ class EventTranslationsRoute @Inject constructor(
                     }
                     get<EventTranslationLocation> { location ->
                         val eventTranslation =
-                            eventTranslationService.getOneByEventIdAndLanguageCodes(location.eId, location.codes)
+                            eventTranslationCodesService.getOne(EventTranslationKey(location.eId, location.codes))
                         eventTranslation?.let {
                             call.respond(eventTranslation)
                         }

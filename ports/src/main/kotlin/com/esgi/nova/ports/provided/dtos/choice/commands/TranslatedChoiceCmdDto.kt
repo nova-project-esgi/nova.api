@@ -1,4 +1,4 @@
-package com.esgi.nova.ports.provided.dtos.choice
+package com.esgi.nova.ports.provided.dtos.choice.commands
 
 import com.esgi.nova.ports.provided.dtos.choice_translation.IChoiceTranslation
 import java.util.*

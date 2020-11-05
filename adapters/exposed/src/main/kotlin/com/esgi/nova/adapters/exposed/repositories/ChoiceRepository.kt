@@ -5,7 +5,7 @@ import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.EventEntity
 import com.esgi.nova.adapters.exposed.tables.Choice
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceCmdDto
+import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceCmdDto
 import com.esgi.nova.ports.required.ITotalCollection
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -16,7 +16,7 @@ class ChoiceRepository {
     fun getOne(id: UUID): ChoiceEntity? = transaction { ChoiceEntity[id] }
     fun create(choice: ChoiceCmdDto): ChoiceEntity? = transaction {
         ChoiceEntity.new {
-            event = EventEntity[choice.eventId]
+            EventEntity.findById(choice.eventId)?.let { eventEntity -> event = eventEntity }
         }
     }
 
@@ -26,5 +26,12 @@ class ChoiceRepository {
     }
 
     fun getAllByEventId(eventId: UUID) = transaction { ChoiceEntity.find { Choice.event eq eventId } }
+    fun updateOne(id: UUID, element: ChoiceCmdDto) = transaction {
+        getOne(id)?.also { choice ->
+            EventEntity.findById(element.eventId)?.let{eventEntity ->
+                choice.event = eventEntity
+            }
+        }
+    }
 
 }

@@ -6,9 +6,9 @@ import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ChoiceTranslationMapper
 import com.esgi.nova.adapters.exposed.repositories.ChoiceTranslationRepository
 import com.esgi.nova.ports.provided.IPagination
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceTranslationKey
+import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationDto
-import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationLanguageIdCmdDto
+import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
 import com.esgi.nova.ports.required.IChoiceTranslationPersistence
 import com.esgi.nova.ports.required.ILanguagePersistence
 import com.esgi.nova.ports.required.ITotalCollection
@@ -28,7 +28,7 @@ class ChoiceTranslationPersistence @Inject constructor(
             )
         }
 
-    override fun create(element: ChoiceTranslationLanguageIdCmdDto): ChoiceTranslationDto? =
+    override fun create(element: ChoiceTranslationCmdDto<UUID>): ChoiceTranslationDto? =
         dbContext.connectAndExec { choiceTranslationMapper.toDto(choiceTranslationRepository.create(element)) }
 
     override fun getAllTotal(pagination: IPagination): ITotalCollection<ChoiceTranslationDto> =
@@ -42,11 +42,19 @@ class ChoiceTranslationPersistence @Inject constructor(
             )
         }
 
-    override fun getOne(id: ChoiceTranslationKey): ChoiceTranslationDto? =
+    override fun getOne(id: ChoiceTranslationKey<UUID>): ChoiceTranslationDto? =
         dbContext.connectAndExec {
             choiceTranslationRepository.getOne(id)
                 ?.let { choiceTranslation -> choiceTranslationMapper.toDto(choiceTranslation) }
         }
+
+    override fun updateOne(
+        element: ChoiceTranslationCmdDto<UUID>,
+        id: ChoiceTranslationKey<UUID>
+    ): ChoiceTranslationDto? = dbContext.connectAndExec {
+        choiceTranslationRepository.updateOne(id, element)
+            ?.let { choiceTranslation -> choiceTranslationMapper.toDto(choiceTranslation) }
+    }
 
 
     override fun getTotalByLanguages(

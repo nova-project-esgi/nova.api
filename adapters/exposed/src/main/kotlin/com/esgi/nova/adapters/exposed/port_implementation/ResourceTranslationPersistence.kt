@@ -7,9 +7,9 @@ import com.esgi.nova.adapters.exposed.mappers.ResourceTranslationMapper
 import com.esgi.nova.adapters.exposed.repositories.ChoiceResourceRepository
 import com.esgi.nova.adapters.exposed.repositories.ResourceTranslationRepository
 import com.esgi.nova.ports.provided.IPagination
+import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationDto
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
-import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationLanguageIdCmdDto
 import com.esgi.nova.ports.required.ILanguagePersistence
 import com.esgi.nova.ports.required.IResourceTranslationPersistence
 import com.esgi.nova.ports.required.ITotalCollection
@@ -30,7 +30,7 @@ class ResourceTranslationPersistence @Inject constructor(
             )
         }
 
-    override fun create(element: ResourceTranslationLanguageIdCmdDto): ResourceTranslationDto? =
+    override fun create(element: ResourceTranslationCmdDto<UUID>): ResourceTranslationDto? =
         dbContext.connectAndExec { resourceTranslationMapper.toDto(resourceTranslationRepository.create(element)) }
 
     override fun getAllTotal(pagination: IPagination): ITotalCollection<ResourceTranslationDto> =
@@ -44,7 +44,7 @@ class ResourceTranslationPersistence @Inject constructor(
             )
         }
 
-    override fun getOne(id: ResourceTranslationKey): ResourceTranslationDto? =
+    override fun getOne(id: ResourceTranslationKey<UUID>): ResourceTranslationDto? =
         dbContext.connectAndExec {
             resourceTranslationRepository.getOne(id)?.let { resource -> resourceTranslationMapper.toDto(resource) }
         }
@@ -88,7 +88,7 @@ class ResourceTranslationPersistence @Inject constructor(
         languagePersistence.getDefault()?.let { languageDto ->
             resourceTranslationMapper.toDto(
                 resourceTranslationRepository.getOne(
-                    ResourceTranslationKey(
+                    ResourceTranslationKey<UUID>(
                         resourceId,
                         languageDto.id
                     )
@@ -98,10 +98,18 @@ class ResourceTranslationPersistence @Inject constructor(
     }
 
     override fun getAllDefaultByChoiceId(choiceId: UUID): Collection<ResourceTranslationDto> {
-        languagePersistence.getDefault()?.let {language ->
+        languagePersistence.getDefault()?.let { language ->
             return getAllByChoiceIdAndLanguageId(choiceId, language.id)
         }
         return listOf()
+    }
+
+    override fun updateOne(
+        element: ResourceTranslationCmdDto<UUID>,
+        id: ResourceTranslationKey<UUID>
+    ): ResourceTranslationDto? = dbContext.connectAndExec {
+        resourceTranslationRepository.updateOne(id, element)
+            ?.let { resourceTranslation -> resourceTranslationMapper.toDto(resourceTranslation) }
     }
 
 }

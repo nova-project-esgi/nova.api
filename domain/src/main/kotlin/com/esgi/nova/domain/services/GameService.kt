@@ -11,4 +11,5 @@ class GameService @Inject constructor(private val gamePersistence: IGamePersiste
     override fun getAll() = gamePersistence.getAll()
     override fun create(element: GameCmdDto): GameDto? = gamePersistence.create(element)
     override fun getOne(id: UUID): GameDto? = gamePersistence.getOne(id)
+    override fun updateOne(element: GameCmdDto, id: UUID): GameDto? = gamePersistence.updateOne(element, id)
 }

@@ -13,9 +13,17 @@ class GameRepository @Inject constructor(private val dbContext: DatabaseContext)
     fun getOne(id: UUID) = transaction { GameEntity.findById(id) }
     fun create(game: GameCmdDto) = transaction {
         GameEntity.new {
-            user = UserEntity[game.userId]
+            UserEntity.findById(game.userId)?.let { userEntity -> user = userEntity  }
             score = game.score
             startDate = game.startDate
+        }
+    }
+
+    fun updateOne(id: UUID, element: GameCmdDto) = transaction {
+        getOne(id)?.also { gameEntity ->
+            UserEntity.findById(element.userId)?.let {userEntity -> gameEntity.user = userEntity  }
+            gameEntity.startDate = element.startDate
+            gameEntity.score = element.score
         }
     }
 }

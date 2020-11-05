@@ -6,8 +6,8 @@ import com.esgi.nova.adapters.exposed.models.EventEntity
 import com.esgi.nova.adapters.exposed.models.EventTranslationEntity
 import com.esgi.nova.adapters.exposed.models.LanguageEntity
 import com.esgi.nova.adapters.exposed.tables.EventTranslation
+import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
-import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationLanguageIdCmdDto
 import com.esgi.nova.ports.required.ITotalCollection
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.and
@@ -16,18 +16,21 @@ import java.util.*
 
 class EventTranslationRepository {
     fun getAll(): SizedIterable<EventTranslationEntity> = transaction { EventTranslationEntity.all() }
-    fun getOne(id: EventTranslationKey): EventTranslationEntity? =
+    fun getOne(id: EventTranslationKey<UUID>): EventTranslationEntity? =
         transaction {
-            EventTranslationEntity.find { (EventTranslation.event eq id.eventId) and (EventTranslation.language eq id.languageId) }
+            EventTranslationEntity.find { (EventTranslation.event eq id.eventId) and (EventTranslation.language eq id.language) }
                 .firstOrNull()
         }
 
-    fun create(eventTranslation: EventTranslationLanguageIdCmdDto): EventTranslationEntity? = transaction {
+    fun create(eventTranslation: EventTranslationCmdDto<UUID>): EventTranslationEntity? = transaction {
         EventTranslationEntity.new {
             description = eventTranslation.description
             title = eventTranslation.title
-            event = EventEntity[eventTranslation.eventId]
-            language = LanguageEntity[eventTranslation.languageId]
+            EventEntity.findById(eventTranslation.eventId)
+                ?.let { eventEntity -> event = eventEntity }
+            LanguageEntity.findById(eventTranslation.language)?.let { languageEntity ->
+                language = languageEntity
+            }
         }
     }
 
@@ -50,4 +53,17 @@ class EventTranslationRepository {
         EventTranslationEntity.find { (EventTranslation.event eq eventId) and (EventTranslation.language eq languageId) }
             .toList()
     }
+
+    fun updateOne(eventTranslationId: EventTranslationKey<UUID>, eventTranslation: EventTranslationCmdDto<UUID>) =
+        transaction {
+            getOne(eventTranslationId)?.also { eventTranslationEntity ->
+                eventTranslationEntity.description = eventTranslation.description
+                eventTranslationEntity.title = eventTranslation.title
+                EventEntity.findById(eventTranslation.eventId)
+                    ?.let { eventEntity -> eventTranslationEntity.event = eventEntity }
+                LanguageEntity.findById(eventTranslation.language)?.let { languageEntity ->
+                    eventTranslationEntity.language = languageEntity
+                }
+            }
+        }
 }

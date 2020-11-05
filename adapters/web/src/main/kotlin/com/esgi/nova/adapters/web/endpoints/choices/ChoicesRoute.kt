@@ -6,12 +6,13 @@ import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.adapters.web.extensions.exceptHeaderNames
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.adapters.web.extensions.withHeaderNames
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceCmdDto
-import com.esgi.nova.ports.provided.dtos.choice.ChoiceWithResourcesCmdDto
-import com.esgi.nova.ports.provided.dtos.choice.TranslatedChoiceCmdDto
-import com.esgi.nova.ports.provided.dtos.choice.TranslatedChoiceWithResourcesCmdDto
+import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceCmdDto
+import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceWithResourcesCmdDto
+import com.esgi.nova.ports.provided.dtos.choice.commands.TranslatedChoiceCmdDto
+import com.esgi.nova.ports.provided.dtos.choice.commands.TranslatedChoiceWithResourcesCmdDto
 import com.esgi.nova.ports.provided.enums.Role
 import com.esgi.nova.ports.provided.services.IChoiceService
+import com.esgi.nova.ports.provided.services.ITranslatedChoiceService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -22,7 +23,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
-class ChoicesRoute @Inject constructor(application: Application, choiceService: IChoiceService) {
+class ChoicesRoute @Inject constructor(application: Application, choiceService: IChoiceService, translatedChoiceService: ITranslatedChoiceService) {
     init {
         application.routing {
             authenticate {
@@ -32,7 +33,7 @@ class ChoicesRoute @Inject constructor(application: Application, choiceService: 
                             post("/choices") {
                                 val choiceForCreation = call.receive<TranslatedChoiceCmdDto>()
                                 call.request.headers[HttpHeaders.ContentLanguage]?.let { codes ->
-                                    choiceService.createTranslatedChoice(choiceForCreation, codes)
+                                    translatedChoiceService.createTranslatedChoice(choiceForCreation, codes)
                                         ?.let { createdChoice ->
                                             call.createdIn(ChoiceLocation(createdChoice.id))
                                         }
@@ -43,7 +44,7 @@ class ChoicesRoute @Inject constructor(application: Application, choiceService: 
                         contentType(CustomContentType.Application.ChoiceWithResource) {
                             post("/choices") {
                                 val choiceForCreation = call.receive<TranslatedChoiceWithResourcesCmdDto>()
-                                choiceService.createTranslatedChoiceAndAttachResources(
+                                translatedChoiceService.createTranslatedChoiceAndAttachResources(
                                     choiceForCreation,
                                     call.request.headers[HttpHeaders.ContentLanguage]!!
                                 )?.let { createdChoice ->
@@ -72,7 +73,7 @@ class ChoicesRoute @Inject constructor(application: Application, choiceService: 
                     withHeaderNames(HttpHeaders.AcceptLanguage) {
                         get<ChoiceLocation> {
                             call.request.headers[HttpHeaders.AcceptLanguage]?.let { codes ->
-                                choiceService.getTranslatedChoiceDetailed(
+                                translatedChoiceService.getTranslatedChoiceDetailed(
                                     it.id,
                                     codes,
                                     includeEvent = true,
@@ -83,7 +84,7 @@ class ChoicesRoute @Inject constructor(application: Application, choiceService: 
                             }
                         }
                         get<ChoicesLocation> { location ->
-                            choiceService.getTranslatedChoicesPage(
+                            translatedChoiceService.getTranslatedChoicesPage(
                                 location,
                                 call.request.headers[HttpHeaders.AcceptLanguage]!!,includeEvent = false,includeResources = false
                             ).let { choices ->

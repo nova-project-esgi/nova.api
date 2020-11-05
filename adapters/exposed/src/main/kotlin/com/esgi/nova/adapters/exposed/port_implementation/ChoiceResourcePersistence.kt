@@ -45,5 +45,9 @@ class ChoiceResourcePersistence @Inject constructor(
             choiceResourceRepository.getOne(id)?.let { choiceResource -> choiceResourceMapper.toDto(choiceResource) }
         }
 
+    override fun updateOne(element: ChoiceResourceCmdDto, id: ChoiceResourcesKey): ChoiceResourceDto? = dbContext.connectAndExec {
+        choiceResourceRepository.updateOne(id, element)?.let{choiceResource -> choiceResourceMapper.toDto(choiceResource)}
+    }
+
 
 }

@@ -3,8 +3,10 @@ package com.esgi.nova.adapters.web.endpoints.resource_translations
 import com.esgi.nova.adapters.web.domain.ResourceTranslationCmd
 import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
-import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationLanguageCodesCmdDto
+import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationCmdDto
+import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
 import com.esgi.nova.ports.provided.enums.Role
+import com.esgi.nova.ports.provided.services.IResourceTranslationCodesService
 import com.esgi.nova.ports.provided.services.IResourceTranslationService
 import com.google.inject.Inject
 import io.ktor.application.*
@@ -17,7 +19,7 @@ import io.ktor.routing.*
 @KtorExperimentalLocationsAPI
 class ResourceTranslationsRoute @Inject constructor(
     application: Application,
-    resourceTranslationService: IResourceTranslationService
+    resourceTranslationCodesService: IResourceTranslationCodesService
 ) {
     init {
         application.routing {
@@ -25,8 +27,8 @@ class ResourceTranslationsRoute @Inject constructor(
                 rolesAllowed(Role.ADMIN) {
                     post<ResourceTranslationsLocation> { location ->
                         val resourceForCreation = call.receive<ResourceTranslationCmd>()
-                        resourceTranslationService.createWithCodes(
-                            ResourceTranslationLanguageCodesCmdDto(
+                        resourceTranslationCodesService.create(
+                            ResourceTranslationCmdDto(
                                 resourceForCreation.name,
                                 location.rId,
                                 location.codes
@@ -36,7 +38,7 @@ class ResourceTranslationsRoute @Inject constructor(
                         }
                     }
                     get<ResourceTranslationsLocation> { location ->
-                        resourceTranslationService.getOneWithCodes(location.rId, location.codes)
+                        resourceTranslationCodesService.getOne(ResourceTranslationKey(location.rId, location.codes))
                             ?.let { resourceTranslationDto ->
                                 call.respond(resourceTranslationDto)
                             }
