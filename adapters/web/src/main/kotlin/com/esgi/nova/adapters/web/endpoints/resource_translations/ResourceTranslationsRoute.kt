@@ -1,13 +1,12 @@
 package com.esgi.nova.adapters.web.endpoints.resource_translations
 
-import com.esgi.nova.adapters.web.domain.ResourceTranslationCmd
+import com.esgi.nova.adapters.web.domain.entities.ResourceTranslationCmd
 import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
 import com.esgi.nova.ports.provided.enums.Role
 import com.esgi.nova.ports.provided.services.IResourceTranslationCodesService
-import com.esgi.nova.ports.provided.services.IResourceTranslationService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*

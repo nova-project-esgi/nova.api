@@ -7,48 +7,38 @@ import com.esgi.nova.ports.provided.services.IChoiceTranslationCodesService
 import com.esgi.nova.ports.provided.services.ILanguageService
 import com.esgi.nova.ports.required.IChoiceTranslationPersistence
 import com.google.inject.Inject
+import java.util.*
 
 class ChoiceTranslationCodesService @Inject constructor(
-    private val languageService: ILanguageService,
-    private val choiceTranslationPersistence: IChoiceTranslationPersistence
-) : IChoiceTranslationCodesService {
+    languageService: ILanguageService,
+    override val persistence: IChoiceTranslationPersistence
+) : BaseTranslationCodesService<
+        ChoiceTranslationKey<String>,
+        ChoiceTranslationKey<UUID>,
+        ChoiceTranslationCmdDto<String>,
+        ChoiceTranslationCmdDto<UUID>,
+        ChoiceTranslationDto>(
+    languageService,
+    persistence
+),
+    IChoiceTranslationCodesService {
 
-    override fun create(element: ChoiceTranslationCmdDto<String>): ChoiceTranslationDto? {
-        languageService.getOneByCodes(element.language)?.let { l ->
-            return choiceTranslationPersistence.create(
-                ChoiceTranslationCmdDto(
-                    element.title,
-                    element.description,
-                    element.choiceId,
-                    l.id
-                )
-            )
-        }
-        return null
+    override fun codeInputToUuidInput(
+        codesInput: ChoiceTranslationCmdDto<String>,
+        languageId: UUID
+    ): ChoiceTranslationCmdDto<UUID> {
+        return ChoiceTranslationCmdDto(
+            codesInput.title,
+            codesInput.description,
+            codesInput.choiceId,
+            languageId
+        )
     }
 
-    override fun updateOne(
-        element: ChoiceTranslationCmdDto<String>,
-        id: ChoiceTranslationKey<String>
-    ): ChoiceTranslationDto? {
-        languageService.getOneByCodes(id.language)?.let { l ->
-            return choiceTranslationPersistence.updateOne(
-                ChoiceTranslationCmdDto(
-                    element.title,
-                    element.description,
-                    element.choiceId,
-                    l.id
-                ),
-                ChoiceTranslationKey(id.choiceId, l.id)
-            )
-        }
-        return null
+
+    override fun codeIdToUuidId(codeId: ChoiceTranslationKey<String>, languageId: UUID): ChoiceTranslationKey<UUID> {
+        return ChoiceTranslationKey(codeId.choiceId, languageId)
     }
 
-    override fun getOne(id: ChoiceTranslationKey<String>): ChoiceTranslationDto? {
-        languageService.getOneByCodes(id.language)?.let { l ->
-            return choiceTranslationPersistence.getOne(ChoiceTranslationKey(id.choiceId, l.id))
-        }
-        return null
-    }
+
 }

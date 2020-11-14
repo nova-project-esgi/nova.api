@@ -11,6 +11,7 @@ import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceWithResourcesCmdD
 import com.esgi.nova.ports.provided.dtos.choice.commands.TranslatedChoiceCmdDto
 import com.esgi.nova.ports.provided.dtos.choice.commands.TranslatedChoiceWithResourcesCmdDto
 import com.esgi.nova.ports.provided.enums.Role
+import com.esgi.nova.ports.provided.services.IChoiceNavigationService
 import com.esgi.nova.ports.provided.services.IChoiceService
 import com.esgi.nova.ports.provided.services.ITranslatedChoiceService
 import com.google.inject.Inject
@@ -23,7 +24,12 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
-class ChoicesRoute @Inject constructor(application: Application, choiceService: IChoiceService, translatedChoiceService: ITranslatedChoiceService) {
+class ChoicesRoute @Inject constructor(
+    application: Application,
+    choiceService: IChoiceService,
+    translatedChoiceService: ITranslatedChoiceService,
+    choiceNavigationService: IChoiceNavigationService
+) {
     init {
         application.routing {
             authenticate {
@@ -77,7 +83,7 @@ class ChoicesRoute @Inject constructor(application: Application, choiceService: 
                                     it.id,
                                     codes,
                                     includeEvent = true,
-                                    includeResources = true,useDefaultLanguage = true
+                                    includeResources = true, useDefaultLanguage = true
                                 )?.let { choice ->
                                     call.respond(choice)
                                 }
@@ -86,7 +92,9 @@ class ChoicesRoute @Inject constructor(application: Application, choiceService: 
                         get<ChoicesLocation> { location ->
                             translatedChoiceService.getTranslatedChoicesPage(
                                 location,
-                                call.request.headers[HttpHeaders.AcceptLanguage]!!,includeEvent = false,includeResources = false
+                                call.request.headers[HttpHeaders.AcceptLanguage]!!,
+                                includeEvent = false,
+                                includeResources = false
                             ).let { choices ->
                                 call.respond(PageMetadata(choices, call.request.uri))
                             }
@@ -101,9 +109,18 @@ class ChoicesRoute @Inject constructor(application: Application, choiceService: 
                                 call.respond(choice)
                             }
                         }
-                        get<ChoicesLocation> { location ->
-                            choiceService.getPage(location).let { choices ->
-                                call.respond(PageMetadata(choices, call.request.uri))
+                        contentType(ContentType.Application.Json) {
+                            get<ChoicesLocation> { location ->
+                                choiceService.getPage(location).let { choices ->
+                                    call.respond(PageMetadata(choices, call.request.uri))
+                                }
+                            }
+                        }
+                        contentType(CustomContentType.Application.ChoiceNavigation) {
+                            get<ChoicesLocation> { location ->
+                                choiceNavigationService.getPage(location).let { choices ->
+                                    call.respond(PageMetadata(choices, call.request.uri))
+                                }
                             }
                         }
                     }

@@ -14,29 +14,31 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class ResourceTranslationRepository {
-    fun getAll(): SizedIterable<ResourceTranslationEntity> = transaction { ResourceTranslationEntity.all() }
-    fun getOne(id: ResourceTranslationKey<UUID>): ResourceTranslationEntity? =
+class ResourceTranslationRepository :
+    IRepository<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationEntity> {
+    override fun getAll(): SizedIterable<ResourceTranslationEntity> = transaction { ResourceTranslationEntity.all() }
+    override fun getOne(id: ResourceTranslationKey<UUID>): ResourceTranslationEntity? =
         transaction {
             ResourceTranslationEntity.find { (ResourceTranslation.language eq id.language) and (ResourceTranslation.resource eq id.resourceId) }
                 .firstOrNull()
         }
 
-    fun create(resourceTranslation: ResourceTranslationCmdDto<UUID>): ResourceTranslationEntity? = transaction {
+    override fun create(element: ResourceTranslationCmdDto<UUID>): ResourceTranslationEntity? = transaction {
         ResourceTranslationEntity.new {
-            name = resourceTranslation.name
-            ResourceEntity.findById(resourceTranslation.resourceId)
+            name = element.name
+            ResourceEntity.findById(element.resourceId)
                 ?.let { resourceEntity -> resource = resourceEntity }
-            LanguageEntity.findById(resourceTranslation.language)?.let { languageEntity ->
+            LanguageEntity.findById(element.language)?.let { languageEntity ->
                 language = languageEntity
             }
         }
     }
 
-    fun getAllTotal(pagination: DatabasePagination): ITotalCollection<ResourceTranslationEntity> = transaction {
-        val elements = ResourceTranslationEntity.all()
-        TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
-    }
+    override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<ResourceTranslationEntity> =
+        transaction {
+            val elements = ResourceTranslationEntity.all()
+            TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
+        }
 
     fun getTotalByLanguages(
         databasePagination: DatabasePagination,
@@ -61,13 +63,16 @@ class ResourceTranslationRepository {
                 .toList()
         }
 
-    fun updateOne(id: ResourceTranslationKey<UUID>, resourceTranslation: ResourceTranslationCmdDto<UUID>) =
+    override fun updateOne(
+        element: ResourceTranslationCmdDto<UUID>,
+        id: ResourceTranslationKey<UUID>
+    ) =
         transaction {
             getOne(id)?.also { resourceTranslationEntity ->
-                resourceTranslationEntity.name = resourceTranslation.name
-                ResourceEntity.findById(resourceTranslation.resourceId)
+                resourceTranslationEntity.name = element.name
+                ResourceEntity.findById(element.resourceId)
                     ?.let { resourceEntity -> resourceTranslationEntity.resource = resourceEntity }
-                LanguageEntity.findById(resourceTranslation.language)?.let { languageEntity ->
+                LanguageEntity.findById(element.language)?.let { languageEntity ->
                     resourceTranslationEntity.language = languageEntity
                 }
             }

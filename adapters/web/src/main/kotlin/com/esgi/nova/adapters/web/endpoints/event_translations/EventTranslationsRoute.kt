@@ -1,6 +1,6 @@
 package com.esgi.nova.adapters.web.endpoints.event_translations
 
-import com.esgi.nova.adapters.web.domain.EventTranslationCmd
+import com.esgi.nova.adapters.web.domain.entities.EventTranslationCmd
 import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDto

@@ -11,9 +11,9 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class LanguageRepository {
-    fun getAll(): SizedIterable<LanguageEntity> = transaction { LanguageEntity.all() }
-    fun getOne(id: UUID): LanguageEntity? = transaction { LanguageEntity.findById(id) }
+class LanguageRepository : IRepository<UUID, LanguageCmdDto, LanguageEntity> {
+    override fun getAll(): SizedIterable<LanguageEntity> = transaction { LanguageEntity.all() }
+    override fun getOne(id: UUID): LanguageEntity? = transaction { LanguageEntity.findById(id) }
     fun getOneByCodes(code: String, subCode: String?): LanguageEntity? {
         val languages = getAllByCodes(code, subCode)
         if (subCode == null) {
@@ -22,14 +22,14 @@ class LanguageRepository {
         return languages.firstOrNull()
     }
 
-    fun create(language: LanguageCmdDto): LanguageEntity? = transaction {
+    override fun create(language: LanguageCmdDto): LanguageEntity? = transaction {
         LanguageEntity.new {
             code = language.code
             subCode = language.subCode
         }
     }
 
-    fun getAllTotal(pagination: DatabasePagination): ITotalCollection<LanguageEntity> = transaction {
+    override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<LanguageEntity> = transaction {
         val elements = LanguageEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
     }
@@ -52,9 +52,14 @@ class LanguageRepository {
     }
 
 
-    fun updateOne(id: UUID, language: LanguageCmdDto) = transaction { getOne(id)?.also { languageEntity ->
-        languageEntity.code = language.code
-        languageEntity.subCode = language.subCode
-    } }
+    override fun updateOne(
+        element: LanguageCmdDto,
+        id: UUID
+    ): LanguageEntity? = transaction {
+        getOne(id)?.also { languageEntity ->
+            languageEntity.code = element.code
+            languageEntity.subCode = element.subCode
+        }
+    }
 
 }

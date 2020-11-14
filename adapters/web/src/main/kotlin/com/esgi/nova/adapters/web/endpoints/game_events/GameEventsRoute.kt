@@ -1,6 +1,6 @@
 package com.esgi.nova.adapters.web.endpoints.game_events
 
-import com.esgi.nova.adapters.web.domain.GameEventCmd
+import com.esgi.nova.adapters.web.domain.entities.GameEventCmd
 import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventCmdDto
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventsId

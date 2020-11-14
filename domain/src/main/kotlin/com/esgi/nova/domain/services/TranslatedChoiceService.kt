@@ -20,6 +20,7 @@ import com.esgi.nova.ports.provided.services.*
 import com.esgi.nova.ports.required.IChoicePersistence
 import com.esgi.nova.ports.required.IChoiceResourcePersistence
 import com.esgi.nova.ports.required.IChoiceTranslationPersistence
+import com.esgi.nova.ports.required.ICrudPersistence
 import com.google.inject.Inject
 import java.util.*
 

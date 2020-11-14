@@ -2,6 +2,7 @@ package com.esgi.nova.adapters.exposed.port_implementation
 
 import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.mappers.GameEventMapper
+import com.esgi.nova.adapters.exposed.models.GameEventEntity
 import com.esgi.nova.adapters.exposed.repositories.GameEventRepository
 import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventCmdDto
@@ -13,32 +14,12 @@ import com.google.inject.Inject
 import java.util.*
 
 class GameEventPersistence @Inject constructor(
-    private val gameEventRepository: GameEventRepository,
-    private val gameEventMapper: GameEventMapper,
-    private val dbContext: DatabaseContext
-) : IGameEventPersistence {
-    override fun getAll(): Collection<GameEventDto> =
-        dbContext.connectAndExec { gameEventMapper.toDtos(gameEventRepository.getAll()) }
-
-    override fun create(element: GameEventCmdDto): GameEventDto? {
-        val entity = dbContext.connectAndExec { gameEventRepository.create(element) }
-        val dto = dbContext.connectAndExec { gameEventMapper.toDto(entity) }
-        return dto
-    }
-
-
-    override fun getAllTotal(pagination: IPagination): ITotalCollection<GameEventDto> {
-        TODO("Not yet implemented")
-    }
+    override val repository: GameEventRepository,
+    mapper: GameEventMapper,
+    dbContext: DatabaseContext
+) : BasePersistence<UUID, GameEventCmdDto, GameEventEntity, GameEventDto>(repository, mapper, dbContext),
+    IGameEventPersistence {
 
     override fun getAllFiltered(filter: GameEventsId): Collection<GameEventDto> =
-        dbContext.connectAndExec { gameEventMapper.toDtos(gameEventRepository.getAllById(filter)) }
-
-    override fun getOne(id: UUID): GameEventDto? = dbContext.connectAndExec {
-        gameEventRepository.getOne(id)?.let { gameEvent -> gameEventMapper.toDto(gameEvent) }
-    }
-
-    override fun updateOne(element: GameEventCmdDto, id: UUID): GameEventDto? = dbContext.connectAndExec {
-        gameEventRepository.updateOne(id, element)?.let { choice -> gameEventMapper.toDto(choice) }
-    }
+        dbContext.connectAndExec { mapper.toDtos(repository.getAllById(filter)) }
 }

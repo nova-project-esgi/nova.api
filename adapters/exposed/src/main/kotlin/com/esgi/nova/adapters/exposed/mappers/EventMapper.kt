@@ -7,16 +7,16 @@ import org.mapstruct.Mapper
 
 
 @Mapper(componentModel = "jsr330", uses = [GameMapper::class, EntityMapper::class])
-interface EventMapper {
+interface EventMapper: IDtoMapper<EventEntity, EventDto> {
 
-    fun toDto(
-        event: EventEntity?,
-        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext()
-    ): EventDto?
-
-    fun toDtos(
-        events: Collection<EventEntity>,
-        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext(ignoreFirstLevelIterable = false)
-    ): Collection<EventDto>
+//    override fun toDto(
+//        srcEntity: EventEntity?,
+//        @Context context: CycleAvoidingMappingContext
+//    ): EventDto?
+//
+//    override fun toDtos(
+//        srcEntities: Collection<EventEntity>,
+//        @Context context: CycleAvoidingMappingContext
+//    ): Collection<EventDto>
 
 }

@@ -11,5 +11,6 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var username by User.username
     var password by User.password
+    var email by User.email
     var role by User.role
 }

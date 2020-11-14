@@ -2,10 +2,15 @@ package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
+import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.EventEntity
 import com.esgi.nova.adapters.exposed.models.EventTranslationEntity
 import com.esgi.nova.adapters.exposed.models.LanguageEntity
 import com.esgi.nova.adapters.exposed.tables.EventTranslation
+import com.esgi.nova.ports.common.ICreate
+import com.esgi.nova.ports.common.IGetOne
+import com.esgi.nova.ports.common.IUpdateOne
+import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceCmdDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
 import com.esgi.nova.ports.required.ITotalCollection
@@ -14,15 +19,15 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class EventTranslationRepository {
-    fun getAll(): SizedIterable<EventTranslationEntity> = transaction { EventTranslationEntity.all() }
-    fun getOne(id: EventTranslationKey<UUID>): EventTranslationEntity? =
+class EventTranslationRepository: IRepository<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationEntity>  {
+    override fun getAll(): SizedIterable<EventTranslationEntity> = transaction { EventTranslationEntity.all() }
+    override fun getOne(id: EventTranslationKey<UUID>): EventTranslationEntity? =
         transaction {
             EventTranslationEntity.find { (EventTranslation.event eq id.eventId) and (EventTranslation.language eq id.language) }
                 .firstOrNull()
         }
 
-    fun create(eventTranslation: EventTranslationCmdDto<UUID>): EventTranslationEntity? = transaction {
+    override fun create(eventTranslation: EventTranslationCmdDto<UUID>): EventTranslationEntity? = transaction {
         EventTranslationEntity.new {
             description = eventTranslation.description
             title = eventTranslation.title
@@ -34,7 +39,7 @@ class EventTranslationRepository {
         }
     }
 
-    fun getAllTotal(pagination: DatabasePagination): ITotalCollection<EventTranslationEntity> = transaction {
+    override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<EventTranslationEntity> = transaction {
         val elements = EventTranslationEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
     }
@@ -54,14 +59,17 @@ class EventTranslationRepository {
             .toList()
     }
 
-    fun updateOne(eventTranslationId: EventTranslationKey<UUID>, eventTranslation: EventTranslationCmdDto<UUID>) =
+    override fun updateOne(
+        element: EventTranslationCmdDto<UUID>,
+        id: EventTranslationKey<UUID>
+    ): EventTranslationEntity? =
         transaction {
-            getOne(eventTranslationId)?.also { eventTranslationEntity ->
-                eventTranslationEntity.description = eventTranslation.description
-                eventTranslationEntity.title = eventTranslation.title
-                EventEntity.findById(eventTranslation.eventId)
+            getOne(id)?.also { eventTranslationEntity ->
+                eventTranslationEntity.description = element.description
+                eventTranslationEntity.title = element.title
+                EventEntity.findById(element.eventId)
                     ?.let { eventEntity -> eventTranslationEntity.event = eventEntity }
-                LanguageEntity.findById(eventTranslation.language)?.let { languageEntity ->
+                LanguageEntity.findById(element.language)?.let { languageEntity ->
                     eventTranslationEntity.language = languageEntity
                 }
             }

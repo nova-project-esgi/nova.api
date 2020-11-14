@@ -5,5 +5,6 @@ import io.ktor.http.*
 object CustomContentType {
     object Application {
         val ChoiceWithResource: ContentType = ContentType("application", "vnd+nova.choice_with_resources+json")
+        val ChoiceNavigation: ContentType = ContentType("application", "vnd+nova.choice_navigation+json")
     }
 }

@@ -4,6 +4,7 @@ import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ResourceMapper
+import com.esgi.nova.adapters.exposed.models.ResourceEntity
 import com.esgi.nova.adapters.exposed.repositories.ResourceRepository
 import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.resource.ResourceCmdDto
@@ -14,26 +15,8 @@ import com.google.inject.Inject
 import java.util.*
 
 class ResourcePersistence @Inject constructor(
-    private val resourceRepository: ResourceRepository,
-    private val resourceMapper: ResourceMapper,
-    private val dbContext: DatabaseContext
-) : IResourcePersistence {
-    override fun getAll(): Collection<ResourceDto> = dbContext.connectAndExec {
-        resourceMapper.toDtos(resourceRepository.getAll())
-    }
-
-    override fun create(element: ResourceCmdDto): ResourceDto? =
-        dbContext.connectAndExec { resourceMapper.toDto(resourceRepository.create(element)) }
-
-    override fun getAllTotal(pagination: IPagination): ITotalCollection<ResourceDto> = dbContext.connectAndExec {
-        val elements = resourceRepository.getAllTotal(DatabasePagination(pagination))
-        TotalCollection(elements.total, resourceMapper.toDtos(elements))
-    }
-
-    override fun getOne(id: UUID): ResourceDto? =
-        dbContext.connectAndExec { resourceRepository.getOne(id)?.let { resource -> resourceMapper.toDto(resource) } }
-
-    override fun updateOne(element: ResourceCmdDto, id: UUID): ResourceDto? = dbContext.connectAndExec {
-        resourceRepository.updateOne(id, element)?.let { resource -> resourceMapper.toDto(resource) }
-    }
+    override val repository: ResourceRepository,
+    mapper: ResourceMapper,
+    dbContext: DatabaseContext
+) : BasePersistence<UUID, ResourceCmdDto, ResourceEntity, ResourceDto>(repository, mapper, dbContext) ,IResourcePersistence {
 }

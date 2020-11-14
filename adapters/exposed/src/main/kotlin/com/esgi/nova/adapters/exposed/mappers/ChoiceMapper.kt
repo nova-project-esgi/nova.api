@@ -9,15 +9,15 @@ import org.mapstruct.Mapper
     componentModel = "jsr330",
     uses = [ResourceMapper::class, EventMapper::class, EntityMapper::class, GameMapper::class]
 )
-interface ChoiceMapper {
+interface ChoiceMapper: IDtoMapper<ChoiceEntity, ChoiceDto> {
 
-    fun toDto(
-        choice: ChoiceEntity?,
-        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext()
-    ): ChoiceDto?
-
-    fun toDtos(
-        choices: Collection<ChoiceEntity>,
-        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext(ignoreFirstLevelIterable = false)
-    ): Collection<ChoiceDto>
+//    override fun toDto(
+//        srcEntity: ChoiceEntity?,
+//        @Context context: CycleAvoidingMappingContext
+//    ): ChoiceDto?
+//
+//    override fun toDtos(
+//        srcEntities: Collection<ChoiceEntity>,
+//        @Context context: CycleAvoidingMappingContext
+//    ): Collection<ChoiceDto>
 }

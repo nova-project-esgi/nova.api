@@ -5,5 +5,6 @@ import com.esgi.nova.ports.provided.enums.Role
 interface IUser {
     var username: String
     var password: String
+    var email: String
     var role: Role
 }

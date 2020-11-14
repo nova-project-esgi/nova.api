@@ -2,6 +2,7 @@ package com.esgi.nova.ports.provided.dtos.event_translation
 
 import com.esgi.nova.ports.common.extensions.toAggregatedCode
 import com.esgi.nova.ports.provided.dtos.IId
+import com.esgi.nova.ports.provided.dtos.ITranslation
 import com.esgi.nova.ports.provided.dtos.choice.queries.TranslatedChoiceDto
 import com.esgi.nova.ports.provided.dtos.event.EventDto
 import com.esgi.nova.ports.provided.dtos.event.TranslatedEventDto
@@ -12,9 +13,9 @@ class EventTranslationDto(
     override var id: UUID,
     override var title: String,
     override var description: String,
-    var language: LanguageDto,
+    override var language: LanguageDto,
     var event: EventDto
-) : IEventTranslation, IId<UUID> {
+) : IEventTranslation, IId<UUID>, ITranslation<LanguageDto> {
     fun toTranslatedEventDto(translatedChoices: List<TranslatedChoiceDto>? = null) =
         TranslatedEventDto(
             id = event.id,

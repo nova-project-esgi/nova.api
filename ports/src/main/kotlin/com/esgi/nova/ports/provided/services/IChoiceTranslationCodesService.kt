@@ -7,7 +7,5 @@ import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmd
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
 
-interface IChoiceTranslationCodesService : IGetOne<ChoiceTranslationKey<String>, ChoiceTranslationDto>,
-    ICreate<ChoiceTranslationCmdDto<String>, ChoiceTranslationDto>,
-    IUpdateOne<ChoiceTranslationCmdDto<String>, ChoiceTranslationKey<String>, ChoiceTranslationDto> {
+interface IChoiceTranslationCodesService : ICrudService<ChoiceTranslationKey<String>,ChoiceTranslationCmdDto<String> ,ChoiceTranslationDto> {
 }

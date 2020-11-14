@@ -4,68 +4,39 @@ import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ChoiceTranslationMapper
+import com.esgi.nova.adapters.exposed.models.ChoiceTranslationEntity
 import com.esgi.nova.adapters.exposed.repositories.ChoiceTranslationRepository
 import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
 import com.esgi.nova.ports.required.IChoiceTranslationPersistence
+import com.esgi.nova.ports.required.ICrudPersistence
 import com.esgi.nova.ports.required.ILanguagePersistence
 import com.esgi.nova.ports.required.ITotalCollection
 import com.google.inject.Inject
 import java.util.*
 
 class ChoiceTranslationPersistence @Inject constructor(
-    private val dbContext: DatabaseContext,
-    private val choiceTranslationRepository: ChoiceTranslationRepository,
-    private val choiceTranslationMapper: ChoiceTranslationMapper,
+    dbContext: DatabaseContext,
+    override val repository: ChoiceTranslationRepository,
+    mapper: ChoiceTranslationMapper,
     private val languagePersistence: ILanguagePersistence
-) : IChoiceTranslationPersistence {
-    override fun getAll(): Collection<ChoiceTranslationDto> =
-        dbContext.connectAndExec {
-            choiceTranslationMapper.toDtos(
-                choiceTranslationRepository.getAll().toList()
-            )
-        }
-
-    override fun create(element: ChoiceTranslationCmdDto<UUID>): ChoiceTranslationDto? =
-        dbContext.connectAndExec { choiceTranslationMapper.toDto(choiceTranslationRepository.create(element)) }
-
-    override fun getAllTotal(pagination: IPagination): ITotalCollection<ChoiceTranslationDto> =
-        dbContext.connectAndExec {
-            val totalCollection = choiceTranslationRepository.getAllTotal(DatabasePagination(pagination))
-            TotalCollection(
-                totalCollection.total,
-                choiceTranslationMapper.toDtos(
-                    totalCollection
-                )
-            )
-        }
-
-    override fun getOne(id: ChoiceTranslationKey<UUID>): ChoiceTranslationDto? =
-        dbContext.connectAndExec {
-            choiceTranslationRepository.getOne(id)
-                ?.let { choiceTranslation -> choiceTranslationMapper.toDto(choiceTranslation) }
-        }
-
-    override fun updateOne(
-        element: ChoiceTranslationCmdDto<UUID>,
-        id: ChoiceTranslationKey<UUID>
-    ): ChoiceTranslationDto? = dbContext.connectAndExec {
-        choiceTranslationRepository.updateOne(id, element)
-            ?.let { choiceTranslation -> choiceTranslationMapper.toDto(choiceTranslation) }
-    }
-
+) : BasePersistence<ChoiceTranslationKey<UUID>, ChoiceTranslationCmdDto<UUID>, ChoiceTranslationEntity, ChoiceTranslationDto>(
+    repository,
+    mapper,
+    dbContext
+) ,IChoiceTranslationPersistence {
 
     override fun getTotalByLanguages(
         pagination: IPagination,
         languageIds: List<UUID>
     ): ITotalCollection<ChoiceTranslationDto> = dbContext.connectAndExec {
         val totalCollection =
-            choiceTranslationRepository.getTotalByLanguages(DatabasePagination(pagination), languageIds)
+            repository.getTotalByLanguages(DatabasePagination(pagination), languageIds)
         TotalCollection(
             totalCollection.total,
-            choiceTranslationMapper.toDtos(
+            mapper.toDtos(
                 totalCollection
             )
         )
@@ -73,8 +44,8 @@ class ChoiceTranslationPersistence @Inject constructor(
 
     override fun getAllByChoiceIdAndLanguageId(choiceId: UUID, languageId: UUID): Collection<ChoiceTranslationDto> =
         dbContext.connectAndExec {
-            choiceTranslationMapper.toDtos(
-                choiceTranslationRepository.getAllByChoiceIdAndLanguageId(
+            mapper.toDtos(
+                repository.getAllByChoiceIdAndLanguageId(
                     choiceId,
                     languageId
                 ).toList()
@@ -85,8 +56,8 @@ class ChoiceTranslationPersistence @Inject constructor(
         choiceIds: List<UUID>,
         languageId: UUID
     ): Collection<ChoiceTranslationDto> = dbContext.connectAndExec {
-        choiceTranslationMapper.toDtos(
-            choiceTranslationRepository.getAllByChoiceIdsAndLanguageId(choiceIds, languageId).toList()
+        mapper.toDtos(
+            repository.getAllByChoiceIdsAndLanguageId(choiceIds, languageId).toList()
         )
     }
 
@@ -99,8 +70,8 @@ class ChoiceTranslationPersistence @Inject constructor(
 
     override fun getOneDefault(choiceId: UUID) = dbContext.connectAndExec {
         languagePersistence.getDefault()?.let { languageDto ->
-            choiceTranslationMapper.toDto(
-                choiceTranslationRepository.getOne(
+            mapper.toDto(
+                repository.getOne(
                     ChoiceTranslationKey(
                         choiceId,
                         languageDto.id

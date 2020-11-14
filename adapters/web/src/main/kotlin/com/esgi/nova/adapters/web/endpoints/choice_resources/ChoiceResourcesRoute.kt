@@ -1,6 +1,6 @@
 package com.esgi.nova.adapters.web.endpoints.choice_resources
 
-import com.esgi.nova.adapters.web.domain.ChoiceResourceCmd
+import com.esgi.nova.adapters.web.domain.entities.ChoiceResourceCmd
 import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.ports.provided.dtos.choice_resource.ChoiceResourceCmdDto

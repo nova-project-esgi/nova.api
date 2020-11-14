@@ -1,4 +1,4 @@
-package com.esgi.nova.adapters.web.domain
+package com.esgi.nova.adapters.web.domain.entities
 
 class ChoiceTranslationCmd(
     var title: String,

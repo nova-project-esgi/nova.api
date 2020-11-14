@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule
 
 class DomainModule : AbstractModule() {
     override fun configure() {
+        bind(IChoiceNavigationService::class.java).to(ChoiceNavigationService::class.java)
         bind(IChoiceResourceService::class.java).to(ChoiceResourceService::class.java)
         bind(IChoiceService::class.java).to(ChoiceService::class.java)
         bind(IChoiceTranslationService::class.java).to(ChoiceTranslationService::class.java)

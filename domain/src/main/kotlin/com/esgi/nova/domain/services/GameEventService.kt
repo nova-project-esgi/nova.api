@@ -1,5 +1,7 @@
 package com.esgi.nova.domain.services
 
+import com.esgi.nova.ports.provided.dtos.game.GameCmdDto
+import com.esgi.nova.ports.provided.dtos.game.GameDto
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventCmdDto
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventDto
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventsId
@@ -8,15 +10,8 @@ import com.esgi.nova.ports.required.IGameEventPersistence
 import com.google.inject.Inject
 import java.util.*
 
-class GameEventService @Inject constructor(private val gameEventPersistence: IGameEventPersistence) :
+class GameEventService @Inject constructor(override val persistence: IGameEventPersistence) : BaseService<UUID, GameEventCmdDto, GameEventDto>(persistence),
     IGameEventService {
-    override fun getAll() = gameEventPersistence.getAll()
-    override fun create(element: GameEventCmdDto): GameEventDto? = gameEventPersistence.create(element)
-    override fun getAllFiltered(filter: GameEventsId) = gameEventPersistence.getAllFiltered(filter)
-    override fun getOne(id: UUID): GameEventDto? = gameEventPersistence.getOne(id)
-    override fun updateOne(element: GameEventCmdDto, id: UUID): GameEventDto? = gameEventPersistence.updateOne(
-        element,
-        id
-    )
+    override fun getAllFiltered(filter: GameEventsId) = persistence.getAllFiltered(filter)
 
 }

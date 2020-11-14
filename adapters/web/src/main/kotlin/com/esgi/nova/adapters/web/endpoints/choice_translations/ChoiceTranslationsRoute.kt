@@ -1,11 +1,10 @@
 package com.esgi.nova.adapters.web.endpoints.choice_translations
 
-import com.esgi.nova.adapters.web.domain.ChoiceTranslationCmd
+import com.esgi.nova.adapters.web.domain.entities.ChoiceTranslationCmd
 import com.esgi.nova.adapters.web.extensions.createdIn
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
-import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
 import com.esgi.nova.ports.provided.enums.Role
 import com.esgi.nova.ports.provided.services.IChoiceTranslationCodesService
 import com.esgi.nova.ports.provided.services.IChoiceTranslationService

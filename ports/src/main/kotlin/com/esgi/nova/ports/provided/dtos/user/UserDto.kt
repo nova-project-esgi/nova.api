@@ -8,5 +8,6 @@ class UserDto(
     override var id: UUID,
     override var username: String,
     override var password: String,
+    override var email: String,
     override var role: Role
 ) : IUser, IId<UUID>

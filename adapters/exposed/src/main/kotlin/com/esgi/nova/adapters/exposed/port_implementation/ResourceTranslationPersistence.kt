@@ -4,6 +4,7 @@ import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ResourceTranslationMapper
+import com.esgi.nova.adapters.exposed.models.ResourceTranslationEntity
 import com.esgi.nova.adapters.exposed.repositories.ChoiceResourceRepository
 import com.esgi.nova.adapters.exposed.repositories.ResourceTranslationRepository
 import com.esgi.nova.ports.provided.IPagination
@@ -17,41 +18,20 @@ import com.google.inject.Inject
 import java.util.*
 
 class ResourceTranslationPersistence @Inject constructor(
-    private val dbContext: DatabaseContext,
-    private val resourceTranslationRepository: ResourceTranslationRepository,
-    private val resourceTranslationMapper: ResourceTranslationMapper,
+    dbContext: DatabaseContext,
+    override val repository: ResourceTranslationRepository,
+    mapper: ResourceTranslationMapper,
     private val choiceResourceRepository: ChoiceResourceRepository,
     private val languagePersistence: ILanguagePersistence
-) : IResourceTranslationPersistence {
-    override fun getAll(): Collection<ResourceTranslationDto> =
-        dbContext.connectAndExec {
-            resourceTranslationMapper.toDtos(
-                resourceTranslationRepository.getAll().toList()
-            )
-        }
+) : BasePersistence<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationEntity, ResourceTranslationDto>(
+    repository,
+    mapper,
+    dbContext
+), IResourceTranslationPersistence {
 
-    override fun create(element: ResourceTranslationCmdDto<UUID>): ResourceTranslationDto? =
-        dbContext.connectAndExec { resourceTranslationMapper.toDto(resourceTranslationRepository.create(element)) }
-
-    override fun getAllTotal(pagination: IPagination): ITotalCollection<ResourceTranslationDto> =
-        dbContext.connectAndExec {
-            val totalCollection = resourceTranslationRepository.getAllTotal(DatabasePagination(pagination))
-            TotalCollection(
-                totalCollection.total,
-                resourceTranslationMapper.toDtos(
-                    totalCollection
-                )
-            )
-        }
-
-    override fun getOne(id: ResourceTranslationKey<UUID>): ResourceTranslationDto? =
-        dbContext.connectAndExec {
-            resourceTranslationRepository.getOne(id)?.let { resource -> resourceTranslationMapper.toDto(resource) }
-        }
-
-    override fun getAllByResourceIdAndLanguageId(resourceId: UUID, languageId: UUID) = dbContext.connectAndExec {
-        resourceTranslationMapper.toDtos(
-            resourceTranslationRepository.getAllByResourceIdAndLanguageId(
+    override fun getAllByResourceIdAndLanguageId(resourceId: UUID, languageId: UUID): Collection<ResourceTranslationDto> = dbContext.connectAndExec {
+        mapper.toDtos(
+            repository.getAllByResourceIdAndLanguageId(
                 resourceId,
                 languageId
             )
@@ -63,10 +43,10 @@ class ResourceTranslationPersistence @Inject constructor(
         languageIds: List<UUID>
     ): ITotalCollection<ResourceTranslationDto> = dbContext.connectAndExec {
         val totalCollection =
-            resourceTranslationRepository.getTotalByLanguages(DatabasePagination(pagination), languageIds)
+            repository.getTotalByLanguages(DatabasePagination(pagination), languageIds)
         TotalCollection(
             totalCollection.total,
-            resourceTranslationMapper.toDtos(
+            mapper.toDtos(
                 totalCollection
             )
         )
@@ -76,8 +56,8 @@ class ResourceTranslationPersistence @Inject constructor(
         dbContext.connectAndExec {
             val resourceIds = choiceResourceRepository.getAllByChoiceId(choiceId)
                 .map { choiceResource -> choiceResource.resource.id.value }
-            resourceTranslationMapper.toDtos(
-                resourceTranslationRepository.getAllByResourceIdsAndLanguageId(
+            mapper.toDtos(
+                repository.getAllByResourceIdsAndLanguageId(
                     resourceIds,
                     languageId
                 )
@@ -86,8 +66,8 @@ class ResourceTranslationPersistence @Inject constructor(
 
     override fun getOneDefault(resourceId: UUID): ResourceTranslationDto? = dbContext.connectAndExec {
         languagePersistence.getDefault()?.let { languageDto ->
-            resourceTranslationMapper.toDto(
-                resourceTranslationRepository.getOne(
+            mapper.toDto(
+                repository.getOne(
                     ResourceTranslationKey<UUID>(
                         resourceId,
                         languageDto.id
@@ -102,14 +82,6 @@ class ResourceTranslationPersistence @Inject constructor(
             return getAllByChoiceIdAndLanguageId(choiceId, language.id)
         }
         return listOf()
-    }
-
-    override fun updateOne(
-        element: ResourceTranslationCmdDto<UUID>,
-        id: ResourceTranslationKey<UUID>
-    ): ResourceTranslationDto? = dbContext.connectAndExec {
-        resourceTranslationRepository.updateOne(id, element)
-            ?.let { resourceTranslation -> resourceTranslationMapper.toDto(resourceTranslation) }
     }
 
 }

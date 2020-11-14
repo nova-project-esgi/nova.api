@@ -11,15 +11,7 @@ import com.google.inject.Inject
 import java.util.*
 
 class ResourceService @Inject constructor(
-    private val resourcePersistence: IResourcePersistence,
-) : IResourceService {
-    override fun getAll() = resourcePersistence.getAll()
-    override fun create(element: ResourceCmdDto): ResourceDto? = resourcePersistence.create(element)
-    override fun getOne(id: UUID): ResourceDto? = resourcePersistence.getOne(id)
-    override fun getPage(pagination: IPagination): IPage<ResourceDto> =
-        resourcePersistence.getAllTotal(pagination).toStaticPage(pagination)
-
-    override fun updateOne(element: ResourceCmdDto, id: UUID): ResourceDto? = resourcePersistence.updateOne(element, id)
-
+    override val persistence: IResourcePersistence,
+) : BaseService<UUID, ResourceCmdDto, ResourceDto>(persistence), IResourceService {
 
 }

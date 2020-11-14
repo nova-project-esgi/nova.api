@@ -1,7 +1,9 @@
 package com.esgi.nova.adapters.exposed.mappers
 
 import com.esgi.nova.adapters.exposed.models.GameEntity
+import com.esgi.nova.adapters.exposed.models.GameEventEntity
 import com.esgi.nova.ports.provided.dtos.game.GameDto
+import com.esgi.nova.ports.provided.dtos.game_event.GameEventDto
 import org.mapstruct.Context
 import org.mapstruct.Mapper
 
@@ -9,16 +11,16 @@ import org.mapstruct.Mapper
     componentModel = "jsr330",
     uses = [EventMapper::class, UserMapper::class, EntityMapper::class]
 )
-interface GameMapper {
+interface GameMapper: IDtoMapper<GameEntity, GameDto> {
 
-    fun toDto(
-        game: GameEntity?,
-        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext()
-    ): GameDto?
-
-    fun toDtos(
-        games: Collection<GameEntity>,
-        @Context context: CycleAvoidingMappingContext = CycleAvoidingMappingContext(ignoreFirstLevelIterable = false)
-    ): Collection<GameDto>
+//    override fun toDto(
+//        srcEntity: GameEntity?,
+//        @Context context: CycleAvoidingMappingContext
+//    ): GameDto?
+//
+//    override fun toDtos(
+//        srcEntities: Collection<GameEntity>,
+//        @Context context: CycleAvoidingMappingContext
+//    ): Collection<GameDto>
 
 }

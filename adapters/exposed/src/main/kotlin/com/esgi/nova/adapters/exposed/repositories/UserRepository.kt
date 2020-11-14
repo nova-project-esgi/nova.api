@@ -1,52 +1,50 @@
 package com.esgi.nova.adapters.exposed.repositories
 
-import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.UserEntity
 import com.esgi.nova.adapters.exposed.tables.User
-import com.esgi.nova.ports.provided.dtos.user.UserCmdDto
-import com.google.inject.Inject
+import com.esgi.nova.ports.provided.dtos.user.UserRegisterCmdDto
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class UserRepository @Inject constructor(private val dbContext: DatabaseContext) {
-    fun getAll(): List<UserEntity> = transaction {
-        UserEntity.all().toList()
+class UserRepository : IRepository<UUID, UserRegisterCmdDto, UserEntity> {
+    override fun getAll() = transaction {
+        UserEntity.all()
     }
 
-    fun create(user: UserCmdDto) = transaction {
+    override fun create(element: UserRegisterCmdDto) = transaction {
         UserEntity.new {
-            password = user.password
+            password = element.password
             username = username
         }
     }
 
-    fun getOrCreate(user: UserCmdDto): UserEntity {
-        return dbContext.connectAndExec {
-
-            val userEntity =
-                UserEntity.find { (User.password eq user.password) and (User.username eq user.username) }.firstOrNull()
-
-            userEntity ?: create(user)
-        }
+    fun getOrCreate(userRegister: UserRegisterCmdDto) = transaction {
+        val userEntity =
+            UserEntity.find { (User.password eq userRegister.password) and (User.username eq userRegister.username) }.firstOrNull()
+        userEntity ?: create(userRegister)
     }
 
     fun getByName(username: String): UserEntity? =
-        dbContext.connectAndExec { UserEntity.find { (User.username eq username) }.singleOrNull() }
+        transaction { UserEntity.find { (User.username eq username) }.singleOrNull() }
 
-    fun getAllTotal(pagination: DatabasePagination) = transaction {
+    fun getByUsernameAndPassword(username: String, password: String): UserEntity? =
+        transaction { UserEntity.find { (User.username eq username) and (User.password eq password) }.singleOrNull() }
+
+
+    override fun getAllTotal(pagination: DatabasePagination) = transaction {
         val elements = UserEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
     }
 
-    fun getOne(id: UUID) = transaction { UserEntity.findById(id) }
+    override fun getOne(id: UUID) = transaction { UserEntity.findById(id) }
 
-    fun updateOne(id: UUID, user: UserCmdDto) = transaction {
+    override fun updateOne(element: UserRegisterCmdDto, id: UUID): UserEntity? = transaction {
         getOne(id)?.also { userEntity ->
-            userEntity.username = user.username
-            userEntity.password = user.password
+            userEntity.username = element.username
+            userEntity.password = element.password
         }
     }
 }

@@ -8,6 +8,5 @@ import com.esgi.nova.ports.provided.dtos.game.GameCmdDto
 import com.esgi.nova.ports.provided.dtos.game.GameDto
 import java.util.*
 
-interface IGamePersistence : IGetAll<GameDto>, ICreate<GameCmdDto, GameDto>, IGetOne<UUID, GameDto>,
-    IGetAllTotal<GameDto>, IUpdateOne<GameCmdDto, UUID, GameDto> {
+interface IGamePersistence : ICrudPersistence<UUID, GameCmdDto, GameDto>{
 }

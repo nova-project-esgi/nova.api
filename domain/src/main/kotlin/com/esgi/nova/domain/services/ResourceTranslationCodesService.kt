@@ -7,47 +7,37 @@ import com.esgi.nova.ports.provided.services.ILanguageService
 import com.esgi.nova.ports.provided.services.IResourceTranslationCodesService
 import com.esgi.nova.ports.required.IResourceTranslationPersistence
 import com.google.inject.Inject
+import java.util.*
 
 class ResourceTranslationCodesService @Inject constructor(
-    private val languageService: ILanguageService,
-    private val resourceTranslationPersistence: IResourceTranslationPersistence
-) : IResourceTranslationCodesService {
+    languageService: ILanguageService,
+    override val persistence: IResourceTranslationPersistence
+) : BaseTranslationCodesService<
+        ResourceTranslationKey<String>,
+        ResourceTranslationKey<UUID>,
+        ResourceTranslationCmdDto<String>,
+        ResourceTranslationCmdDto<UUID>,
+        ResourceTranslationDto>(
+    languageService,
+    persistence
+), IResourceTranslationCodesService {
 
-    override fun getOne(id: ResourceTranslationKey<String>): ResourceTranslationDto? {
-        languageService.getOneByCodes(id.language)?.let { l ->
-            return resourceTranslationPersistence.getOne(ResourceTranslationKey(id.resourceId, l.id))
-        }
-        return null
+    override fun codeInputToUuidInput(
+        codesInput: ResourceTranslationCmdDto<String>,
+        languageId: UUID
+    ): ResourceTranslationCmdDto<UUID> {
+        return ResourceTranslationCmdDto(
+            codesInput.name,
+            codesInput.resourceId,
+            languageId
+        )
     }
 
-    override fun create(element: ResourceTranslationCmdDto<String>): ResourceTranslationDto? {
-        languageService.getOneByCodes(element.language)?.let { l ->
-            return resourceTranslationPersistence.create(
-                ResourceTranslationCmdDto(
-                    element.name,
-                    element.resourceId,
-                    l.id
-                )
-            )
-        }
-        return null
-    }
-
-    override fun updateOne(
-        element: ResourceTranslationCmdDto<String>,
-        id: ResourceTranslationKey<String>
-    ): ResourceTranslationDto? {
-        languageService.getOneByCodes(element.language)?.let { l ->
-            return resourceTranslationPersistence.updateOne(
-                ResourceTranslationCmdDto(
-                    element.name,
-                    element.resourceId,
-                    l.id
-                ),
-                ResourceTranslationKey(id.resourceId, l.id)
-            )
-        }
-        return null
+    override fun codeIdToUuidId(
+        codeId: ResourceTranslationKey<String>,
+        languageId: UUID
+    ): ResourceTranslationKey<UUID> {
+       return ResourceTranslationKey(codeId.resourceId,languageId)
     }
 
 
