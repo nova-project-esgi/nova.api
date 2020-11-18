@@ -12,10 +12,8 @@ import com.esgi.nova.ports.provided.dtos.event.EventDto
 import com.esgi.nova.ports.provided.dtos.event.TranslatedEventCmdDto
 import com.esgi.nova.ports.provided.dtos.event.TranslatedEventDto
 import com.esgi.nova.ports.provided.dtos.event.translated_event_detailed.TranslatedEventDetailedDto
-import jdk.jfr.Event
 import java.util.*
 
-interface IEventService : IGetAll<EventDto>, ICreate<EventCmdDto, EventDto>, IGetOne<UUID, EventDto>,
-    IGetPage<EventDto>, IUpdateOne<EventCmdDto, UUID, EventDto> {
+interface IEventService : ICrudService<UUID, EventCmdDto, EventDto>{
 
 }

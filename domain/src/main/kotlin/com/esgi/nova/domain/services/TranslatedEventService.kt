@@ -95,8 +95,8 @@ class TranslatedEventService @Inject constructor(
             .toStaticPage(pagination, translations.total.toInt())
     }
 
-    override fun createTranslatedEvent(translatedEvent: TranslatedEventCmdDto, codes: String): TranslatedEventDto? {
-        languageService.getOneByCodes(codes)?.let { language ->
+    override fun createTranslatedEvent(translatedEvent: TranslatedEventCmdDto): TranslatedEventDto? {
+        languageService.getOneByCodes(translatedEvent.language)?.let { language ->
             eventPersistence.create(EventCmdDto(translatedEvent.isDaily, translatedEvent.isActive))?.let { event ->
                 eventTranslationPersistence.create(
                     EventTranslationCmdDto(

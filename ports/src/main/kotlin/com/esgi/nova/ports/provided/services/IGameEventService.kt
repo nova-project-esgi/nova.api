@@ -8,6 +8,6 @@ import com.esgi.nova.ports.provided.dtos.game_event.GameEventDto
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventsId
 import java.util.*
 
-interface IGameEventService : IGetAll<GameEventDto>, ICreate<GameEventCmdDto, GameEventDto>,
-    IGetAllFiltered<GameEventsId, GameEventDto>, IGetOne<UUID, GameEventDto>, IUpdateOne<GameEventCmdDto, UUID, GameEventDto> {
+interface IGameEventService : ICrudService<UUID, GameEventCmdDto, GameEventDto>,
+    IGetAllFiltered<GameEventsId, GameEventDto>, IGetOne<UUID, GameEventDto> {
 }

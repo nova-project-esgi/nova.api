@@ -36,8 +36,7 @@ interface ITranslatedResourceService {
     ): IPage<TranslatedResourceDto>
 
     fun createTranslatedResource(
-        translatedResource: TranslatedResourceCmdDto,
-        codes: String
+        translatedResource: TranslatedResourceCmdDto
     ): TranslatedResourceDto?
 
     fun getTranslatedResourcesByChoiceIdAndLanguageId(

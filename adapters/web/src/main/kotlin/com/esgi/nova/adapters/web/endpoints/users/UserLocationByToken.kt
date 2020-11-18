@@ -4,6 +4,7 @@ import io.ktor.locations.*
 import java.util.*
 
 @KtorExperimentalLocationsAPI
-@Location("/users/{uId}")
-data class UserLocation(val uId: UUID) {
+@Location("/users/{token}")
+class UserLocationByToken(val token: String) {
 }
+

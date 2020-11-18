@@ -11,8 +11,7 @@ import com.esgi.nova.ports.provided.dtos.choice_resource.ChoiceResourcesKey
 import java.awt.Choice
 import java.util.*
 
-interface IChoiceResourceService : IGetAll<ChoiceResourceDto>, IGetPage<ChoiceResourceDto>,
-    ICreate<ChoiceResourceCmdDto, ChoiceResourceDto>, IGetOne<ChoiceResourcesKey, ChoiceResourceDto>, IUpdateOne<ChoiceResourceCmdDto, ChoiceResourcesKey, ChoiceResourceDto> {
+interface IChoiceResourceService : ICrudService<ChoiceResourcesKey, ChoiceResourceCmdDto, ChoiceResourceDto> {
     fun getAllByResourceId(resourceId: UUID): Collection<ChoiceResourceDto>
     fun getAllByChoiceId(choiceId: UUID): Collection<ChoiceResourceDto>
 }

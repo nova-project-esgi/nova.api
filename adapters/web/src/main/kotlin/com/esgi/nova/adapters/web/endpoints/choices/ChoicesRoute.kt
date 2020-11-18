@@ -25,102 +25,47 @@ import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
 class ChoicesRoute @Inject constructor(
-    application: Application,
-    choiceService: IChoiceService,
-    translatedChoiceService: ITranslatedChoiceService,
-    choiceNavigationService: IChoiceNavigationService
+        application: Application,
+        choiceService: IChoiceService,
+        choiceNavigationService: IChoiceNavigationService
 ) {
     init {
         application.routing {
             authenticate {
                 rolesAllowed(Role.ADMIN) {
-                    withHeaderNames(HttpHeaders.ContentLanguage) {
-                        contentType(ContentType.Application.Json) {
-                            post("/choices") {
-                                val choiceForCreation = call.receive<TranslatedChoiceCmdDto>()
-                                call.request.headers[HttpHeaders.ContentLanguage]?.let { codes ->
-                                    translatedChoiceService.createTranslatedChoice(choiceForCreation, codes)
-                                        ?.let { createdChoice ->
-                                            call.createdIn(ChoiceLocation(createdChoice.id))
-                                        }
-                                }
-                                println(choiceForCreation)
-                            }
-                        }
-                        contentType(CustomContentType.Application.ChoiceWithResource) {
-                            post("/choices") {
-                                val choiceForCreation = call.receive<TranslatedChoiceWithResourcesCmdDto>()
-                                translatedChoiceService.createTranslatedChoiceAndAttachResources(
-                                    choiceForCreation,
-                                    call.request.headers[HttpHeaders.ContentLanguage]!!
-                                )?.let { createdChoice ->
-                                    call.createdIn(ChoiceLocation(createdChoice.id))
-                                }
+                    contentType(CustomContentType.Application.ChoiceWithResource) {
+                        post("/choices") {
+                            val choiceForCreation = call.receive<ChoiceWithResourcesCmdDto>()
+                            val createdChoice = choiceService.createChoiceAndAttachResources(choiceForCreation)
+                            createdChoice?.let {
+                                call.createdIn(ChoiceLocation(createdChoice.id))
                             }
                         }
                     }
-                    exceptHeaderNames(HttpHeaders.ContentLanguage) {
-                        contentType(CustomContentType.Application.ChoiceWithResource) {
-                            post("/choices") {
-                                val choiceForCreation = call.receive<ChoiceWithResourcesCmdDto>()
-                                val createdChoice = choiceService.createChoiceAndAttachResources(choiceForCreation)
-                                createdChoice?.let {
-                                    call.createdIn(ChoiceLocation(createdChoice.id))
-                                }
-                            }
-                        }
-                        contentType(ContentType.Application.Json) {
-                            post("/choices") {
-                                val choiceForCreation = call.receive<ChoiceCmdDto>()
-                                println(choiceForCreation)
-                            }
+                    contentType(ContentType.Application.Json) {
+                        post("/choices") {
+                            val choiceForCreation = call.receive<ChoiceCmdDto>()
+                            println(choiceForCreation)
                         }
                     }
-                    withHeaderNames(HttpHeaders.AcceptLanguage) {
-                        get<ChoiceLocation> {
-                            call.request.headers[HttpHeaders.AcceptLanguage]?.let { codes ->
-                                translatedChoiceService.getTranslatedChoiceDetailed(
-                                    it.id,
-                                    codes,
-                                    includeEvent = true,
-                                    includeResources = true, useDefaultLanguage = true
-                                )?.let { choice ->
-                                    call.respond(choice)
-                                }
-                            }
-                        }
-                        get<ChoicesLocation> { location ->
-                            translatedChoiceService.getTranslatedChoicesPage(
-                                location,
-                                call.request.headers[HttpHeaders.AcceptLanguage]!!,
-                                includeEvent = false,
-                                includeResources = false
-                            ).let { choices ->
-                                call.respond(PageMetadata(choices, call.request.uri))
-                            }
-
-                        }
-                    }
-                    exceptHeaderNames(HttpHeaders.AcceptLanguage) {
-
+                    accept(ContentType.Application.Json) {
                         get<ChoiceLocation> {
                             val choice = choiceService.getOne(it.id)
                             choice?.let {
                                 call.respond(choice)
                             }
                         }
-                        contentType(ContentType.Application.Json) {
-                            get<ChoicesLocation> { location ->
-                                choiceService.getPage(location).let { choices ->
-                                    call.respond(PageMetadata(choices, call.request.uri))
-                                }
+                        get<ChoicesLocation> { location ->
+                            choiceService.getPage(location).let { choices ->
+                                call.respond(PageMetadata(choices, call.request.uri))
                             }
                         }
-                        contentType(CustomContentType.Application.ChoiceNavigation) {
-                            get<ChoicesLocation> { location ->
-                                choiceNavigationService.getPage(location).let { choices ->
-                                    call.respond(PageMetadata(choices, call.request.uri))
-                                }
+                        
+                    }
+                    accept(CustomContentType.Application.ChoiceNavigation) {
+                        get<ChoicesLocation> { location ->
+                            choiceNavigationService.getPage(location).let { choices ->
+                                call.respond(PageMetadata(choices, call.request.uri))
                             }
                         }
                     }

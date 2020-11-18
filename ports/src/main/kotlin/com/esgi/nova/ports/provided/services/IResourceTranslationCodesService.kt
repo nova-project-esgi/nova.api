@@ -7,7 +7,5 @@ import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslatio
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationDto
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
 
-interface IResourceTranslationCodesService : IGetOne<ResourceTranslationKey<String>, ResourceTranslationDto>,
-    ICreate<ResourceTranslationCmdDto<String>, ResourceTranslationDto>,
-    IUpdateOne<ResourceTranslationCmdDto<String>, ResourceTranslationKey<String>, ResourceTranslationDto> {
+interface IResourceTranslationCodesService : ITranslationService<ResourceTranslationKey<String>, ResourceTranslationCmdDto<String>, ResourceTranslationDto>{
 }

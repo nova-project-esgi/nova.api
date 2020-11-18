@@ -11,8 +11,7 @@ import com.esgi.nova.ports.provided.dtos.language.LanguageCmdDto
 import com.esgi.nova.ports.provided.dtos.language.LanguageDto
 import java.util.*
 
-interface ILanguageService : IGetAll<LanguageDto>, ICreate<LanguageCmdDto, LanguageDto>, IGetOne<UUID, LanguageDto>,
-    IGetPage<LanguageDto>, IUpdateOne<LanguageCmdDto, UUID, LanguageDto> {
+interface ILanguageService : ICrudService<UUID, LanguageCmdDto, LanguageDto> {
     fun getPageByCodes(pagination: IPagination, codes: String): IPage<LanguageDto>
     fun getAllByCodes(codes: String): List<LanguageDto>
     fun createByCodes(codes: String): LanguageDto?

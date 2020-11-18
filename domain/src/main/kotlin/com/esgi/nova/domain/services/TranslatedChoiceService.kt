@@ -101,10 +101,9 @@ class TranslatedChoiceService @Inject constructor(
     }
 
     override fun createTranslatedChoiceAndAttachResources(
-        element: TranslatedChoiceWithResourcesCmdDto,
-        codes: String
+        element: TranslatedChoiceWithResourcesCmdDto
     ): TranslatedChoiceDto? {
-        languageService.getOneByCodes(codes)?.let { language ->
+        languageService.getOneByCodes(element.language)?.let { language ->
             choicePersistence.create(element)?.let { choice ->
                 element.resources.forEach { resource ->
                     choiceResourcePersistence.create(
@@ -212,8 +211,8 @@ class TranslatedChoiceService @Inject constructor(
             .toStaticPage(pagination, translations.total.toInt())
     }
 
-    override fun createTranslatedChoice(translatedChoice: TranslatedChoiceCmdDto, codes: String): TranslatedChoiceDto? {
-        languageService.getOneByCodes(codes)?.let { language ->
+    override fun createTranslatedChoice(translatedChoice: TranslatedChoiceCmdDto): TranslatedChoiceDto? {
+        languageService.getOneByCodes(translatedChoice.language)?.let { language ->
             choicePersistence.create(ChoiceCmdDto(translatedChoice.eventId))?.let { choice ->
                 choiceTranslationPersistence.create(
                     ChoiceTranslationCmdDto(

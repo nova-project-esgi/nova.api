@@ -3,7 +3,7 @@ package com.esgi.nova.adapters.web.endpoints.auth
 import com.esgi.nova.adapters.web.authentication.Encryption
 import com.esgi.nova.adapters.web.authentication.JWTAuthentication
 import com.esgi.nova.adapters.web.domain.JWT
-import com.esgi.nova.adapters.web.endpoints.users.UserLocation
+import com.esgi.nova.adapters.web.endpoints.users.UserLocationByUUID
 import com.esgi.nova.adapters.web.mappers.UserMapper
 import com.esgi.nova.ports.provided.dtos.user.UserLoginCmdDto
 import com.esgi.nova.ports.provided.dtos.user.UserRegisterCmdDto
@@ -41,7 +41,7 @@ class AuthRoute @Inject constructor(
                     post.password = Encryption.md5(post.password)
                     val user = userService.create(post)
                     user?.let {
-                        val url = locations.href(UserLocation(user.id))
+                        val url = locations.href(UserLocationByUUID(user.id))
                         call.response.headers.append(HttpHeaders.Location, url)
                         call.
 respond(userMapper.toResume(user, JWT(jwtAuthentication.sign(user.username))))

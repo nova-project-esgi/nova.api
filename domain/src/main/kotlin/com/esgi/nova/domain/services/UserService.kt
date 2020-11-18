@@ -13,6 +13,7 @@ import java.util.*
 class UserService @Inject constructor(override val persistence: IUserPersistence) :
     BaseService<UUID, UserRegisterCmdDto, UserDto>(persistence), IUserService {
     override fun signIn(userRegisterDto: UserLoginCmdDto): UserDto? = persistence.getByUsernameAndPassword(userRegisterDto.username, userRegisterDto.password)
+    override fun getByUsername(userName: String): UserDto? = persistence.getByName(userName);
     override fun hasSameRole(username: String, role: Iterable<Role>): Boolean {
         val user = persistence.getByName(username)
         user?.let {

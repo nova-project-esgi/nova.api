@@ -10,10 +10,7 @@ import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslatio
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
 import java.util.*
 
-interface IResourceTranslationService : IGetAll<ResourceTranslationDto>,
-    ICreate<ResourceTranslationCmdDto<UUID>, ResourceTranslationDto>,
-    IGetOne<ResourceTranslationKey<UUID>, ResourceTranslationDto>, IGetPage<ResourceTranslationDto>,
-    IUpdateOne<ResourceTranslationCmdDto<UUID>, ResourceTranslationKey<UUID>, ResourceTranslationDto> {
+interface IResourceTranslationService : ICrudService<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationDto>{
     fun getOneOrDefault(id: ResourceTranslationKey<UUID>): ResourceTranslationDto?
     fun getAllByChoiceIdAndLanguageIdWithDefaults(choiceId: UUID, languageId: UUID): Collection<ResourceTranslationDto>
 }

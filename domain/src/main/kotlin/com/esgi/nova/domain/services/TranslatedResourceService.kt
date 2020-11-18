@@ -148,10 +148,9 @@ class TranslatedResourceService @Inject constructor(
     }
 
     override fun createTranslatedResource(
-        translatedResource: TranslatedResourceCmdDto,
-        codes: String
+        translatedResource: TranslatedResourceCmdDto
     ): TranslatedResourceDto? {
-        languageService.getOneByCodes(codes)?.let { language ->
+        languageService.getOneByCodes(translatedResource.language)?.let { language ->
             resourcePersistence.create(ResourceCmdDto())?.let { resource ->
                 resourceTranslationPersistence.create(
                     ResourceTranslationCmdDto(

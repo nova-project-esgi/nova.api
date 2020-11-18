@@ -21,24 +21,12 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
-class ResourcesRoute @Inject constructor(application: Application, resourceService: IResourceService, translatedResourceService: ITranslatedResourceService) {
+class ResourcesRoute @Inject constructor(application: Application, resourceService: IResourceService) {
     init {
         application.routing {
             authenticate {
                 rolesAllowed(Role.ADMIN) {
-                    withHeaderNames(HttpHeaders.ContentLanguage) {
-                        post("/resources") {
-                            val resource = call.receive<TranslatedResourceCmdDto>()
-                            translatedResourceService.createTranslatedResource(
-                                resource,
-                                call.request.headers[HttpHeaders.ContentLanguage]!!
-                            )?.let { createdResource ->
-                                call.createdIn(ResourceLocation(createdResource.id))
-                            }
-
-                        }
-                    }
-                    exceptHeaderNames(HttpHeaders.ContentLanguage) {
+                    contentType(ContentType.Application.Json) {
                         post("/resources") {
                             val resourceCmd = call.receive<ResourceCmdDto>()
                             try {
@@ -52,27 +40,7 @@ class ResourcesRoute @Inject constructor(application: Application, resourceServi
                         }
                     }
                 }
-                withHeaderNames(HttpHeaders.AcceptLanguage) {
-                    get<ResourceLocation> { location ->
-                        translatedResourceService.getTranslatedResourceDetailedDto(
-                            id = location.id,
-                            codes = call.request.headers[HttpHeaders.AcceptLanguage]!!, includeChoices = true,
-                            useDefaultLanguage = true
-                        )?.let { translatedResource ->
-                            call.respond(translatedResource)
-                        }
-                    }
-                    get<ResourcesLocation> { location ->
-                        translatedResourceService.getTranslatedResourcesPage(
-                            location,
-                            call.request.headers[HttpHeaders.AcceptLanguage]!!, includeChoices = false
-                        ).let { translatedResources ->
-                            call.respond(PageMetadata(translatedResources, call.request.uri))
-                        }
-                    }
-
-                }
-                exceptHeaderNames(HttpHeaders.AcceptLanguage) {
+                accept(ContentType.Application.Json) {
                     get<ResourceLocation> {
                         val resource = resourceService.getOne(it.id)
                         resource?.let {

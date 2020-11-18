@@ -28,7 +28,7 @@ interface ITranslatedEventService {
         includeChoices: Boolean
     ): IPage<TranslatedEventDto>
 
-    fun createTranslatedEvent(translatedEvent: TranslatedEventCmdDto, codes: String): TranslatedEventDto?
+    fun createTranslatedEvent(translatedEvent: TranslatedEventCmdDto): TranslatedEventDto?
     fun convertTranslatedEventToTranslatedEventDetailed(translatedEventDto: TranslatedEventDto): TranslatedEventDetailedDto
     fun getTranslatedEventDetailed(
         id: UUID,

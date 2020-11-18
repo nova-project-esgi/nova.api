@@ -2,15 +2,10 @@ package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
-import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.EventEntity
 import com.esgi.nova.adapters.exposed.models.EventTranslationEntity
 import com.esgi.nova.adapters.exposed.models.LanguageEntity
 import com.esgi.nova.adapters.exposed.tables.EventTranslation
-import com.esgi.nova.ports.common.ICreate
-import com.esgi.nova.ports.common.IGetOne
-import com.esgi.nova.ports.common.IUpdateOne
-import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceCmdDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
 import com.esgi.nova.ports.required.ITotalCollection
@@ -19,7 +14,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class EventTranslationRepository: IRepository<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationEntity>  {
+class EventTranslationRepository: ITranslationRepository<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationEntity>  {
     override fun getAll(): SizedIterable<EventTranslationEntity> = transaction { EventTranslationEntity.all() }
     override fun getOne(id: EventTranslationKey<UUID>): EventTranslationEntity? =
         transaction {
@@ -74,4 +69,12 @@ class EventTranslationRepository: IRepository<EventTranslationKey<UUID>, EventTr
                 }
             }
         }
+
+    override fun getAllTotalByLanguage(pagination: DatabasePagination, languageId: UUID): ITotalCollection<EventTranslationEntity> = transaction {
+        val elements = EventTranslationEntity.find{EventTranslation.language eq languageId}
+        TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
+    }
+    override fun getAllByLanguage(languageId: UUID): SizedIterable<EventTranslationEntity> = transaction {
+        EventTranslationEntity.find{EventTranslation.language eq languageId}
+    }
 }

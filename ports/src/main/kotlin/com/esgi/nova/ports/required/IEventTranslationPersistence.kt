@@ -7,7 +7,7 @@ import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
 import java.util.*
 
 interface IEventTranslationPersistence :
-    ICrudPersistence<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationDto> {
+    ITranslationPersistence<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationDto> {
     fun getTotalByLanguages(pagination: IPagination, languageIds: List<UUID>): ITotalCollection<EventTranslationDto>
     fun getAllByEventIdAndLanguageId(eventId: UUID, languageId: UUID): Collection<EventTranslationDto>
     fun getOneDefault(eventId: UUID): EventTranslationDto?

@@ -47,6 +47,11 @@ class EventTranslationsRoute @Inject constructor(
                             call.respond(eventTranslation)
                         }
                     }
+                    get<EventTranslationsLocation> { location ->
+                        val eventTranslations =
+                                eventTranslationCodesService.getAllByLanguage(location.codes)
+                        call.respond(eventTranslations)
+                    }
                 }
             }
         }

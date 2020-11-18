@@ -7,9 +7,5 @@ import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDt
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
 
-interface IEventTranslationCodesService : IGetOne<EventTranslationKey<String>, EventTranslationDto>,
-    ICreate<EventTranslationCmdDto<String>, EventTranslationDto>,
-    IUpdateOne<EventTranslationCmdDto<String>, EventTranslationKey<String>, EventTranslationDto> {
-
-
+interface IEventTranslationCodesService : ITranslationService<EventTranslationKey<String>, EventTranslationCmdDto<String>, EventTranslationDto> {
 }

@@ -7,7 +7,7 @@ import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
 import java.util.*
 
 interface IChoiceTranslationPersistence :
-    ICrudPersistence<ChoiceTranslationKey<UUID>, ChoiceTranslationCmdDto<UUID>, ChoiceTranslationDto> {
+    ITranslationPersistence<ChoiceTranslationKey<UUID>, ChoiceTranslationCmdDto<UUID>, ChoiceTranslationDto> {
     fun getTotalByLanguages(pagination: IPagination, languageIds: List<UUID>): ITotalCollection<ChoiceTranslationDto>
     fun getAllByChoiceIdAndLanguageId(choiceId: UUID, languageId: UUID): Collection<ChoiceTranslationDto>
     fun getAllByChoiceIdsAndLanguageId(choiceIds: List<UUID>, languageId: UUID): Collection<ChoiceTranslationDto>

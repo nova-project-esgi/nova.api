@@ -2,6 +2,7 @@ package com.esgi.nova.app
 
 import arrow.core.Either
 import com.esgi.nova.adapters.web.authentication.JWTAuthentication
+import com.esgi.nova.adapters.web.domain.CustomContentType
 import com.esgi.nova.adapters.web.features.authorization.RoleAuthorization
 import com.esgi.nova.ports.provided.services.IUserService
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -23,9 +24,9 @@ import javax.naming.AuthenticationException
 
 @KtorExperimentalAPI
 class ApplicationConfig @Inject constructor(
-    application: Application,
-    jwtAuthentication: JWTAuthentication,
-    userService: IUserService
+        application: Application,
+        jwtAuthentication: JWTAuthentication,
+        userService: IUserService
 ) {
     init {
 
@@ -92,9 +93,11 @@ class ApplicationConfig @Inject constructor(
 
             install(ContentNegotiation) {
                 jackson {
+                    CustomContentType.getTypes()
+                            .forEach { contentType -> register(contentType, JacksonConverter(this)) }
                     register(
-                        ContentType("application", "*"),
-                        JacksonConverter(this)
+                            ContentType.Application.Json,
+                            JacksonConverter(this)
                     )
                     enable(SerializationFeature.INDENT_OUTPUT)
                     registerModule(KotlinModule())

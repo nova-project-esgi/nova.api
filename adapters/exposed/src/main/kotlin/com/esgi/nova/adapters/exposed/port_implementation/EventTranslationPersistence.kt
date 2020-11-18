@@ -21,7 +21,7 @@ class EventTranslationPersistence @Inject constructor(
     override val repository: EventTranslationRepository,
     mapper: EventTranslationMapper,
     private val languagePersistence: ILanguagePersistence
-) : BasePersistence<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationEntity, EventTranslationDto>(
+) : BaseTranslationPersistence<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationEntity, EventTranslationDto>(
     repository,
     mapper,
     dbContext

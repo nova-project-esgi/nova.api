@@ -14,7 +14,6 @@ import com.esgi.nova.ports.provided.dtos.resource.TranslatedResourceDto
 import com.esgi.nova.ports.provided.dtos.resource.translated_resource_detailed.TranslatedResourceDetailedDto
 import java.util.*
 
-interface IResourceService : IGetAll<ResourceDto>, ICreate<ResourceCmdDto, ResourceDto>, IGetOne<UUID, ResourceDto>,
-    IGetPage<ResourceDto>, IUpdateOne<ResourceCmdDto, UUID, ResourceDto> {
+interface IResourceService : ICrudService<UUID, ResourceCmdDto, ResourceDto> {
 
 }

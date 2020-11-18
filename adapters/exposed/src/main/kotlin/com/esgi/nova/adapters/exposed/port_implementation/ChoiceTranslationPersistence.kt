@@ -22,7 +22,7 @@ class ChoiceTranslationPersistence @Inject constructor(
     override val repository: ChoiceTranslationRepository,
     mapper: ChoiceTranslationMapper,
     private val languagePersistence: ILanguagePersistence
-) : BasePersistence<ChoiceTranslationKey<UUID>, ChoiceTranslationCmdDto<UUID>, ChoiceTranslationEntity, ChoiceTranslationDto>(
+) : BaseTranslationPersistence<ChoiceTranslationKey<UUID>, ChoiceTranslationCmdDto<UUID>, ChoiceTranslationEntity, ChoiceTranslationDto>(
     repository,
     mapper,
     dbContext
@@ -80,4 +80,5 @@ class ChoiceTranslationPersistence @Inject constructor(
             )
         }
     }
+
 }

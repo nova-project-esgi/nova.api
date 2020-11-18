@@ -7,7 +7,7 @@ import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslatio
 import java.util.*
 
 interface IResourceTranslationPersistence :
-    ICrudPersistence<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationDto> {
+    ITranslationPersistence<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationDto> {
     fun getTotalByLanguages(pagination: IPagination, languageIds: List<UUID>): ITotalCollection<ResourceTranslationDto>
     fun getAllByResourceIdAndLanguageId(resourceId: UUID, languageId: UUID): Collection<ResourceTranslationDto>
     fun getAllByChoiceIdAndLanguageId(choiceId: UUID, languageId: UUID): Collection<ResourceTranslationDto>

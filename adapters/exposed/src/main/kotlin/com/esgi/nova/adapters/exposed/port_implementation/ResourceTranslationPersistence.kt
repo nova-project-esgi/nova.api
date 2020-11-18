@@ -23,7 +23,7 @@ class ResourceTranslationPersistence @Inject constructor(
     mapper: ResourceTranslationMapper,
     private val choiceResourceRepository: ChoiceResourceRepository,
     private val languagePersistence: ILanguagePersistence
-) : BasePersistence<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationEntity, ResourceTranslationDto>(
+) : BaseTranslationPersistence<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationEntity, ResourceTranslationDto>(
     repository,
     mapper,
     dbContext
@@ -83,5 +83,6 @@ class ResourceTranslationPersistence @Inject constructor(
         }
         return listOf()
     }
+
 
 }

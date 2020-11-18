@@ -11,11 +11,10 @@ import java.util.*
 
 interface ITranslatedChoiceService {
     fun createTranslatedChoiceAndAttachResources(
-        element: TranslatedChoiceWithResourcesCmdDto,
-        codes: String
+        element: TranslatedChoiceWithResourcesCmdDto
     ): TranslatedChoiceDto?
 
-    fun createTranslatedChoice(translatedChoice: TranslatedChoiceCmdDto, codes: String): TranslatedChoiceDto?
+    fun createTranslatedChoice(translatedChoice: TranslatedChoiceCmdDto): TranslatedChoiceDto?
     fun getTranslatedChoicesPage(
         pagination: IPagination,
         codes: String,

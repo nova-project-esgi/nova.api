@@ -10,5 +10,6 @@ import java.util.*
 
 interface IUserService : ICrudService<UUID, UserRegisterCmdDto, UserDto> {
     fun signIn(userRegisterDto: UserLoginCmdDto): UserDto?
+    fun getByUsername(userName: String): UserDto?
     fun hasSameRole(username: String, role: Iterable<Role>): Boolean
 }

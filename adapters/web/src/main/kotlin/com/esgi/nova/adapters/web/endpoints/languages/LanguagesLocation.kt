@@ -9,6 +9,6 @@ import io.ktor.locations.*
 data class LanguagesLocation(
     override val page: Long = PaginationDefault.PAGE,
     override val size: Long = PaginationDefault.SIZE,
-    val codes: String?,
+    val codes: String? = null,
 ) : IPagination {
 }

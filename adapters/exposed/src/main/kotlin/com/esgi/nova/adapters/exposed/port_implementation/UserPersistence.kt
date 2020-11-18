@@ -11,16 +11,18 @@ import com.google.inject.Inject
 import java.util.*
 
 class UserPersistence @Inject constructor(
-    override val repository: UserRepository,
-    mapper: UserMapper,
-    dbContext: DatabaseContext
+        override val repository: UserRepository,
+        mapper: UserMapper,
+        dbContext: DatabaseContext
 ) : BasePersistence<UUID, UserRegisterCmdDto, UserEntity, UserDto>(repository, mapper, dbContext), IUserPersistence {
 
     override fun getByName(username: String): UserDto? = dbContext.connectAndExec {
-        mapper.toDto(repository.getByName(username) as UserEntity)
+        repository.getByName(username)?.let { user ->
+            mapper.toDto(user)
+        }
     }
 
-    override fun getByUsernameAndPassword(username: String, password: String): UserDto? = dbContext.connectAndExec{
+    override fun getByUsernameAndPassword(username: String, password: String): UserDto? = dbContext.connectAndExec {
         repository.getByUsernameAndPassword(username, password)?.let { user -> mapper.toDto(user) }
     }
 

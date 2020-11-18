@@ -4,6 +4,7 @@ import com.esgi.nova.adapters.web.endpoints.auth.AuthRoute
 import com.esgi.nova.adapters.web.endpoints.choice_resources.ChoiceResourcesRoute
 import com.esgi.nova.adapters.web.endpoints.choice_translations.ChoiceTranslationsRoute
 import com.esgi.nova.adapters.web.endpoints.choices.ChoicesRoute
+import com.esgi.nova.adapters.web.endpoints.choices.TranslatedChoicesRoute
 import com.esgi.nova.adapters.web.endpoints.event_translations.EventTranslationsRoute
 import com.esgi.nova.adapters.web.endpoints.events.EventsRoute
 import com.esgi.nova.adapters.web.endpoints.game_events.GameEventsRoute
@@ -11,6 +12,8 @@ import com.esgi.nova.adapters.web.endpoints.games.GamesRoute
 import com.esgi.nova.adapters.web.endpoints.languages.LanguageRoute
 import com.esgi.nova.adapters.web.endpoints.resource_translations.ResourceTranslationsRoute
 import com.esgi.nova.adapters.web.endpoints.resources.ResourcesRoute
+import com.esgi.nova.adapters.web.endpoints.translated_events.TranslatedEventRoute
+import com.esgi.nova.adapters.web.endpoints.translated_resources.TranslatedResourcesRoute
 import com.esgi.nova.adapters.web.endpoints.users.UsersRoute
 import com.esgi.nova.adapters.web.mappers.UserMapper
 import com.google.inject.AbstractModule
@@ -35,8 +38,10 @@ class WebModule() : AbstractModule() {
         bind(LanguageRoute::class.java).asEagerSingleton()
         bind(ResourcesRoute::class.java).asEagerSingleton()
         bind(ResourceTranslationsRoute::class.java).asEagerSingleton()
+        bind(TranslatedEventRoute::class.java).asEagerSingleton()
+        bind(TranslatedChoicesRoute::class.java).asEagerSingleton()
+        bind(TranslatedResourcesRoute::class.java).asEagerSingleton()
         bind(UsersRoute::class.java).asEagerSingleton()
-
         bind(UserMapper::class.java).to(Mappers.getMapperClass(UserMapper::class.java))
     }
 

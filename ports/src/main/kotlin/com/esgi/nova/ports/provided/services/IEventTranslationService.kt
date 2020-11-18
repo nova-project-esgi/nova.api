@@ -8,9 +8,6 @@ import com.esgi.nova.ports.provided.IGetPage
 import com.esgi.nova.ports.provided.dtos.event_translation.*
 import java.util.*
 
-interface IEventTranslationService : IGetAll<EventTranslationDto>,
-    ICreate<EventTranslationCmdDto<UUID>, EventTranslationDto>,
-    IGetOne<EventTranslationKey<UUID>, EventTranslationDto>,
-    IGetPage<EventTranslationDto>, IUpdateOne<EventTranslationCmdDto<UUID>, EventTranslationKey<UUID>, EventTranslationDto> {
+interface IEventTranslationService : ICrudService<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationDto> {
     fun getOneOrDefault(id: EventTranslationKey<UUID>): EventTranslationDto?
 }
