@@ -6,7 +6,7 @@ import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ResourceTranslationMapper
 import com.esgi.nova.adapters.exposed.models.ResourceTranslationEntity
 import com.esgi.nova.adapters.exposed.port_implementation.translation_persistence.BaseTranslationPersistence
-import com.esgi.nova.adapters.exposed.repositories.ChoiceResourceRepository
+import com.esgi.nova.adapters.exposed.repositories.choices_resources.ChoiceResourceRepository
 import com.esgi.nova.adapters.exposed.repositories.ResourceTranslationRepository
 import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationCmdDto
@@ -19,11 +19,11 @@ import com.google.inject.Inject
 import java.util.*
 
 class ResourceTranslationPersistence @Inject constructor(
-    dbContext: DatabaseContext,
-    override val repository: ResourceTranslationRepository,
-    mapper: ResourceTranslationMapper,
-    private val choiceResourceRepository: ChoiceResourceRepository,
-    private val languagePersistence: ILanguagePersistence
+        dbContext: DatabaseContext,
+        override val repository: ResourceTranslationRepository,
+        mapper: ResourceTranslationMapper,
+        private val choiceResourceRepository: ChoiceResourceRepository,
+        private val languagePersistence: ILanguagePersistence
 ) : BaseTranslationPersistence<ResourceTranslationKey<UUID>, ResourceTranslationCmdDto<UUID>, ResourceTranslationEntity, ResourceTranslationDto>(
     repository,
     mapper,

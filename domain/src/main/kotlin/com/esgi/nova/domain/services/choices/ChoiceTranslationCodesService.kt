@@ -1,10 +1,15 @@
 package com.esgi.nova.domain.services.choices
 
+import com.esgi.nova.domain.domain.StaticPage
+import com.esgi.nova.domain.extensions.toStaticPage
 import com.esgi.nova.domain.services.translation_service.BaseTranslationCodesService
 import com.esgi.nova.domain.services.translation_service.ICodeIdToUuidId
+import com.esgi.nova.ports.provided.IPage
+import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
+import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationResumeDto
 import com.esgi.nova.ports.provided.services.IChoiceTranslationCodesService
 import com.esgi.nova.ports.provided.services.ILanguageService
 import com.esgi.nova.ports.required.IChoiceTranslationPersistence

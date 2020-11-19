@@ -1,10 +1,10 @@
 package com.esgi.nova.ports.required
 
 import com.esgi.nova.ports.provided.IPagination
-import com.esgi.nova.ports.provided.dtos.ITranslationEntityKey
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationKey
+import com.esgi.nova.ports.required.translations.ITranslationPersistence
 import java.util.*
 
 interface IChoiceTranslationPersistence :

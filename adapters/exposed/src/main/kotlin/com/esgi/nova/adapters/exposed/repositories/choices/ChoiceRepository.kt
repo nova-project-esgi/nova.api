@@ -1,11 +1,10 @@
-package com.esgi.nova.adapters.exposed.repositories
+package com.esgi.nova.adapters.exposed.repositories.choices
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.IRepository
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.EventEntity
-import com.esgi.nova.adapters.exposed.tables.Choice
 import com.esgi.nova.ports.provided.dtos.choice.commands.ChoiceCmdDto
 import com.esgi.nova.ports.required.ITotalCollection
 import org.jetbrains.exposed.sql.SizedIterable
@@ -31,8 +30,4 @@ class ChoiceRepository : IRepository<UUID, ChoiceCmdDto, ChoiceEntity> {
         val elements = ChoiceEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
     }
-
-    fun getAllByEventId(eventId: UUID) = transaction { ChoiceEntity.find { Choice.event eq eventId } }
-
-
 }

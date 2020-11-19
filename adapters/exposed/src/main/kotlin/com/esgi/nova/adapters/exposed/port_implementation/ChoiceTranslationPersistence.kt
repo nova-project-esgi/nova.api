@@ -6,7 +6,7 @@ import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ChoiceTranslationMapper
 import com.esgi.nova.adapters.exposed.models.ChoiceTranslationEntity
 import com.esgi.nova.adapters.exposed.port_implementation.translation_persistence.BaseTranslationPersistence
-import com.esgi.nova.adapters.exposed.repositories.ChoiceTranslationRepository
+import com.esgi.nova.adapters.exposed.repositories.choice_translations.ChoiceTranslationRepository
 import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_translation.ChoiceTranslationDto

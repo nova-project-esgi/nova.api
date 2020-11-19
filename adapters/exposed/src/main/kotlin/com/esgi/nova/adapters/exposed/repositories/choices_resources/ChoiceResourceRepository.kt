@@ -1,7 +1,8 @@
-package com.esgi.nova.adapters.exposed.repositories
+package com.esgi.nova.adapters.exposed.repositories.choices_resources
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.IRepository
+import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.ChoiceResourceEntity
 import com.esgi.nova.adapters.exposed.models.ResourceEntity
@@ -12,7 +13,6 @@ import com.esgi.nova.ports.required.ITotalCollection
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.*
 
 class ChoiceResourceRepository :
         IRepository<ChoiceResourcesKey, ChoiceResourceCmdDto, ChoiceResourceEntity> {
@@ -25,16 +25,9 @@ class ChoiceResourceRepository :
             resource = ResourceEntity[element.resourceId]
         }
     }
-
     override fun getOne(id: ChoiceResourcesKey): ChoiceResourceEntity? =
         ChoiceResourceEntity.find { (ChoiceResource.resource eq id.resourceId) and (ChoiceResource.choice eq id.choiceId) }
             .singleOrNull()
-
-    fun getAllByChoiceId(choiceId: UUID) =
-        transaction { ChoiceResourceEntity.find { ChoiceResource.choice eq choiceId } }
-
-    fun getAllByResourceId(resourceId: UUID) =
-        transaction { ChoiceResourceEntity.find { ChoiceResource.resource eq resourceId } }
 
     override fun updateOne(element: ChoiceResourceCmdDto, id: ChoiceResourcesKey) = transaction {
         getOne(id)?.also { choiceResource ->
@@ -45,8 +38,8 @@ class ChoiceResourceRepository :
         }
     }
 
-
-    override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<ChoiceResourceEntity> {
-        TODO("Not yet implemented")
+    override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<ChoiceResourceEntity> = transaction{
+        val elements = ChoiceResourceEntity.all()
+        TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
     }
 }
