@@ -1,6 +1,7 @@
 package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
+import com.esgi.nova.adapters.exposed.domain.IRepository
 import com.esgi.nova.adapters.exposed.models.EventEntity
 import com.esgi.nova.adapters.exposed.models.GameEntity
 import com.esgi.nova.adapters.exposed.models.GameEventEntity

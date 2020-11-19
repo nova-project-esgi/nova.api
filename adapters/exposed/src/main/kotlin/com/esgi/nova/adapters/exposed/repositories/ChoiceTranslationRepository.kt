@@ -1,6 +1,7 @@
 package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
+import com.esgi.nova.adapters.exposed.domain.ITranslationRepository
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.ChoiceTranslationEntity
@@ -14,14 +15,14 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class ChoiceTranslationRepository:  ITranslationRepository<ChoiceTranslationKey<UUID>, ChoiceTranslationCmdDto<UUID>,ChoiceTranslationEntity>  {
+class ChoiceTranslationRepository: ITranslationRepository<ChoiceTranslationKey<UUID>, ChoiceTranslationCmdDto<UUID>, ChoiceTranslationEntity> {
     override fun getAll(): SizedIterable<ChoiceTranslationEntity> = transaction { ChoiceTranslationEntity.all() }
     fun getOne(id: UUID): ChoiceTranslationEntity? = transaction { ChoiceTranslationEntity[id] }
     override fun getOne(id: ChoiceTranslationKey<UUID>): ChoiceTranslationEntity? =
-        transaction {
-            ChoiceTranslationEntity.find { (ChoiceTranslation.choice eq id.choiceId) and (ChoiceTranslation.language eq id.language) }
-                .firstOrNull()
-        }
+            transaction {
+                ChoiceTranslationEntity.find { (ChoiceTranslation.choice eq id.entityId) and (ChoiceTranslation.language eq id.language) }
+                        .firstOrNull()
+            }
 
     override fun create(element: ChoiceTranslationCmdDto<UUID>): ChoiceTranslationEntity? = transaction {
         ChoiceTranslationEntity.new {
@@ -43,16 +44,16 @@ class ChoiceTranslationRepository:  ITranslationRepository<ChoiceTranslationKey<
     }
 
     fun getAllByChoiceIdAndLanguageId(choiceId: UUID, languageId: UUID) =
-        transaction {
-            ChoiceTranslationEntity.find { (ChoiceTranslation.choice eq choiceId) and (ChoiceTranslation.language eq languageId) }
-        }
+            transaction {
+                ChoiceTranslationEntity.find { (ChoiceTranslation.choice eq choiceId) and (ChoiceTranslation.language eq languageId) }
+            }
 
     fun getAllByChoiceIdsAndLanguageId(choiceIds: List<UUID>, languageId: UUID) =
-        transaction { ChoiceTranslationEntity.find { (ChoiceTranslation.choice inList choiceIds) and (ChoiceTranslation.language eq languageId) } }
+            transaction { ChoiceTranslationEntity.find { (ChoiceTranslation.choice inList choiceIds) and (ChoiceTranslation.language eq languageId) } }
 
     override fun updateOne(
-        element: ChoiceTranslationCmdDto<UUID>,
-        id: ChoiceTranslationKey<UUID>
+            element: ChoiceTranslationCmdDto<UUID>,
+            id: ChoiceTranslationKey<UUID>
     ): ChoiceTranslationEntity? = transaction {
         getOne(id)?.also { choiceTranslationEntity ->
             choiceTranslationEntity.description = element.description

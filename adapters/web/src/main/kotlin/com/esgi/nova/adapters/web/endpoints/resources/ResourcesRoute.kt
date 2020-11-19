@@ -1,16 +1,11 @@
 package com.esgi.nova.adapters.web.endpoints.resources
 
 import com.esgi.nova.adapters.web.domain.pagination.PageMetadata
-import com.esgi.nova.ports.provided.dtos.resource.translated_resource_detailed.TranslatedResourceDetailedDto
 import com.esgi.nova.adapters.web.extensions.createdIn
-import com.esgi.nova.adapters.web.extensions.exceptHeaderNames
 import com.esgi.nova.adapters.web.extensions.rolesAllowed
-import com.esgi.nova.adapters.web.extensions.withHeaderNames
 import com.esgi.nova.ports.provided.dtos.resource.ResourceCmdDto
-import com.esgi.nova.ports.provided.dtos.resource.TranslatedResourceCmdDto
 import com.esgi.nova.ports.provided.enums.Role
-import com.esgi.nova.ports.provided.services.IResourceService
-import com.esgi.nova.ports.provided.services.ITranslatedResourceService
+import com.esgi.nova.ports.provided.services.resources.IResourceService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*

@@ -2,6 +2,7 @@ package com.esgi.nova.domain.services
 
 import com.esgi.nova.domain.domain.StaticPage
 import com.esgi.nova.domain.extensions.toStaticPage
+import com.esgi.nova.domain.services.service.BaseService
 import com.esgi.nova.ports.common.constants.MultiLanguage
 import com.esgi.nova.ports.provided.IPage
 import com.esgi.nova.ports.provided.IPagination

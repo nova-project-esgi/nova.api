@@ -1,17 +1,15 @@
 package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
+import com.esgi.nova.adapters.exposed.domain.IRepository
 import com.esgi.nova.adapters.exposed.models.GameEntity
 import com.esgi.nova.adapters.exposed.models.UserEntity
-import com.esgi.nova.ports.common.ICreate
-import com.esgi.nova.ports.common.IGetOne
-import com.esgi.nova.ports.common.IUpdateOne
 import com.esgi.nova.ports.provided.dtos.game.GameCmdDto
 import com.esgi.nova.ports.required.ITotalCollection
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class GameRepository: IRepository<UUID, GameCmdDto, GameEntity>  {
+class GameRepository: IRepository<UUID, GameCmdDto, GameEntity> {
     override fun getAll() = transaction { GameEntity.all() }
     override fun getOne(id: UUID) = transaction { GameEntity.findById(id) }
     override fun create(element: GameCmdDto) = transaction {

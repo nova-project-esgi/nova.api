@@ -1,6 +1,7 @@
 package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
+import com.esgi.nova.adapters.exposed.domain.IRepository
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.ResourceEntity
 import com.esgi.nova.ports.provided.dtos.resource.ResourceCmdDto

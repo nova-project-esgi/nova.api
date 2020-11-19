@@ -32,5 +32,11 @@ class ChoiceTranslationDto(
             language.toAggregatedCode()
         )
 
-
+    fun toResume(): ChoiceTranslationResumeDto = ChoiceTranslationResumeDto(
+            this.title,
+            this.description,
+            this.choice.id,
+            this.id,
+            this.language.id
+    )
 }

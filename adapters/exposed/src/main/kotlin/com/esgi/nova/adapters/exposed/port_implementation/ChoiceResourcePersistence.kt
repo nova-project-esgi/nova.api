@@ -3,6 +3,7 @@ package com.esgi.nova.adapters.exposed.port_implementation
 import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.mappers.ChoiceResourceMapper
 import com.esgi.nova.adapters.exposed.models.ChoiceResourceEntity
+import com.esgi.nova.adapters.exposed.port_implementation.persistence.BasePersistence
 import com.esgi.nova.adapters.exposed.repositories.ChoiceResourceRepository
 import com.esgi.nova.ports.provided.dtos.choice_resource.ChoiceResourceCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_resource.ChoiceResourceDto

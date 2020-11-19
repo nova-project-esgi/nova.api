@@ -6,7 +6,7 @@ import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.ports.provided.dtos.choice_resource.ChoiceResourceCmdDto
 import com.esgi.nova.ports.provided.dtos.choice_resource.ChoiceResourcesKey
 import com.esgi.nova.ports.provided.enums.Role
-import com.esgi.nova.ports.provided.services.IChoiceResourceService
+import com.esgi.nova.ports.provided.services.choices.IChoiceResourceService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*

@@ -1,16 +1,13 @@
 package com.esgi.nova.adapters.exposed.port_implementation
 
 import com.esgi.nova.adapters.exposed.DatabaseContext
-import com.esgi.nova.adapters.exposed.domain.DatabasePagination
-import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.EventMapper
 import com.esgi.nova.adapters.exposed.models.EventEntity
+import com.esgi.nova.adapters.exposed.port_implementation.persistence.BasePersistence
 import com.esgi.nova.adapters.exposed.repositories.EventRepository
-import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.event.EventCmdDto
 import com.esgi.nova.ports.provided.dtos.event.EventDto
 import com.esgi.nova.ports.required.IEventPersistence
-import com.esgi.nova.ports.required.ITotalCollection
 import com.google.inject.Inject
 import java.util.*
 

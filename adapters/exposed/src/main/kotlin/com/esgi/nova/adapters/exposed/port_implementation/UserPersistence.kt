@@ -3,6 +3,7 @@ package com.esgi.nova.adapters.exposed.port_implementation
 import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.mappers.UserMapper
 import com.esgi.nova.adapters.exposed.models.UserEntity
+import com.esgi.nova.adapters.exposed.port_implementation.persistence.BasePersistence
 import com.esgi.nova.adapters.exposed.repositories.UserRepository
 import com.esgi.nova.ports.provided.dtos.user.UserRegisterCmdDto
 import com.esgi.nova.ports.provided.dtos.user.UserDto

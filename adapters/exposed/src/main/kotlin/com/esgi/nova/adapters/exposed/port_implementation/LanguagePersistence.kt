@@ -5,6 +5,7 @@ import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.LanguageMapper
 import com.esgi.nova.adapters.exposed.models.LanguageEntity
+import com.esgi.nova.adapters.exposed.port_implementation.persistence.BasePersistence
 import com.esgi.nova.adapters.exposed.repositories.LanguageRepository
 import com.esgi.nova.ports.common.constants.MultiLanguage
 import com.esgi.nova.ports.provided.IPagination

@@ -1,16 +1,13 @@
 package com.esgi.nova.adapters.exposed.port_implementation
 
 import com.esgi.nova.adapters.exposed.DatabaseContext
-import com.esgi.nova.adapters.exposed.domain.DatabasePagination
-import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ResourceMapper
 import com.esgi.nova.adapters.exposed.models.ResourceEntity
+import com.esgi.nova.adapters.exposed.port_implementation.persistence.BasePersistence
 import com.esgi.nova.adapters.exposed.repositories.ResourceRepository
-import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.resource.ResourceCmdDto
 import com.esgi.nova.ports.provided.dtos.resource.ResourceDto
 import com.esgi.nova.ports.required.IResourcePersistence
-import com.esgi.nova.ports.required.ITotalCollection
 import com.google.inject.Inject
 import java.util.*
 

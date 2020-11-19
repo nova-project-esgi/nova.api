@@ -1,6 +1,7 @@
 package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
+import com.esgi.nova.adapters.exposed.domain.ITranslationRepository
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.EventEntity
 import com.esgi.nova.adapters.exposed.models.EventTranslationEntity
@@ -14,7 +15,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class EventTranslationRepository: ITranslationRepository<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationEntity>  {
+class EventTranslationRepository: ITranslationRepository<EventTranslationKey<UUID>, EventTranslationCmdDto<UUID>, EventTranslationEntity> {
     override fun getAll(): SizedIterable<EventTranslationEntity> = transaction { EventTranslationEntity.all() }
     override fun getOne(id: EventTranslationKey<UUID>): EventTranslationEntity? =
         transaction {

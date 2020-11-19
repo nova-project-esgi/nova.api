@@ -6,8 +6,8 @@ import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.event_translation.EventTranslationKey
 import com.esgi.nova.ports.provided.enums.Role
-import com.esgi.nova.ports.provided.services.IEventTranslationCodesService
-import com.esgi.nova.ports.provided.services.IEventTranslationService
+import com.esgi.nova.ports.provided.services.events.IEventTranslationCodesService
+import com.esgi.nova.ports.provided.services.events.IEventTranslationService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -18,9 +18,9 @@ import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
 class EventTranslationsRoute @Inject constructor(
-    application: Application,
-    eventTranslationService: IEventTranslationService,
-    eventTranslationCodesService: IEventTranslationCodesService
+        application: Application,
+        eventTranslationService: IEventTranslationService,
+        eventTranslationCodesService: IEventTranslationCodesService
 ) {
     init {
         application.routing {

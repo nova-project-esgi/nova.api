@@ -6,7 +6,7 @@ import com.esgi.nova.adapters.web.extensions.rolesAllowed
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationCmdDto
 import com.esgi.nova.ports.provided.dtos.resource_translation.ResourceTranslationKey
 import com.esgi.nova.ports.provided.enums.Role
-import com.esgi.nova.ports.provided.services.IResourceTranslationCodesService
+import com.esgi.nova.ports.provided.services.resources.IResourceTranslationCodesService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*

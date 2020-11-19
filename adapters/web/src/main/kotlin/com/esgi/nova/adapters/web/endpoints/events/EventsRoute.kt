@@ -1,14 +1,9 @@
 package com.esgi.nova.adapters.web.endpoints.events
 
-import com.esgi.nova.adapters.web.domain.CustomContentType
 import com.esgi.nova.adapters.web.domain.pagination.PageMetadata
 import com.esgi.nova.adapters.web.extensions.createdIn
-import com.esgi.nova.adapters.web.extensions.exceptHeaderNames
-import com.esgi.nova.adapters.web.extensions.withHeaderNames
 import com.esgi.nova.ports.provided.dtos.event.EventCmdDto
-import com.esgi.nova.ports.provided.dtos.event.TranslatedEventCmdDto
-import com.esgi.nova.ports.provided.services.IEventService
-import com.esgi.nova.ports.provided.services.ITranslatedEventService
+import com.esgi.nova.ports.provided.services.events.IEventService
 import com.google.inject.Inject
 import io.ktor.application.*
 import io.ktor.auth.*

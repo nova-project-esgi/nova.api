@@ -1,5 +1,5 @@
 package com.esgi.nova.ports.common
 
-interface IGetAllFiltered<T, U> {
-    fun getAllFiltered(filter: T): Collection<U>
+interface IGetAllFiltered<Filter, Output> {
+    fun getAllFiltered(filter: Filter): Collection<Output>
 }

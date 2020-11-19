@@ -1,5 +1,6 @@
 package com.esgi.nova.domain.services
 
+import com.esgi.nova.domain.services.service.BaseService
 import com.esgi.nova.ports.provided.dtos.user.UserRegisterCmdDto
 import com.esgi.nova.ports.provided.dtos.user.UserDto
 import com.esgi.nova.ports.provided.dtos.user.UserLoginCmdDto

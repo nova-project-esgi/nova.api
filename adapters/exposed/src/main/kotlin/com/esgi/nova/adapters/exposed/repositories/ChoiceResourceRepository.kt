@@ -1,6 +1,7 @@
 package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
+import com.esgi.nova.adapters.exposed.domain.IRepository
 import com.esgi.nova.adapters.exposed.models.ChoiceEntity
 import com.esgi.nova.adapters.exposed.models.ChoiceResourceEntity
 import com.esgi.nova.adapters.exposed.models.ResourceEntity
@@ -14,7 +15,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 class ChoiceResourceRepository :
-    IRepository<ChoiceResourcesKey, ChoiceResourceCmdDto, ChoiceResourceEntity > {
+        IRepository<ChoiceResourcesKey, ChoiceResourceCmdDto, ChoiceResourceEntity> {
     override fun getAll(): SizedIterable<ChoiceResourceEntity> = transaction { ChoiceResourceEntity.all() }
     override fun create(element: ChoiceResourceCmdDto): ChoiceResourceEntity = transaction {
         ChoiceResourceEntity.new {
@@ -35,7 +36,7 @@ class ChoiceResourceRepository :
     fun getAllByResourceId(resourceId: UUID) =
         transaction { ChoiceResourceEntity.find { ChoiceResource.resource eq resourceId } }
 
-    fun updateOne(id: ChoiceResourcesKey, element: ChoiceResourceCmdDto) = transaction {
+    override fun updateOne(element: ChoiceResourceCmdDto, id: ChoiceResourcesKey) = transaction {
         getOne(id)?.also { choiceResource ->
             ResourceEntity.findById(element.resourceId)
                 ?.let { resourceEntity -> choiceResource.resource = resourceEntity }
@@ -44,9 +45,6 @@ class ChoiceResourceRepository :
         }
     }
 
-    override fun updateOne(element: ChoiceResourceCmdDto, id: ChoiceResourcesKey): ChoiceResourceEntity? {
-        TODO("Not yet implemented")
-    }
 
     override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<ChoiceResourceEntity> {
         TODO("Not yet implemented")

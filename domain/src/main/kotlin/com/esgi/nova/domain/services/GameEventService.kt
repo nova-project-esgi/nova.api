@@ -1,7 +1,6 @@
 package com.esgi.nova.domain.services
 
-import com.esgi.nova.ports.provided.dtos.game.GameCmdDto
-import com.esgi.nova.ports.provided.dtos.game.GameDto
+import com.esgi.nova.domain.services.service.BaseService
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventCmdDto
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventDto
 import com.esgi.nova.ports.provided.dtos.game_event.GameEventsId

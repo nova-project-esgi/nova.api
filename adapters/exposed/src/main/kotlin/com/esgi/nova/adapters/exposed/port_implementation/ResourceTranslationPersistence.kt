@@ -5,6 +5,7 @@ import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.mappers.ResourceTranslationMapper
 import com.esgi.nova.adapters.exposed.models.ResourceTranslationEntity
+import com.esgi.nova.adapters.exposed.port_implementation.translation_persistence.BaseTranslationPersistence
 import com.esgi.nova.adapters.exposed.repositories.ChoiceResourceRepository
 import com.esgi.nova.adapters.exposed.repositories.ResourceTranslationRepository
 import com.esgi.nova.ports.provided.IPagination

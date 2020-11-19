@@ -1,7 +1,28 @@
 package com.esgi.nova.domain
 
 import com.esgi.nova.domain.services.*
+import com.esgi.nova.domain.services.choices.*
+import com.esgi.nova.domain.services.events.EventService
+import com.esgi.nova.domain.services.events.EventTranslationCodesService
+import com.esgi.nova.domain.services.events.EventTranslationService
+import com.esgi.nova.domain.services.events.TranslatedEventService
+import com.esgi.nova.domain.services.resources.ResourceService
+import com.esgi.nova.domain.services.resources.ResourceTranslationCodesService
+import com.esgi.nova.domain.services.resources.ResourceTranslationService
+import com.esgi.nova.domain.services.resources.TranslatedResourceService
 import com.esgi.nova.ports.provided.services.*
+import com.esgi.nova.ports.provided.services.choices.IChoiceNavigationService
+import com.esgi.nova.ports.provided.services.choices.IChoiceResourceService
+import com.esgi.nova.ports.provided.services.choices.IChoiceService
+import com.esgi.nova.ports.provided.services.choices.ITranslatedChoiceService
+import com.esgi.nova.ports.provided.services.events.IEventService
+import com.esgi.nova.ports.provided.services.events.IEventTranslationCodesService
+import com.esgi.nova.ports.provided.services.events.IEventTranslationService
+import com.esgi.nova.ports.provided.services.events.ITranslatedEventService
+import com.esgi.nova.ports.provided.services.resources.IResourceService
+import com.esgi.nova.ports.provided.services.resources.IResourceTranslationCodesService
+import com.esgi.nova.ports.provided.services.resources.IResourceTranslationService
+import com.esgi.nova.ports.provided.services.resources.ITranslatedResourceService
 import com.google.inject.AbstractModule
 
 class DomainModule : AbstractModule() {
