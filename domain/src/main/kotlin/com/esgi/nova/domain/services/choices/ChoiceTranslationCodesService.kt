@@ -18,7 +18,7 @@ import java.util.*
 
 class ChoiceTranslationCodesService @Inject constructor(
         languageService: ILanguageService,
-        override val persistence: IChoiceTranslationPersistence
+        override val persistence: IChoiceTranslationPersistence,
 ) : BaseTranslationCodesService<
         ChoiceTranslationKey<String>,
         ChoiceTranslationKey<UUID>,

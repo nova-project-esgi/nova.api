@@ -2,7 +2,9 @@ package com.esgi.nova.adapters.exposed.repositories
 
 import com.esgi.nova.adapters.exposed.domain.DatabasePagination
 import com.esgi.nova.adapters.exposed.domain.IRepository
+import com.esgi.nova.adapters.exposed.domain.TotalCollection
 import com.esgi.nova.adapters.exposed.models.GameEntity
+import com.esgi.nova.adapters.exposed.models.LanguageEntity
 import com.esgi.nova.adapters.exposed.models.UserEntity
 import com.esgi.nova.ports.provided.dtos.game.GameCmdDto
 import com.esgi.nova.ports.required.ITotalCollection
@@ -28,7 +30,8 @@ class GameRepository: IRepository<UUID, GameCmdDto, GameEntity> {
         }
     }
 
-    override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<GameEntity> {
-        TODO("Not yet implemented")
+    override fun getAllTotal(pagination: DatabasePagination): ITotalCollection<GameEntity> = transaction {
+        val elements = GameEntity.all()
+        TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
     }
 }

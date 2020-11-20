@@ -9,11 +9,12 @@ import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.required.ITotalCollection
 
 interface IPersistenceGetAllTotalFiltered<Filter, OutputDto, OutputEntity>: com.esgi.nova.ports.required.IGetAllTotalFiltered<Filter, OutputDto>{
-    val repository: IGetAllTotalFiltered<Filter, OutputEntity>
     val mapper: IDtoMapper<OutputEntity, OutputDto>
     val dbContext: DatabaseContext
-    override fun getAllTotalFiltered(pagination: IPagination, filter: Filter): ITotalCollection<OutputDto> = dbContext.connectAndExec {
+    val repository: IGetAllTotalFiltered<Filter, OutputEntity>
+    fun getAllTotalFiltered(repository: IGetAllTotalFiltered<Filter, OutputEntity>, pagination: IPagination, filter: Filter): ITotalCollection<OutputDto> = dbContext.connectAndExec {
         val elements = repository.getAllTotalFiltered(DatabasePagination(pagination), filter)
         TotalCollection(elements.total, mapper.toDtos(elements))
     }
+    override fun getAllTotalFiltered(pagination: IPagination, filter: Filter): ITotalCollection<OutputDto>  = getAllTotalFiltered(repository, pagination, filter)
 }

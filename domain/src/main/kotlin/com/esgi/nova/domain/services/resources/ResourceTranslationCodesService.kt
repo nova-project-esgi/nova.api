@@ -40,7 +40,7 @@ class ResourceTranslationCodesService @Inject constructor(
         codeId: ResourceTranslationKey<String>,
         languageId: UUID
     ): ResourceTranslationKey<UUID> {
-       return ResourceTranslationKey(codeId.resourceId,languageId)
+       return ResourceTranslationKey(codeId.entityId,languageId)
     }
 
 

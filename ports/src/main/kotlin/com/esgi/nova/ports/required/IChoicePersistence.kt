@@ -8,5 +8,4 @@ import java.util.*
 
 interface IChoicePersistence  :
     ICrudPersistence<UUID, ChoiceCmdDto, ChoiceDto> {
-    fun getAllByEventId(eventId: UUID): Collection<ChoiceDto>
 }

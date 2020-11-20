@@ -16,7 +16,7 @@ class ResourceTranslationService @Inject constructor(
 
     override fun getOneOrDefault(id: ResourceTranslationKey<UUID>): ResourceTranslationDto? {
         return persistence.getOne(id)
-            ?: persistence.getOneDefault(id.resourceId)
+            ?: persistence.getOneDefault(id.entityId)
     }
 
     override fun getAllByChoiceIdAndLanguageIdWithDefaults(

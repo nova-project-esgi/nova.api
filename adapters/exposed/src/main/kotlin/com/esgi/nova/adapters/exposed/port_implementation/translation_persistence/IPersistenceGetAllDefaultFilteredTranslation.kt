@@ -9,13 +9,12 @@ import com.esgi.nova.ports.required.ILanguagePersistence
 import java.util.*
 
 interface IPersistenceGetAllDefaultFilteredTranslation<Filter, FilterWithLanguage: ITranslation<UUID>, OutputDto, OutputEntity>: IGetAllFiltered<Filter, OutputDto> {
-    val repository: IGetAllIterableFiltered<FilterWithLanguage, OutputEntity>
     val languagePersistence: ILanguagePersistence
     val mapper: IDtoMapper<OutputEntity, OutputDto>
     val dbContext: DatabaseContext
 
     fun toFilterWithLanguage(filter: Filter, language: UUID): FilterWithLanguage
-    override fun getAllFiltered(filter: Filter): Collection<OutputDto> = dbContext.connectAndExec {
+    fun getAllFiltered(repository: IGetAllIterableFiltered<FilterWithLanguage, OutputEntity>, filter: Filter): Collection<OutputDto> = dbContext.connectAndExec {
         val res = mutableListOf<OutputDto>()
         languagePersistence.getDefault()?.let { languageDto ->
             res += mapper.toDtos(

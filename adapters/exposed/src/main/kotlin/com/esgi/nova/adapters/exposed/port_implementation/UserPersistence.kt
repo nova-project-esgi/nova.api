@@ -27,11 +27,4 @@ class UserPersistence @Inject constructor(
         repository.getByUsernameAndPassword(username, password)?.let { user -> mapper.toDto(user) }
     }
 
-//    override fun getOrCreate(userRegisterDto: UserRegisterCmdDto): UserDto? {
-//        return dbContext.connectAndExec {
-//            val editedUser = repository.getOrCreate(userRegisterDto)
-//            mapper.toDto(editedUser)
-//        }
-//    }
-
 }

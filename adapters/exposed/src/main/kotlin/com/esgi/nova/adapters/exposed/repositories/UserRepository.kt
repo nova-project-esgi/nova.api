@@ -11,6 +11,15 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 class UserRepository : IRepository<UUID, UserRegisterCmdDto, UserEntity> {
+
+    fun getByName(username: String): UserEntity? =
+            transaction { UserEntity.find { (User.username eq username) }.singleOrNull() }
+
+    fun getByUsernameAndPassword(username: String, password: String): UserEntity? =
+            transaction { UserEntity.find { (User.username eq username) and (User.password eq password) }.singleOrNull() }
+
+
+    //region repository
     override fun getAll() = transaction {
         UserEntity.all()
     }
@@ -21,20 +30,6 @@ class UserRepository : IRepository<UUID, UserRegisterCmdDto, UserEntity> {
             username = username
         }
     }
-
-    fun getOrCreate(userRegister: UserRegisterCmdDto) = transaction {
-        val userEntity =
-            UserEntity.find { (User.password eq userRegister.password) and (User.username eq userRegister.username) }.firstOrNull()
-        userEntity ?: create(userRegister)
-    }
-
-    fun getByName(username: String): UserEntity? =
-        transaction { UserEntity.find { (User.username eq username) }.singleOrNull() }
-
-    fun getByUsernameAndPassword(username: String, password: String): UserEntity? =
-        transaction { UserEntity.find { (User.username eq username) and (User.password eq password) }.singleOrNull() }
-
-
     override fun getAllTotal(pagination: DatabasePagination) = transaction {
         val elements = UserEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
@@ -48,4 +43,7 @@ class UserRepository : IRepository<UUID, UserRegisterCmdDto, UserEntity> {
             userEntity.password = element.password
         }
     }
+
+    //endregion
+
 }

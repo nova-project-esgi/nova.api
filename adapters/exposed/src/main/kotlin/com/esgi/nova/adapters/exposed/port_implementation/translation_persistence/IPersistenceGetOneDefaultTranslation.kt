@@ -8,13 +8,12 @@ import com.esgi.nova.ports.required.ILanguagePersistence
 import java.util.*
 
 interface IPersistenceGetOneDefaultTranslation<Id, OutputDto, OutputEntity>: IGetOne<Id, OutputDto> {
-    val repository: IGetOne<ITranslationEntityKey<Id, UUID>, OutputEntity>
     val languagePersistence: ILanguagePersistence
     val mapper: IDtoMapper<OutputEntity, OutputDto>
     val dbContext: DatabaseContext
 
     fun toTranslationEntityKey(id: Id, languageId: UUID): ITranslationEntityKey<Id, UUID>;
-    override fun getOne(id: Id): OutputDto? = dbContext.connectAndExec {
+    fun getOne(repository: IGetOne<ITranslationEntityKey<Id, UUID>, OutputEntity>, id: Id): OutputDto? = dbContext.connectAndExec {
         languagePersistence.getDefault()?.let { languageDto ->
             mapper.toDto(
                     repository.getOne(

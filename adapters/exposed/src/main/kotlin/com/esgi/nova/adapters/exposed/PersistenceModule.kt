@@ -2,6 +2,10 @@ package com.esgi.nova.adapters.exposed
 
 import com.esgi.nova.adapters.exposed.mappers.*
 import com.esgi.nova.adapters.exposed.port_implementation.*
+import com.esgi.nova.adapters.exposed.port_implementation.choice_resources.ChoiceResourcePersistence
+import com.esgi.nova.adapters.exposed.port_implementation.choice_translations.ChoiceTranslationPersistence
+import com.esgi.nova.adapters.exposed.port_implementation.choices.ChoicePersistence
+import com.esgi.nova.adapters.exposed.port_implementation.event_translations.EventTranslationPersistence
 import com.esgi.nova.ports.required.*
 import com.google.inject.AbstractModule
 import org.mapstruct.factory.Mappers
@@ -24,7 +28,7 @@ class PersistenceModule(
         bind(IChoiceResourcePersistence::class.java).to(ChoiceResourcePersistence::class.java)
         bind(IGameEventPersistence::class.java).to(GameEventPersistence::class.java)
         bind(IResourcePersistence::class.java).to(ResourcePersistence::class.java)
-        bind(IResourceTranslationPersistence::class.java).to(ResourceTranslationPersistence::class.java)
+        bind(IResourceTranslationPersistence::class.java).to(ResourceTranslationByResourceAndLanguagePersistence::class.java)
         bind(IEventTranslationPersistence::class.java).to(EventTranslationPersistence::class.java)
         bind(IChoiceTranslationPersistence::class.java).to(ChoiceTranslationPersistence::class.java)
         bind(ILanguagePersistence::class.java).to(LanguagePersistence::class.java)

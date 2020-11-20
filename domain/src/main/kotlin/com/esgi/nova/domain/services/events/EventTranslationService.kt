@@ -1,9 +1,6 @@
 package com.esgi.nova.domain.services.events
 
-import com.esgi.nova.domain.extensions.toStaticPage
 import com.esgi.nova.domain.services.service.BaseService
-import com.esgi.nova.ports.provided.IPage
-import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.provided.dtos.event_translation.*
 import com.esgi.nova.ports.provided.services.events.IEventTranslationService
 import com.esgi.nova.ports.required.IEventTranslationPersistence
@@ -18,6 +15,6 @@ class EventTranslationService @Inject constructor(
 
     override fun getOneOrDefault(id: EventTranslationKey<UUID>): EventTranslationDto? {
         return eventTranslationPersistence.getOne(id)
-            ?: eventTranslationPersistence.getOneDefault(id.eventId)
+            ?: eventTranslationPersistence.getOneDefault(id.entityId)
     }
 }

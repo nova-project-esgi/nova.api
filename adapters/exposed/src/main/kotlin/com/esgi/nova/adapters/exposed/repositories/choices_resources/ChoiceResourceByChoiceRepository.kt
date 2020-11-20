@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class ChoiceResourceByChoiceRepository: IGetAllIterableById<UUID, ChoiceResourceEntity> {
+class ChoiceResourceByChoiceRepository:ChoiceResourceRepository(),  IGetAllIterableById<UUID, ChoiceResourceEntity> {
     override fun getAllById(id: UUID): SizedIterable<ChoiceResourceEntity> =
             transaction { ChoiceResourceEntity.find { ChoiceResource.choice eq id } }
 }

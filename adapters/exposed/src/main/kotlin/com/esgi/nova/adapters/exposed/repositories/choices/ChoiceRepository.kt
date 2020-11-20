@@ -11,7 +11,8 @@ import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class ChoiceRepository : IRepository<UUID, ChoiceCmdDto, ChoiceEntity> {
+open class ChoiceRepository : IRepository<UUID, ChoiceCmdDto, ChoiceEntity> {
+    //region inherited
     override fun getAll(): SizedIterable<ChoiceEntity> = transaction { ChoiceEntity.all() }
     override fun getOne(id: UUID): ChoiceEntity? = transaction { ChoiceEntity[id] }
     override fun create(element: ChoiceCmdDto): ChoiceEntity? = transaction {
@@ -30,4 +31,5 @@ class ChoiceRepository : IRepository<UUID, ChoiceCmdDto, ChoiceEntity> {
         val elements = ChoiceEntity.all()
         TotalCollection(elements.count(), elements.limit(pagination.size.toInt(), pagination.offset).toList())
     }
+    //endregion
 }

@@ -37,7 +37,7 @@ class EventTranslationCodesService @Inject constructor(
         )
     }
     override fun transformId(codeId: EventTranslationKey<String>, languageId: UUID): EventTranslationKey<UUID> {
-        return EventTranslationKey(codeId.eventId, languageId)
+        return EventTranslationKey(codeId.entityId, languageId)
     }
 
 

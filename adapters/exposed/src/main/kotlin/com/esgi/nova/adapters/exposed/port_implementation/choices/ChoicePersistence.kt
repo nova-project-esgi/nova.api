@@ -1,4 +1,4 @@
-package com.esgi.nova.adapters.exposed.port_implementation
+package com.esgi.nova.adapters.exposed.port_implementation.choices
 
 import com.esgi.nova.adapters.exposed.DatabaseContext
 import com.esgi.nova.adapters.exposed.mappers.ChoiceMapper
@@ -11,13 +11,11 @@ import com.esgi.nova.ports.required.IChoicePersistence
 import com.google.inject.Inject
 import java.util.*
 
-class ChoicePersistence @Inject constructor(
+open class ChoicePersistence @Inject constructor(
         override val repository: ChoiceRepository,
-        mapper: ChoiceMapper,
-        dbContext: DatabaseContext
+        override val mapper: ChoiceMapper,
+        override val dbContext: DatabaseContext
 ) : BasePersistence<UUID, ChoiceCmdDto, ChoiceEntity, ChoiceDto>(repository, mapper, dbContext), IChoicePersistence {
 
-    override fun getAllByEventId(eventId: UUID) =
-        dbContext.connectAndExec { mapper.toDtos(repository.getAllByEventId(eventId).toList()) }
 
 }

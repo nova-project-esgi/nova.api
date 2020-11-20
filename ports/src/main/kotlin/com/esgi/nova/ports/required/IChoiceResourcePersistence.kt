@@ -7,6 +7,4 @@ import java.util.*
 
 interface IChoiceResourcePersistence :
     ICrudPersistence<ChoiceResourcesKey, ChoiceResourceCmdDto, ChoiceResourceDto> {
-    fun getAllByResourceId(resourceId: UUID): Collection<ChoiceResourceDto>
-    fun getAllByChoiceId(choiceId: UUID): Collection<ChoiceResourceDto>
 }

@@ -9,11 +9,12 @@ import com.esgi.nova.ports.provided.IPagination
 import com.esgi.nova.ports.required.ITotalCollection
 
 interface IPersistenceGetAllTotal<OutputDto, OutputEntity>: com.esgi.nova.ports.required.IGetAllTotal<OutputDto>{
-    val repository: IGetAllTotal<OutputEntity>
     val mapper: IDtoMapper<OutputEntity, OutputDto>
     val dbContext: DatabaseContext
-    override fun getAllTotal(pagination: IPagination): ITotalCollection<OutputDto> = dbContext.connectAndExec {
+    val repository: IGetAllTotal<OutputEntity>
+    fun getAllTotal(repository: IGetAllTotal<OutputEntity>, pagination: IPagination): ITotalCollection<OutputDto> = dbContext.connectAndExec {
         val elements = repository.getAllTotal(DatabasePagination(pagination))
         TotalCollection(elements.total, mapper.toDtos(elements))
     }
+    override fun getAllTotal(pagination: IPagination): ITotalCollection<OutputDto> = getAllTotal(repository, pagination)
 }
