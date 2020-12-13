@@ -1,10 +1,9 @@
-rootProject.name = "nova"
-include("app")
-include("domain")
-include("ports")
+rootProject.name = "nova.api"
+include("bootstrap")
+include("core")
+include("core-api")
+include("query")
 include("common")
-include("adapters:web")
-findProject(":adapters:web")?.name = "web"
-include("adapters:exposed")
-findProject(":adapters:exposed")?.name = "exposed"
-
+include("web")
+include("application")
+include("application")

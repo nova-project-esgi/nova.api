@@ -1,133 +1,93 @@
-val ktorVersion: String by project
-val kotlinVersion: String by project
-val logbackVersion: String by project
-val guiceVersion: String by project
-val arrowVersion: String by project
-val autoServiceVersion: String by project
-val jacksonVersion: String by project
-val jupiterVersion: String by project
-val kotlinPoetVersion: String by project
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+val msSqlVersion: String by project
+val axonVersion: String by project
+val hibernateValidatorVersion: String by project
+val javaxValidationVersion: String by project
+val javaJwtVersion: String by project
+val jaxbApiVersion: String by project
+val authSpringSecurityApiVersion: String by project
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
 
 plugins {
-    kotlin("jvm") version "1.4.0"
-    kotlin("kapt") version "1.4.0"
-}
-
-configure(subprojects) {
-    group = "com.esgi"
-    version = "0.0.1"
-
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "kotlin-kapt")
-    apply(plugin = "kotlin")
-
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-
-    dependencies {
-        api("com.github.pozo:mapstruct-kotlin:1.3.1.2")
-        kapt("com.github.pozo:mapstruct-kotlin-processor:1.3.1.2")
-        implementation(kotlin("stdlib-jdk8"))
-        implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
-        testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
-        tasks.test {
-            useJUnitPlatform()
-        }
-    }
-    tasks {
-        withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-            kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
-
-        }
-    }
-}
-
-configure(subprojects.filter { it.name != "common" }) {
-    dependencies {
-        implementation(project(":common"))
-    }
-}
-
-configure(subprojects.filter { it.name == "exposed" || it.name == "web" }) {
-    dependencies {
-        kapt("org.mapstruct:mapstruct-processor:1.4.0.Final")
-        implementation("org.mapstruct:mapstruct:1.4.0.Final")
-        implementation(project(":ports"))
-        implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    }
-}
-
-configure(subprojects.filter { it.name != "ports" }) {
-    dependencies {
-        implementation("com.google.inject:guice:$guiceVersion")
-    }
-}
-
-
-
-configure(subprojects.filter { it.name == "web" || it.name == "app" }) {
-    repositories {
-        maven { url = uri("https://dl.bintray.com/arrow-kt/arrow-kt/") }
-        maven { url = uri("https://oss.jfrog.org/artifactory/oss-snapshot-local/") }
-    }
-    dependencies {
-        kapt("io.arrow-kt:arrow-meta:$arrowVersion")
-        implementation("io.arrow-kt:arrow-core:$arrowVersion")
-        implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
-        implementation("io.ktor:ktor-server-netty:$ktorVersion")
-        implementation("ch.qos.logback:logback-classic:$logbackVersion")
-        implementation("io.ktor:ktor-server-core:$ktorVersion")
-        implementation("io.ktor:ktor-server-host-common:$ktorVersion")
-        implementation("io.ktor:ktor-auth:$ktorVersion")
-        implementation("io.ktor:ktor-locations:$ktorVersion")
-        implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
-        implementation("io.ktor:ktor-jackson:$ktorVersion")
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-        implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
-        testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
-    }
-}
-
-project("app") {
-    repositories {
-        maven { url = uri("https://kotlin.bintray.com/ktor") }
-    }
-
-    dependencies {
-        implementation(project(":ports"))
-        implementation(project(":domain"))
-        implementation(project(":adapters:web"))
-        implementation(project(":adapters:exposed"))
-    }
-}
-project("domain") {
-    dependencies {
-        implementation(project(":ports"))
-    }
-}
-
-configure(subprojects.filter { it.name == "web" }) {
-    dependencies {
-        compile("javax.xml.bind:jaxb-api:2.3.0")
-    }
+    kotlin("jvm") version "1.4.10" apply false
+    kotlin("plugin.spring") version "1.4.10" apply false
+    id("io.spring.dependency-management") version "1.0.10.RELEASE" apply false
+    id("org.springframework.boot") version "2.4.0" apply false
 }
 
 
 extra.apply {
-    set("ktorVersion", ktorVersion)
-    set("kotlinVersion", kotlinVersion)
-    set("logbackVersion", logbackVersion)
-    set("guiceVersion", guiceVersion)
+    set("axonVersion", axonVersion)
+    set("msSqlVersion", msSqlVersion)
+    set("hibernateValidatorVersion", hibernateValidatorVersion)
+    set("javaxValidationVersion", javaxValidationVersion)
+    set("javaJwtVersion", javaJwtVersion)
+    set("jaxbApiVersion", jaxbApiVersion)
+    set("authSpringSecurityApiVersion", authSpringSecurityApiVersion)
 }
 
-repositories {
-    mavenLocal()
-    jcenter()
-    maven { url = uri("https://kotlin.bintray.com/ktor") }
+allprojects {
+    group = "com.esgi.nova"
+    version = "0.0.1-SNAPSHOT"
+    tasks.withType<KotlinCompile> {
+        println("Configuring KotlinCompile  $name in project ${project.name}...")
+        kotlinOptions {
+            languageVersion = "1.3"
+            apiVersion = "1.3"
+            jvmTarget = "11"
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+        }
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }
+
+subprojects {
+
+    repositories {
+        mavenCentral()
+    }
+
+
+    dependencies {
+//		implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")
+//		implementation("org.axonframework.extensions.kotlin:axon-kotlin:0.1.0")
+//		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+//		implementation("org.jetbrains.kotlin:kotlin-reflect")
+//		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+//		implementation("org.springframework.boot:spring-boot-starter-web")
+//		developmentOnly("org.springframework.boot:spring-boot-devtools")
+//		runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
+//		testImplementation("org.springframework.boot:spring-boot-starter-test")
+    }
+    apply(plugin = "io.spring.dependency-management")
+
+    configure<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension> {
+        imports {
+            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        }
+    }
+
+
+}
+
+//tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
+//    builder=".."
+//    imageName=tailender/imagedemo
+//}
+//bootBuildImage{
+//    builder=".."
+//    imageName=tailender/imagedemo
+//}
+
+
+
 
