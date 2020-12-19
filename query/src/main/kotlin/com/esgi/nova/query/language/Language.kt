@@ -5,6 +5,7 @@ import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.query.choice_translation.ChoiceTranslation
 import com.esgi.nova.query.event_translation.EventTranslation
 import com.esgi.nova.query.resource_translation.ResourceTranslation
+import org.hibernate.annotations.Formula
 import org.hibernate.annotations.Type
 import java.util.*
 import javax.persistence.*
@@ -25,19 +26,49 @@ class Language(
 ) {
 
     @OneToMany(mappedBy = "language")
-    lateinit var choiceTranslations: Collection<ChoiceTranslation>
+    var choiceTranslations: MutableSet<ChoiceTranslation> = mutableSetOf()
 
     @OneToMany(mappedBy = "language")
-    lateinit var eventTranslations: Collection<EventTranslation>
+    var eventTranslations: MutableSet<EventTranslation> = mutableSetOf()
 
     @OneToMany(mappedBy = "language")
-    lateinit var resourceTranslations: Collection<ResourceTranslation>
+    var resourceTranslations: MutableSet<ResourceTranslation> = mutableSetOf()
 
-    val concatenatedCodes get() = if (subCode != null) "${code}-${subCode}" else code
+
+    @Formula(value = "concat(code, '-', sub_code)")
+    val concatenatedCodes = if (subCode != null) "${code}-${subCode}" else code
 
     fun toLanguageView() = LanguageView(
         id = id,
         code = code,
         subCode = subCode
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Language
+
+        if (id != other.id) return false
+        if (code != other.code) return false
+        if (subCode != other.subCode) return false
+        if (choiceTranslations != other.choiceTranslations) return false
+        if (eventTranslations != other.eventTranslations) return false
+        if (resourceTranslations != other.resourceTranslations) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + code.hashCode()
+        result = 31 * result + (subCode?.hashCode() ?: 0)
+        result = 31 * result + choiceTranslations.hashCode()
+        result = 31 * result + eventTranslations.hashCode()
+        result = 31 * result + resourceTranslations.hashCode()
+        return result
+    }
+
+
 }

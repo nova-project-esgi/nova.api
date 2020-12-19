@@ -104,7 +104,7 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
         if (!languageExists(id)) {
             throw LanguageNotFoundByIdException()
         }
-        this.commandGateway.sendAndWait<UpdateLanguageCommand>(
+        this.commandGateway.sendAndWait<LanguageIdentifier>(
             UpdateLanguageCommand(
                 id = LanguageIdentifier(id.toString()),
                 code = language.code,

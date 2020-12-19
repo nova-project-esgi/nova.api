@@ -25,4 +25,29 @@ class Event {
 
     @OneToMany(mappedBy = "event")
     lateinit var eventTranslations: Collection<EventTranslation>
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Event
+
+        if (id != other.id) return false
+        if (isDaily != other.isDaily) return false
+        if (isActive != other.isActive) return false
+        if (choices != other.choices) return false
+        if (eventTranslations != other.eventTranslations) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + isDaily.hashCode()
+        result = 31 * result + isActive.hashCode()
+        result = 31 * result + choices.hashCode()
+        result = 31 * result + eventTranslations.hashCode()
+        return result
+    }
+
+
 }

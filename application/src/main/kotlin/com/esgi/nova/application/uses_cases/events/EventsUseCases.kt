@@ -11,12 +11,13 @@ import com.esgi.nova.core_api.events.views.TranslatedEventView
 import com.esgi.nova.core_api.languages.LanguageIdentifier
 import com.esgi.nova.core_api.pagination.PageBase
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.modelling.command.Repository
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-open class EventsUseCases(private val queryGateway: QueryGateway, private val commandGateway: CommandGateway) {
+open class  EventsUseCases(private val queryGateway: QueryGateway, private val commandGateway: CommandGateway) {
 
     open fun getPaginatedTranslatedEventTitlesByConcatenatedCodeAndTitle(
         page: Int,

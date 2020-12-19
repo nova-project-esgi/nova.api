@@ -10,6 +10,16 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import java.util.ArrayList
+
+import org.springframework.http.converter.HttpMessageConverter
+
+import com.fasterxml.jackson.databind.ObjectMapper
+
+import org.springframework.beans.factory.annotation.Autowired
+
+
+
 
 
 @Configuration
@@ -18,6 +28,7 @@ open class WebConfig {
     open fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
+
 
     @Bean
     open fun corsConfigurer(): WebMvcConfigurer? {

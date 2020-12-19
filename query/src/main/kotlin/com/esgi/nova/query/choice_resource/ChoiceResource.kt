@@ -21,4 +21,25 @@ class ChoiceResource(@EmbeddedId
                      var resource: Resource,
                      @Column(name = "change_value") var changeValue: Int = 0) {
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ChoiceResource
+
+        if (id != other.id) return false
+        if (choice != other.choice) return false
+        if (resource != other.resource) return false
+        if (changeValue != other.changeValue) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + choice.hashCode()
+        result = 31 * result + resource.hashCode()
+        result = 31 * result + changeValue
+        return result
+    }
 }

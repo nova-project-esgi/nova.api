@@ -13,13 +13,16 @@ import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
+import org.axonframework.modelling.command.Repository
 import org.axonframework.spring.stereotype.Aggregate
+import java.util.*
 
 @Aggregate
 class UserAggregate constructor() {
 
     @AggregateIdentifier
     private lateinit var id: UserIdentifier
+
     private lateinit var email: String
     private lateinit var username: String
     private lateinit var password: String
@@ -88,14 +91,6 @@ class UserAggregate constructor() {
         role = event.role
         password = event.password
     }
-
-//    // Command handlers
-//    @CommandHandler
-//    fun UserAggregate(command: CreateUser) {
-//        val user: User = command.()
-//        user.validateEmail()
-//        AggregateLifecycle.apply(UserCreatedEvent(user))
-//    }
 
 }
 

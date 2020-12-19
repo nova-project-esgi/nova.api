@@ -9,7 +9,8 @@ import javax.persistence.Embeddable
 @Embeddable
 class EventTranslationId(@Type(type = "uuid-char")
                          @Column(name = "event_id", columnDefinition = "uniqueidentifier")
-                         var eventId: UUID, @Type(type = "uuid-char")
+                         var eventId: UUID,
+                         @Type(type = "uuid-char")
                          @Column(name = "language_id", columnDefinition = "uniqueidentifier")
                          var languageId: UUID) : Serializable {
 

@@ -8,4 +8,5 @@ class StaticPage<T>(override val pageSize: Int, val startPage: Int, override val
     override val hasNext: Boolean = startPage * pageSize + elements.size < total
     override val hasPrevious: Boolean = startPage > 0
 
+
 }

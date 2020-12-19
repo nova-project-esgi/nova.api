@@ -21,7 +21,6 @@ plugins {
     id("org.springframework.boot") version "2.4.0" apply false
 }
 
-
 extra.apply {
     set("axonVersion", axonVersion)
     set("msSqlVersion", msSqlVersion)
@@ -35,6 +34,13 @@ extra.apply {
 allprojects {
     group = "com.esgi.nova"
     version = "0.0.1-SNAPSHOT"
+//    configurations{
+//        all{
+//            exclude("org.springframework.boot" ,"spring-boot-starter-logging")
+//        }
+//    }
+
+
     tasks.withType<KotlinCompile> {
         println("Configuring KotlinCompile  $name in project ${project.name}...")
         kotlinOptions {
@@ -48,6 +54,7 @@ allprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+
 }
 
 subprojects {
@@ -56,18 +63,6 @@ subprojects {
         mavenCentral()
     }
 
-
-    dependencies {
-//		implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")
-//		implementation("org.axonframework.extensions.kotlin:axon-kotlin:0.1.0")
-//		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-//		implementation("org.jetbrains.kotlin:kotlin-reflect")
-//		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-//		implementation("org.springframework.boot:spring-boot-starter-web")
-//		developmentOnly("org.springframework.boot:spring-boot-devtools")
-//		runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
-//		testImplementation("org.springframework.boot:spring-boot-starter-test")
-    }
     apply(plugin = "io.spring.dependency-management")
 
     configure<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension> {
@@ -75,14 +70,9 @@ subprojects {
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
         }
     }
-
-
 }
 
-//tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
-//    builder=".."
-//    imageName=tailender/imagedemo
-//}
+
 //bootBuildImage{
 //    builder=".."
 //    imageName=tailender/imagedemo

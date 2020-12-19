@@ -11,9 +11,11 @@ import javax.annotation.PostConstruct
 
 @Configuration
 class AxonConfig @Autowired constructor(private val configurer: EventProcessingConfigurer) {
+
     @PostConstruct
     fun registerErrorHandling() {
-        configurer.usingSubscribingEventProcessors();
+//        configurer.registerTrackingEventProcessor()
+        configurer.usingSubscribingEventProcessors()
 //        configurer.registerDefaultListenerInvocationErrorHandler {config ->
 //            ListenerInvocationErrorHandler(config)
 //        }

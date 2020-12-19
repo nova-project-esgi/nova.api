@@ -9,4 +9,5 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation("javax.xml.bind:jaxb-api:$jaxbApiVersion")
     implementation("com.auth0:java-jwt:$javaJwtVersion")
+    implementation("org.springframework.boot:spring-boot-starter-web")
 }

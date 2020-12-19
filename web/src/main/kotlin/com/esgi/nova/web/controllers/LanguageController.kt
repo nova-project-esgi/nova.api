@@ -20,7 +20,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
 
     @Secured("ROLE_ADMIN")
     @PostMapping
-    open fun create(@RequestBody language: LanguageForEdition): ResponseEntity<Message> {
+    open fun create(@RequestBody language: LanguageForEdition): ResponseEntity<Any> {
         val id = languagesUseCases.create(language)
         return ResponseEntity
             .created(

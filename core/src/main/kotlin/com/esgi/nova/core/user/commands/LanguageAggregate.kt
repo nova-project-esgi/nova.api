@@ -16,6 +16,7 @@ import org.axonframework.spring.stereotype.Aggregate
 
 @Aggregate
 class LanguageAggregate constructor() {
+
     @AggregateIdentifier
     private lateinit var id: LanguageIdentifier
     private lateinit var code: String
@@ -47,8 +48,6 @@ class LanguageAggregate constructor() {
     fun onDeleteLanguageCommand(command: DeleteLanguageCommand) {
         AggregateLifecycle.apply(LanguageDeletedEvent(id = command.id))
     }
-
-
 
     // Event handlers
     @EventSourcingHandler

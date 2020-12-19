@@ -16,6 +16,7 @@ import kotlin.properties.Delegates
 
 @Aggregate
 class EventAggregate() {
+
     @AggregateIdentifier
     private lateinit var id: EventIdentifier
     private var isDaily by Delegates.notNull<Boolean>()

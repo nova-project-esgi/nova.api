@@ -4,6 +4,8 @@ package com.esgi.nova.web.content_negociation
 object CustomMediaType {
     object Application {
         const val ChoiceTranslation  = "application/vnd+nova.choice_translation+json"
+        const val ResourceWithTranslations  = "application/vnd+nova.resource_translations+json"
+        const val ResourceName  = "application/vnd+nova.resource_name+json"
         const val EventTranslation  = "application/vnd+nova.event_translation+json"
         const val EventTitle  = "application/vnd+nova.event_title"
         const val ChoiceWithResource  = "application/vnd+nova.choice_with_resources+json"

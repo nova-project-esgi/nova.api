@@ -30,4 +30,29 @@ class ChoiceTranslation {
 
     @Column
     lateinit var description: String
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ChoiceTranslation
+
+        if (id != other.id) return false
+        if (choice != other.choice) return false
+        if (language != other.language) return false
+        if (title != other.title) return false
+        if (description != other.description) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + choice.hashCode()
+        result = 31 * result + language.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + description.hashCode()
+        return result
+    }
+
+
 }
