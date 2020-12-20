@@ -15,20 +15,20 @@ open class FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameHandler
 
     @QueryHandler
     fun handle(query: FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameQuery): PageBase<ResourceWithTranslationsView> {
-        val res = resourceRepository.findByResourceTranslationsNameStartingWith(query.name)
-        return PageBase.emptyPage()
+//        val res = resourceRepository.findByResourceTranslationsNameStartingWith(query.name)
+//        return PageBase.emptyPage()
 //        return resourceRepository.findAllByResourceTranslationsNameStartingWith(
 //            name = query.name,
 //            page = query.toPageable()
 //        )
 //            .map { it.toResourceWithTranslationsView()}
 //            .toStaticPage(query)
-//        return resourceRepository.findAllByResourceTranslationsNameStartingWithAndResourceTranslationsLanguageConcatenatedCodesStartingWith(
-//            concatenatedCode = query.concatenatedCodes,
-//            name = query.name,
-//            page = query.toPageable()
-//        )
-//            .map { it.toResourceWithTranslationsView()}
-//            .toStaticPage(query)
+        return resourceRepository.findAllByResourceTranslationsNameStartingWithAndResourceTranslationsLanguageConcatenatedCodesStartingWith(
+            concatenatedCode = query.concatenatedCodes,
+            name = query.name,
+            page = query.toPageable()
+        )
+            .map { it.toResourceWithTranslationsView()}
+            .toStaticPage(query)
     }
 }

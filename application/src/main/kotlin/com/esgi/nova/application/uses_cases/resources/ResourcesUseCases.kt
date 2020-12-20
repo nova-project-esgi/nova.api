@@ -10,10 +10,9 @@ import com.esgi.nova.core_api.pagination.PageBase
 import com.esgi.nova.core_api.resource_translation.commands.CreateResourceTranslationCommand
 import com.esgi.nova.core_api.resource_translation.commands.ResourceTranslationIdentifier
 import com.esgi.nova.core_api.resource_translation.queries.FindPaginatedResourceByNameAndConcatenatedCodeQuery
-import com.esgi.nova.core_api.resource_translation.queries.FindPaginatedResourceNamesByNameAndLanguageCodeQuery
-import com.esgi.nova.core_api.resource_translation.queries.FindPaginatedResourceNamesByNameLanguageCodeAndSubCodeQuery
 import com.esgi.nova.core_api.resource_translation.views.ResourceTranslationNameView
 import com.esgi.nova.core_api.resources.commands.CreateResourceCommand
+import com.esgi.nova.core_api.resources.commands.DeleteResourceCommand
 import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
 import com.esgi.nova.core_api.resources.queries.FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameQuery
 import com.esgi.nova.core_api.resources.queries.FindResourceByIdQuery
@@ -100,7 +99,7 @@ open class ResourcesUseCases(
     ): PageBase<ResourceTranslationNameView> {
         return queryGateway.queryPage<ResourceTranslationNameView, FindPaginatedResourceByNameAndConcatenatedCodeQuery>(
             FindPaginatedResourceByNameAndConcatenatedCodeQuery(
-                name=name,
+                name = name,
                 concatenatedCode = language,
                 page = page,
                 size = size
@@ -122,5 +121,11 @@ open class ResourcesUseCases(
                 size = size
             )
         ).join()
+    }
+
+    fun deleteOneResourceById(id: UUID): UUID {
+        return this.commandGateway
+            .sendAndWait<ResourceIdentifier>(DeleteResourceCommand(id = ResourceIdentifier(id.toString())))
+            .toUUID()
     }
 }

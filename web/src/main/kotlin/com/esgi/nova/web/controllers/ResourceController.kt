@@ -35,6 +35,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
 
     @DeleteMapping("{id}")
     fun deleteOneById(@PathVariable id: UUID): ResponseEntity<Any> {
+        resourcesUseCases.deleteOneResourceById(id)
         return ResponseEntity.noContent().build();
     }
 
@@ -65,7 +66,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
                 name,
                 language
             ).toPageMetadata()
-        );
+        )
     }
 
     @PostMapping("{id}/icon")
