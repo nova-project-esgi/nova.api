@@ -21,12 +21,12 @@ class ChoiceResourceAggregate() {
 
     @CommandHandler
     constructor(cmd: CreateChoiceResourceCommand) : this() {
-        AggregateLifecycle.apply(CreatedChoiceResourceEvent(id = cmd.id, changeValue = cmd.changeValue))
+        AggregateLifecycle.apply(CreatedChoiceResourceEvent(id = cmd.choiceResourceId, changeValue = cmd.changeValue))
     }
 
     @CommandHandler
     fun handle(cmd: DeleteChoiceResourceCommand) {
-        AggregateLifecycle.apply(DeletedChoiceResourceEvent(id = cmd.id))
+        AggregateLifecycle.apply(DeletedChoiceResourceEvent(id = cmd.choiceResourceId))
     }
 
     @EventSourcingHandler

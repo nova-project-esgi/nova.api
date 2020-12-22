@@ -4,5 +4,5 @@ import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
 import java.io.Serializable
 
 data class DeletedResourceEvent(
-    val id: ResourceIdentifier
+    val resourceId: ResourceIdentifier
 ) : Serializable

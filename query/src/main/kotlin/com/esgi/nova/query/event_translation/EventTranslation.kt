@@ -49,8 +49,7 @@ class EventTranslation(@EmbeddedId
             eventId = event.id,
             title = title,
             description = description,
-            language = language.concatenatedCodes,
-            languageId = language.id
+            language = language.toLanguageView()
     )
 
     override fun equals(other: Any?): Boolean {

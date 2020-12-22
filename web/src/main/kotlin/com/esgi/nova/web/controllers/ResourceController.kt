@@ -25,8 +25,6 @@ import javax.servlet.ServletContext
 @RequestMapping("resources")
 open class ResourceController(private val resourcesUseCases: ResourcesUseCases, private val context: ServletContext) {
 
-//    @Autowired
-//    var context: ServletContext? = null
 
     @GetMapping("{id}")
     fun getOneById(@PathVariable id: UUID): ResponseEntity<ResourceView> {
@@ -49,6 +47,17 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
             .created(
                 MvcUriComponentsBuilder.fromMethodName(ResourceController::class.java, "getOneById", id).build().toUri()
             )
+            .build()
+    }
+
+    @PutMapping("{id}", consumes = [CustomMediaType.Application.ResourceWithTranslations])
+    fun updateResourceWithTranslations(
+        @PathVariable id: UUID,
+        @RequestBody resource: ResourceWithTranslationsForEdition
+    ): ResponseEntity<Any> {
+        this.resourcesUseCases.updateResourceWithTranslations(id, resource)
+        return ResponseEntity
+            .noContent()
             .build()
     }
 

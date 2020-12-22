@@ -14,7 +14,7 @@ class LanguageCommands constructor(val commandGateway: CommandGateway) {
 
     fun updateLanguage(id: LanguageIdentifier, code: String, subCode: String?): Unit = commandGateway.sendAndWait(
             UpdateLanguageCommand(
-                    id = id, code = code, subCode = subCode
+                    languageId = id, code = code, subCode = subCode
             )
     )
 

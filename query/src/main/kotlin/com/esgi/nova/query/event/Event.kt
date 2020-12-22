@@ -1,5 +1,6 @@
 package com.esgi.nova.query.event
 
+import com.esgi.nova.core_api.events.views.DetailedEventView
 import com.esgi.nova.query.choice.Choice
 import com.esgi.nova.query.event_translation.EventTranslation
 import org.hibernate.annotations.Type
@@ -8,23 +9,25 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "event")
-class Event {
+class Event(
     @Id
     @Type(type = "uuid-char")
     @Column(name = "id", columnDefinition = "uniqueidentifier")
-    lateinit var id: UUID
+    var id: UUID, @Column(name = "is_daily") var isDaily: Boolean = false,
+    @Column(name = "is_active") var isActive: Boolean = false
+) {
 
-    @Column(name = "is_daily")
-    var isDaily: Boolean = false
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL])
+    var choices: MutableList<Choice> = mutableListOf()
 
-    @Column(name = "is_active")
-    var isActive: Boolean = false
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL])
+    var eventTranslations: MutableList<EventTranslation> = mutableListOf()
 
-    @OneToMany(mappedBy = "event")
-    lateinit var choices: Collection<Choice>
-
-    @OneToMany(mappedBy = "event")
-    lateinit var eventTranslations: Collection<EventTranslation>
+    fun toDetailedEvent() = DetailedEventView(
+        id = id,
+        translations = eventTranslations.map { it.toEventTranslationView() },
+        choices = choices.map { it.toDetailedChoiceView() }
+    )
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

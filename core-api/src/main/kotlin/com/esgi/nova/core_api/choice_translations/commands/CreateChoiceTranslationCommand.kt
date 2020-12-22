@@ -4,7 +4,7 @@ import com.esgi.nova.core_api.choice_translations.commands.ChoiceTranslationIden
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 class CreateChoiceTranslationCommand(
-    @TargetAggregateIdentifier val id: ChoiceTranslationIdentifier,
+    @TargetAggregateIdentifier val translationId: ChoiceTranslationIdentifier,
     val title: String,
     val description: String
 )

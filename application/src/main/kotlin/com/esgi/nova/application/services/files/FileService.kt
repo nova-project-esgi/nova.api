@@ -11,8 +11,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
-import java.util.*
-import java.net.MalformedURLException
 
 import org.springframework.core.io.UrlResource
 import java.io.FileNotFoundException
@@ -22,7 +20,7 @@ import java.io.FileNotFoundException
 class FileService() {
 
     @Value("\${app.upload.dir:\${user.home}}")
-    var uploadDir: String? = null
+    lateinit var uploadDir: String
 
     fun getFileByBaseName(baseName: String, subDir: String): File?{
         val dir = File(Paths.get(uploadDir +File.separator+ subDir).toUri())
@@ -33,6 +31,22 @@ class FileService() {
 
     fun fileExists(baseName: String, subDir: String): Boolean{
         return getFileByBaseName(baseName, subDir) != null
+    }
+
+    fun setFile(file: MultipartFile, subDir: String? = null, newFileName: String? = null){
+        val fileName = newFileName ?: file.originalFilename
+        try {
+            fileName?.let {
+                getFileByBaseName(subDir ?: uploadDir, fileName)?.delete()
+                uploadFile(file, subDir, newFileName);
+            }
+        }catch (e: Exception) {
+            e.printStackTrace()
+            throw FileStorageException(
+                "Could not store file " + fileName
+                        + ". Please try again!"
+            )
+        }
     }
 
     fun uploadFile(file: MultipartFile, subDir: String? = null, newFileName: String? = null) {

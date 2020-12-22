@@ -18,4 +18,6 @@ open class FindPaginatedLanguagesByCodeHandler(private val languageRepository: L
                 .findAllByCode(query.code, query.toPageable()).map { it.toLanguageView() }
                 .toStaticPage(query)
     }
+
 }
+

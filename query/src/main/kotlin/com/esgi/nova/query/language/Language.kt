@@ -2,6 +2,7 @@ package com.esgi.nova.query.language
 
 import com.esgi.nova.common.StringLength
 import com.esgi.nova.core_api.languages.queries.views.LanguageView
+import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
 import com.esgi.nova.query.choice_translation.ChoiceTranslation
 import com.esgi.nova.query.event_translation.EventTranslation
 import com.esgi.nova.query.resource_translation.ResourceTranslation
@@ -25,14 +26,14 @@ class Language(
     var code: String, @Column(length = StringLength.SHORT_STRING, name = "sub_code") var subCode: String? = null
 ) {
 
-    @OneToMany(mappedBy = "language")
-    var choiceTranslations: MutableSet<ChoiceTranslation> = mutableSetOf()
+    @OneToMany(mappedBy = "language", cascade = [CascadeType.ALL])
+    var choiceTranslations: MutableList<ChoiceTranslation> = mutableListOf()
 
-    @OneToMany(mappedBy = "language")
-    var eventTranslations: MutableSet<EventTranslation> = mutableSetOf()
+    @OneToMany(mappedBy = "language", cascade = [CascadeType.ALL])
+    var eventTranslations: MutableList<EventTranslation> = mutableListOf()
 
-    @OneToMany(mappedBy = "language")
-    var resourceTranslations: MutableSet<ResourceTranslation> = mutableSetOf()
+    @OneToMany(mappedBy = "language", cascade = [CascadeType.ALL])
+    var resourceTranslations: MutableList<ResourceTranslation> = mutableListOf()
 
 
     @Formula(value = "concat(code, '-', sub_code)")
@@ -42,6 +43,14 @@ class Language(
         id = id,
         code = code,
         subCode = subCode
+    )
+    fun toLanguageViewWithAvailableActions() = LanguageViewWithAvailableActions(
+        id = id,
+        code = code,
+        subCode = subCode,
+        canDelete = resourceTranslations.all { translation ->
+            translation.resource.resourceTranslations.size > 1
+        }
     )
 
     override fun equals(other: Any?): Boolean {

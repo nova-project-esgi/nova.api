@@ -9,3 +9,4 @@ data class TranslatedEventView(
         val description: String,
         val language: String,
         val choiceIds: List<UUID>)
+

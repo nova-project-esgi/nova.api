@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component
 open class OnUserDeletedEventHandler constructor(private val userRepository: UserRepository) {
     @EventHandler
     fun on(event: UserDeleteEvent) {
-        userRepository.deleteById(event.id.toUUID())
+        userRepository.deleteById(event.userId.toUUID())
     }
 }

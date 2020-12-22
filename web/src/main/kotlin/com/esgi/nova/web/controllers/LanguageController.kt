@@ -3,6 +3,8 @@ package com.esgi.nova.web.controllers
 import com.esgi.nova.application.uses_cases.languages.LanguageForEdition
 import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
 import com.esgi.nova.core_api.languages.queries.views.LanguageView
+import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
+import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import com.esgi.nova.web.pagination.PageMetadata
@@ -50,6 +52,11 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
         return languagesUseCases.getOneById(id)
     }
 
+    @GetMapping("{id}/canDelete")
+    open fun canDeleteById(@PathVariable id: UUID){
+        languagesUseCases.canDelete(id)
+    }
+
 
     @DeleteMapping("{id}")
     open fun delete(@PathVariable id: UUID): ResponseEntity<Message> {
@@ -68,6 +75,22 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
             page,
             size,
             concatenatedCode
+        )
+            .let { pageBase -> return PageMetadata(pageBase) }
+    }
+
+    @GetMapping(params = ["code"], produces = [CustomMediaType.Application.LanguageWithAvailableActions])
+    open fun getPaginatedLanguagesWithAvailableActionsByCodeAndSubCode(
+        @RequestParam(value = "page", required = false, defaultValue = "${PaginationDefault.PAGE}") page: Int,
+        @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
+        @RequestParam(value = "code") code: String,
+        @RequestParam(value = "subCode", required = false) subCode: String?
+    ): PageMetadata<LanguageViewWithAvailableActions> {
+        languagesUseCases.getPaginatedLanguagesWithActionsByCodeAndSubCode(
+            page,
+            size,
+            code = code,
+            subCode = subCode
         )
             .let { pageBase -> return PageMetadata(pageBase) }
     }

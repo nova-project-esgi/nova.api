@@ -25,4 +25,6 @@ interface ResourceTranslationRepository : JpaRepository<ResourceTranslation, Res
         subCode: String,
         page: Pageable
     ): Page<ResourceTranslation>
+
+    fun findAllByLanguageId(languageId: UUID): List<ResourceTranslation>
 }

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component
 open class OnUserCreatedEventHandler constructor(val userRepository: UserRepository) {
     @EventHandler
     fun on(event: UserCreatedEvent) {
-        userRepository.saveAndFlush(User(event.id.toUUID(), event.username, event.password, event.email, event.role, listOf()))
+        userRepository.saveAndFlush(User(event.userId.toUUID(), event.username, event.password, event.email, event.role, listOf()))
     }
 }

@@ -5,7 +5,7 @@ import com.esgi.nova.core_api.user.UserIdentifier
 import java.io.Serializable
 
 data class UserCreatedEvent(
-        val id: UserIdentifier,
+        val userId: UserIdentifier,
         val email: String,
         val username: String,
         val password: String,

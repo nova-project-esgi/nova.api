@@ -1,7 +1,7 @@
 package com.esgi.nova.core.user.commands
 
 import com.esgi.nova.core_api.user.events.UserCreatedEvent
-import com.esgi.nova.core.domain.users.events.UserUpdatedEvent
+import com.esgi.nova.core_api.user.events.UserUpdatedEvent
 import com.esgi.nova.core.domain.users.exceptions.UserNameHasNotChangedException
 import com.esgi.nova.core_api.user.Role
 import com.esgi.nova.core_api.user.commands.CreateUserCommand
@@ -13,9 +13,7 @@ import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
-import org.axonframework.modelling.command.Repository
 import org.axonframework.spring.stereotype.Aggregate
-import java.util.*
 
 @Aggregate
 class UserAggregate constructor() {
@@ -32,7 +30,7 @@ class UserAggregate constructor() {
     constructor(command: CreateUserCommand) : this() {
         AggregateLifecycle.apply(
                 UserCreatedEvent(
-                        id = command.id,
+                        userId = command.userId,
                         username = command.username,
                         password = command.password,
                         role = command.role,
@@ -50,7 +48,7 @@ class UserAggregate constructor() {
 
     @CommandHandler
     fun onDeleteUserCommand(command: DeleteUserCommand) {
-        AggregateLifecycle.apply(UserDeleteEvent(id = command.id))
+        AggregateLifecycle.apply(UserDeleteEvent(userId = command.userId))
     }
 
     @CommandHandler
@@ -58,7 +56,7 @@ class UserAggregate constructor() {
         validateUsernameIsDifferent(username)
         AggregateLifecycle.apply(
                 UserUpdatedEvent(
-                        id = command.id,
+                        userId = command.userId,
                         username = command.username,
                         password = command.password,
                         role = command.role,
@@ -71,7 +69,7 @@ class UserAggregate constructor() {
     // Event handlers
     @EventSourcingHandler
     fun onUserCreatedEvent(event: UserCreatedEvent) {
-        id = event.id
+        id = event.userId
         username = event.username
         role = event.role
         password = event.password

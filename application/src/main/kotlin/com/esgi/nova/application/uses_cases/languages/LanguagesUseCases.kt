@@ -9,9 +9,17 @@ import com.esgi.nova.core_api.languages.exceptions.LanguageAlreadyExistException
 import com.esgi.nova.core_api.languages.exceptions.LanguageNotFoundByIdException
 import com.esgi.nova.core_api.languages.queries.*
 import com.esgi.nova.core_api.languages.queries.views.LanguageView
+import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
 import com.esgi.nova.core_api.pagination.PageBase
+import com.esgi.nova.core_api.resource_translation.commands.CanDeleteResourceTranslationCommand
+import com.esgi.nova.core_api.resource_translation.commands.DeleteResourceTranslationCommand
+import com.esgi.nova.core_api.resource_translation.commands.ResourceTranslationIdentifier
+import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
+import com.esgi.nova.core_api.resources.queries.FindAllResourcesWithTranslationIdsByLanguageIdQuery
+import com.esgi.nova.core_api.resources.views.ResourceWithTranslationIdsView
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
+import org.axonframework.extensions.kotlin.queryMany
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Service
 import java.util.*
@@ -71,11 +79,38 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
             .join()
     }
 
+
+
+    fun canDelete(id: UUID){
+        if (!languageExists(id)) {
+            throw LanguageNotFoundByIdException()
+        }
+        this.queryGateway.queryMany<ResourceWithTranslationIdsView, FindAllResourcesWithTranslationIdsByLanguageIdQuery>(
+            FindAllResourcesWithTranslationIdsByLanguageIdQuery(languageId = LanguageIdentifier(id.toString()))
+        ).join().forEach{ resource ->
+            commandGateway.sendAndWait(CanDeleteResourceTranslationCommand(
+                id = ResourceIdentifier(resource.id.toString()),
+                translationId = ResourceTranslationIdentifier(id.toString())
+            ))
+        }
+
+    }
+
     fun deleteOneById(id: UUID) {
         if (!languageExists(id)) {
             throw LanguageNotFoundByIdException()
         }
-        this.commandGateway.sendAndWait<DeleteLanguageCommand>(DeleteLanguageCommand(id = LanguageIdentifier(id.toString())))
+        val resources = this.queryGateway.queryMany<ResourceWithTranslationIdsView, FindAllResourcesWithTranslationIdsByLanguageIdQuery>(
+            FindAllResourcesWithTranslationIdsByLanguageIdQuery(languageId = LanguageIdentifier(id.toString()))
+        ).join()
+        resources.forEach { resource ->
+            commandGateway.sendAndWait(DeleteResourceTranslationCommand(
+                id = ResourceIdentifier(resource.id.toString()),
+                translationId = ResourceTranslationIdentifier(id.toString())
+            ))
+        }
+        return;
+        this.commandGateway.sendAndWait<DeleteLanguageCommand>(DeleteLanguageCommand(languageId = LanguageIdentifier(id.toString())))
     }
 
     fun languageExists(id: UUID): Boolean {
@@ -100,13 +135,30 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
         ).join()
     }
 
+    fun getPaginatedLanguagesWithActionsByCodeAndSubCode(
+        page: Int,
+        size: Int,
+        code: String,
+        subCode: String?
+    ): PageBase<LanguageViewWithAvailableActions> {
+        if (subCode == null) {
+            return queryGateway.queryPage<LanguageViewWithAvailableActions, FindPaginatedLanguagesWithAvailableActionsByCodeQuery>(
+                FindPaginatedLanguagesWithAvailableActionsByCodeQuery(page = page, size = size, code = code)
+            ).join()
+        }
+        return queryGateway.queryPage<LanguageViewWithAvailableActions, FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeQuery>(
+            FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeQuery(page = page, size = size, code = code, subCode = subCode)
+        ).join()
+    }
+
+
     fun update(language: LanguageForEdition, id: UUID) {
         if (!languageExists(id)) {
             throw LanguageNotFoundByIdException()
         }
         this.commandGateway.sendAndWait<LanguageIdentifier>(
             UpdateLanguageCommand(
-                id = LanguageIdentifier(id.toString()),
+                languageId = LanguageIdentifier(id.toString()),
                 code = language.code,
                 subCode = language.subCode
             )

@@ -21,3 +21,4 @@ open class FindPaginatedResourceNamesByNameAndLanguageCodeHandler(private val re
         ).map { it.toResourceTranslationNameView() }.toStaticPage(query)
     }
 }
+

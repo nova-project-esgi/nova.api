@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 open class OnLanguageUpdatedEventHandler constructor(private val languageRepository: LanguageRepository) {
     @EventHandler
     fun on(event: LanguageUpdateEvent) {
-        languageRepository.findByIdOrNull(event.id.toUUID())?.let { language ->
+        languageRepository.findByIdOrNull(event.languageId.toUUID())?.let { language ->
             language.code = event.code
             language.subCode = event.subCode
             languageRepository.saveAndFlush(language)

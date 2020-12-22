@@ -1,4 +1,4 @@
-package com.esgi.nova.core.user.commands
+package com.esgi.nova.core.user.commands.language
 
 import com.esgi.nova.core_api.languages.commands.UpdateLanguageCommand
 import com.esgi.nova.core_api.languages.LanguageIdentifier
@@ -32,7 +32,7 @@ class LanguageAggregate constructor() {
 
     @CommandHandler
     constructor(command: CreateLanguageCommand) : this() {
-        AggregateLifecycle.apply(LanguageCreatedEvent(id = command.id, code = command.code, subCode = command.subCode))
+        AggregateLifecycle.apply(LanguageCreatedEvent(languageId = command.id, code = command.code, subCode = command.subCode))
     }
 
 
@@ -41,18 +41,18 @@ class LanguageAggregate constructor() {
         validateCodesAreDifferent(
                 testCode = command.code,
                 testSubCode = command.subCode)
-        AggregateLifecycle.apply(LanguageUpdateEvent(id = command.id, code = command.code, subCode = command.subCode))
+        AggregateLifecycle.apply(LanguageUpdateEvent(languageId = command.languageId, code = command.code, subCode = command.subCode))
     }
 
     @CommandHandler
     fun onDeleteLanguageCommand(command: DeleteLanguageCommand) {
-        AggregateLifecycle.apply(LanguageDeletedEvent(id = command.id))
+        AggregateLifecycle.apply(LanguageDeletedEvent(languageId = command.languageId))
     }
 
     // Event handlers
     @EventSourcingHandler
     fun onLanguageCreatedEvent(event: LanguageCreatedEvent) {
-        id = event.id
+        id = event.languageId
         code = event.code
         subCode = event.subCode
     }

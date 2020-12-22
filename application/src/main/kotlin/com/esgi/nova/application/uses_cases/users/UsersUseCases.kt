@@ -24,7 +24,7 @@ import java.util.*
 @Service
 open class UsersUseCases(private val commandGateway: CommandGateway, private val queryGateway: QueryGateway) {
     open fun delete(id: UUID) {
-        commandGateway.sendAndWait<DeleteUserCommand>(DeleteUserCommand(id = UserIdentifier(id.toString())))
+        commandGateway.sendAndWait<DeleteUserCommand>(DeleteUserCommand(userId = UserIdentifier(id.toString())))
     }
 
     open fun getCredentialByUsername(username: String): UserCredential{
@@ -88,7 +88,7 @@ open class UsersUseCases(private val commandGateway: CommandGateway, private val
         }
         commandGateway.sendAndWait<UserIdentifier>(
             CreateUserCommand(
-                id = UserIdentifier(),
+                userId = UserIdentifier(),
                 username = user.username,
                 email = user.email,
                 role = role,

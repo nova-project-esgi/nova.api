@@ -1,6 +1,7 @@
 package com.esgi.nova.query.choice
 
 import com.esgi.nova.core_api.choices.views.ChoiceView
+import com.esgi.nova.core_api.choices.views.DetailedChoiceView
 import com.esgi.nova.query.choice_resource.ChoiceResource
 import com.esgi.nova.query.choice_translation.ChoiceTranslation
 import com.esgi.nova.query.event.Event
@@ -10,25 +11,32 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "choice")
-class Choice {
+class Choice(
     @Id
     @Type(type = "uuid-char")
     @Column(name = "id", columnDefinition = "uniqueidentifier")
-    lateinit var id: UUID
+    var id: UUID
+) {
 
     @ManyToOne
     lateinit var event: Event
 
-    @OneToMany(mappedBy = "choice")
-    lateinit var choiceResources: Collection<ChoiceResource>
+    @OneToMany(mappedBy = "choice", cascade = [CascadeType.ALL])
+    var choiceResources: MutableList<ChoiceResource> = mutableListOf()
 
-    @OneToMany(mappedBy = "choice")
-    lateinit var choiceTranslations: Collection<ChoiceTranslation>
+    @OneToMany(mappedBy = "choice", cascade = [CascadeType.ALL])
+    var choiceTranslations: MutableList<ChoiceTranslation> = mutableListOf()
 
     fun toChoiceView() = ChoiceView(
             id = id,
             eventId = event.id,
             resourceIds = choiceResources.map { it.resource.id }
+    )
+
+    fun toDetailedChoiceView() = DetailedChoiceView(
+        id = id,
+        eventId = event.id,
+        translations = choiceTranslations.map { it.toChoiceTranslationView() }
     )
 
     override fun equals(other: Any?): Boolean {

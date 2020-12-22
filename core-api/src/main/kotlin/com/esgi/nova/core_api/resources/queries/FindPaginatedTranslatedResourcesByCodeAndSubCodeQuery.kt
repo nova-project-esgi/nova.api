@@ -9,3 +9,4 @@ data class FindPaginatedTranslatedResourcesByCodeAndSubCodeQuery(
         val code: String,
         val name: String
 ) : IPagination
+

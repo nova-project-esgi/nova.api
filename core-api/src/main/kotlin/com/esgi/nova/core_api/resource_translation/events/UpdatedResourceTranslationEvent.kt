@@ -6,6 +6,7 @@ import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
 import java.io.Serializable
 
 data class UpdatedResourceTranslationEvent(
-    val id: ResourceTranslationIdentifier,
+    val resourceId: ResourceIdentifier,
+    val translationId: ResourceTranslationIdentifier,
     val name: String
 ) : Serializable

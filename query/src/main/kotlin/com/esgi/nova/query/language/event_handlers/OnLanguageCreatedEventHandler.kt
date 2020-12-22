@@ -1,8 +1,6 @@
 package com.esgi.nova.query.language.event_handlers
 
 import com.esgi.nova.core_api.languages.events.LanguageCreatedEvent
-import com.esgi.nova.query.event_translation.EventTranslation
-import com.esgi.nova.query.event_translation.EventTranslationId
 import com.esgi.nova.query.language.Language
 import com.esgi.nova.query.language.LanguageRepository
 import org.axonframework.eventhandling.EventHandler
@@ -13,6 +11,6 @@ import org.springframework.stereotype.Component
 open class OnLanguageCreatedEventHandler constructor(private val languageRepository: LanguageRepository) {
     @EventHandler
     fun on(event: LanguageCreatedEvent) {
-        languageRepository.saveAndFlush(Language(event.id.toUUID(), event.code, event.subCode))
+        languageRepository.saveAndFlush(Language(event.languageId.toUUID(), event.code, event.subCode))
     }
 }

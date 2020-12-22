@@ -4,6 +4,6 @@ import com.esgi.nova.core_api.choice_translations.commands.ChoiceTranslationIden
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 class CreateChoiceResourceCommand(
-    @TargetAggregateIdentifier val id: ChoiceResourceIdentifier,
+    @TargetAggregateIdentifier val choiceResourceId: ChoiceResourceIdentifier,
     val changeValue: Int
 )

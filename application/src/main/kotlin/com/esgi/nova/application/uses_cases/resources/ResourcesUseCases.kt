@@ -11,9 +11,7 @@ import com.esgi.nova.core_api.resource_translation.commands.CreateResourceTransl
 import com.esgi.nova.core_api.resource_translation.commands.ResourceTranslationIdentifier
 import com.esgi.nova.core_api.resource_translation.queries.FindPaginatedResourceByNameAndConcatenatedCodeQuery
 import com.esgi.nova.core_api.resource_translation.views.ResourceTranslationNameView
-import com.esgi.nova.core_api.resources.commands.CreateResourceCommand
-import com.esgi.nova.core_api.resources.commands.DeleteResourceCommand
-import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
+import com.esgi.nova.core_api.resources.commands.*
 import com.esgi.nova.core_api.resources.queries.FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameQuery
 import com.esgi.nova.core_api.resources.queries.FindResourceByIdQuery
 import com.esgi.nova.core_api.resources.views.ResourceView
@@ -47,10 +45,8 @@ open class ResourcesUseCases(
                 resourceWithTranslations.translations.forEach { translation ->
                     commandGateway.sendAndWait<ResourceTranslationIdentifier>(
                         CreateResourceTranslationCommand(
-                            ResourceTranslationIdentifier(
-                                languageId = translation.languageId.toString(),
-                                resourceId = id.identifier
-                            ),
+                            id = ResourceIdentifier(id.identifier),
+                            translationId = ResourceTranslationIdentifier(translation.languageId.toString()),
                             name = translation.name
                         )
                     )
@@ -73,10 +69,7 @@ open class ResourcesUseCases(
     }
 
     fun setResourceIcon(icon: MultipartFile, id: UUID) {
-        if (fileService.fileExists(id.toString(), resourcesDir)) {
-            throw ResourceIconAlreadyExists()
-        }
-        fileService.uploadFile(
+        fileService.setFile(
             icon,
             resourcesDir,
             icon.originalFilename?.replace(icon.extractFileName(), id.toString())
@@ -125,7 +118,22 @@ open class ResourcesUseCases(
 
     fun deleteOneResourceById(id: UUID): UUID {
         return this.commandGateway
-            .sendAndWait<ResourceIdentifier>(DeleteResourceCommand(id = ResourceIdentifier(id.toString())))
+            .sendAndWait<ResourceIdentifier>(DeleteResourceCommand(resourceId = ResourceIdentifier(id.toString())))
             .toUUID()
     }
+
+    fun updateResourceWithTranslations(id: UUID, resourceForUpdate: ResourceWithTranslationsForEdition) {
+        this.commandGateway.sendAndWait<ResourceIdentifier>(
+                UpdateResourceCommand(
+                    resourceId = ResourceIdentifier(id.toString()),
+                                translations = resourceForUpdate.translations.map { TranslationEditionDto(
+                                    resourceId = ResourceIdentifier(id.toString()),
+                                    translationId = ResourceTranslationIdentifier(it.languageId.toString()),
+                                    name = it.name
+                                ) }
+                    )
+            )
+    }
+
+
 }

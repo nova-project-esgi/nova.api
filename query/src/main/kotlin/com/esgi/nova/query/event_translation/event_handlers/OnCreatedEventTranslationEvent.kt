@@ -1,6 +1,6 @@
-package com.esgi.nova.query.event.event_handler
+package com.esgi.nova.query.event_translation.event_handlers
 
-import com.esgi.nova.core_api.events.events.CreatedEventTranslationEvent
+import com.esgi.nova.core_api.event_translations.events.CreatedEventTranslationEvent
 import com.esgi.nova.query.event_translation.EventTranslation
 import com.esgi.nova.query.event_translation.EventTranslationId
 import com.esgi.nova.query.event_translation.EventTranslationRepository
@@ -12,8 +12,15 @@ open class OnCreatedEventTranslationEvent constructor(private val eventTranslati
     @EventHandler
     fun on(event: CreatedEventTranslationEvent) {
 
-        eventTranslationRepository.save(EventTranslation(id = EventTranslationId(
-                eventId = event.eventId.toUUID(),
-                languageId = event.languageId.toUUID()), description = event.description, title = event.title))
+        eventTranslationRepository.save(
+            EventTranslation(
+                id = EventTranslationId(
+                    eventId = event.eventId.toUUID(),
+                    languageId = event.translationId.toUUID()
+                ), description = event.description, title = event.title
+            )
+        )
     }
 }
+
+

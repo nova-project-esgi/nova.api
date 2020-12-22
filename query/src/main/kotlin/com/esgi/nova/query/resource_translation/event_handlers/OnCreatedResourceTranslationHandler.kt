@@ -1,6 +1,5 @@
 package com.esgi.nova.query.resource_translation.event_handlers
 
-import com.esgi.nova.common.extensions.toUUID
 import com.esgi.nova.core_api.resource_translation.events.CreatedResourceTranslationEvent
 import com.esgi.nova.query.language.LanguageRepository
 import com.esgi.nova.query.resource.ResourceRepository
@@ -9,7 +8,6 @@ import com.esgi.nova.query.resource_translation.ResourceTranslationId
 import com.esgi.nova.query.resource_translation.ResourceTranslationRepository
 import org.axonframework.eventhandling.EventHandler
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 open class OnCreatedResourceTranslationHandler constructor(
@@ -19,8 +17,8 @@ open class OnCreatedResourceTranslationHandler constructor(
 ) {
     @EventHandler
     fun on(event: CreatedResourceTranslationEvent) {
-        val resource = resourceRepository.getOne(event.id.resourceId.toUUID())
-        val language = languageRepository.getOne(event.id.languageId.toUUID())
+        val resource = resourceRepository.getOne(event.resourceId.toUUID())
+        val language = languageRepository.getOne(event.translationId.toUUID())
         try{
             resourceTranslationRepository.save(
                 ResourceTranslation(

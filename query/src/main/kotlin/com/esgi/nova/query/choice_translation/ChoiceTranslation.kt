@@ -1,6 +1,7 @@
 package com.esgi.nova.query.choice_translation
 
 import com.esgi.nova.common.StringLength
+import com.esgi.nova.core_api.choice_translations.views.ChoiceTranslationView
 import com.esgi.nova.query.choice.Choice
 import com.esgi.nova.query.language.Language
 import org.hibernate.annotations.Type
@@ -8,10 +9,14 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "choice_translation")
-class ChoiceTranslation {
-
+class ChoiceTranslation(
     @EmbeddedId
-    lateinit var id: ChoiceTranslationId
+    var id: ChoiceTranslationId,
+    @Column(length = StringLength.LONG_STRING)
+    var title: String,
+    @Column
+    var description: String
+) {
 
     @ManyToOne
     @Type(type = "uuid-char")
@@ -25,11 +30,13 @@ class ChoiceTranslation {
     @MapsId("languageId")
     lateinit var language: Language
 
-    @Column(length = StringLength.LONG_STRING)
-    lateinit var title: String
+    fun toChoiceTranslationView() = ChoiceTranslationView(
+        choiceId = choice.id,
+        language = language.toLanguageView(),
+        description = description,
+        title = title
+    )
 
-    @Column
-    lateinit var description: String
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

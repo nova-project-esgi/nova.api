@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component
 open class OnLanguageDeletedEvent constructor(private val languageRepository: LanguageRepository) {
     @EventHandler
     fun on(event: LanguageDeletedEvent) {
-        languageRepository.deleteById(event.id.toUUID());
+        languageRepository.deleteById(event.languageId.toUUID());
     }
 }

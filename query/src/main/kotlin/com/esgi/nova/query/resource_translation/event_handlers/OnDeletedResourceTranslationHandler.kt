@@ -5,7 +5,6 @@ import com.esgi.nova.query.resource_translation.ResourceTranslationId
 import com.esgi.nova.query.resource_translation.ResourceTranslationRepository
 import org.axonframework.eventhandling.EventHandler
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 open class OnDeletedResourceTranslationHandler constructor(
@@ -15,9 +14,10 @@ open class OnDeletedResourceTranslationHandler constructor(
     fun on(event: DeletedResourceTranslationEvent) {
         resourceTranslationRepository.deleteById(
             ResourceTranslationId(
-                resourceId = UUID.fromString(event.id.resourceId),
-                languageId = UUID.fromString(event.id.languageId)
+                resourceId = event.resourceId.toUUID(),
+                languageId = event.translationId.toUUID()
             )
         )
     }
 }
+

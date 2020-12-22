@@ -1,23 +1,42 @@
 package com.esgi.nova.application.uses_cases.events
 
 import com.esgi.nova.application.axon.queryPage
+import com.esgi.nova.core_api.choices.commands.ChoiceIdentifier
+import com.esgi.nova.core_api.choices.commands.CreateChoiceCommand
+import com.esgi.nova.core_api.events.commands.CreateEventCommand
 import com.esgi.nova.core_api.events.commands.EventIdentifier
+import com.esgi.nova.core_api.events.queries.FindPaginatedDetailedEventsByConcatenatedCodeAndTitleQuery
 import com.esgi.nova.core_api.events.queries.FindPaginatedEventTitlesByConcatenatedCodeAndTitleQuery
 import com.esgi.nova.core_api.events.queries.FindPaginatedEventTranslationByEventIdAndLanguageIdsQuery
-import com.esgi.nova.core_api.events.queries.FindPaginatedTranslatedEventByConcatenatedCodeAndTitleQuery
+import com.esgi.nova.core_api.events.views.DetailedEventView
 import com.esgi.nova.core_api.events.views.EventTranslationTitleView
 import com.esgi.nova.core_api.events.views.EventTranslationView
-import com.esgi.nova.core_api.events.views.TranslatedEventView
 import com.esgi.nova.core_api.languages.LanguageIdentifier
 import com.esgi.nova.core_api.pagination.PageBase
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.axonframework.modelling.command.Repository
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-open class  EventsUseCases(private val queryGateway: QueryGateway, private val commandGateway: CommandGateway) {
+open class EventsUseCases(private val queryGateway: QueryGateway, private val commandGateway: CommandGateway) {
+
+    open fun testCreateEvent(event: DetailedEventForEdition) {
+        val eventId = commandGateway.sendAndWait<EventIdentifier>(
+            CreateEventCommand(
+                isDaily = true,
+                isActive = true,
+                eventId = EventIdentifier()
+            )
+        )
+        val choiceId = commandGateway.sendAndWait<ChoiceIdentifier>(
+            CreateChoiceCommand(
+                choiceId = ChoiceIdentifier(),
+                eventId = eventId
+            )
+        )
+
+    }
 
     open fun getPaginatedTranslatedEventTitlesByConcatenatedCodeAndTitle(
         page: Int,
@@ -54,9 +73,9 @@ open class  EventsUseCases(private val queryGateway: QueryGateway, private val c
         size: Int,
         concatenatedCode: String,
         title: String
-    ): PageBase<TranslatedEventView> {
-        return queryGateway.queryPage<TranslatedEventView, FindPaginatedTranslatedEventByConcatenatedCodeAndTitleQuery>(
-            FindPaginatedTranslatedEventByConcatenatedCodeAndTitleQuery(page, size, concatenatedCode, title)
+    ): PageBase<DetailedEventView> {
+        return queryGateway.queryPage<DetailedEventView, FindPaginatedDetailedEventsByConcatenatedCodeAndTitleQuery>(
+            FindPaginatedDetailedEventsByConcatenatedCodeAndTitleQuery(page, size, concatenatedCode, title)
         )
             .join()
 

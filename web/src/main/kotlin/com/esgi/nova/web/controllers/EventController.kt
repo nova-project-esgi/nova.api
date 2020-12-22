@@ -1,9 +1,10 @@
 package com.esgi.nova.web.controllers
 
+import com.esgi.nova.application.uses_cases.events.DetailedEventForEdition
 import com.esgi.nova.application.uses_cases.events.EventsUseCases
+import com.esgi.nova.core_api.events.views.DetailedEventView
 import com.esgi.nova.core_api.events.views.EventTranslationTitleView
 import com.esgi.nova.core_api.events.views.EventTranslationView
-import com.esgi.nova.core_api.events.views.TranslatedEventView
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.pagination.PageMetadata
@@ -17,15 +18,18 @@ open class EventController constructor(
     private val eventsUseCases: EventsUseCases
 ) {
 
+    @GetMapping("test")
+    open fun testCreateEvent(){
+        eventsUseCases.testCreateEvent(DetailedEventForEdition(listOf(), listOf()))
+    }
 
-
-    @GetMapping(produces = [CustomMediaType.Application.TranslatedEvent])
+    @GetMapping(produces = [CustomMediaType.Application.DetailedEvent])
     open fun getPaginatedTranslatedEventsByConcatenatedCodeAndTitle(
         @RequestParam(value = "page", required = false, defaultValue = "${PaginationDefault.PAGE}") page: Int,
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
         @RequestParam(value = "language", required = true) concatenatedCode: String,
         @RequestParam(value = "title", required = true) title: String
-    ): PageMetadata<TranslatedEventView> {
+    ): PageMetadata<DetailedEventView> {
         return eventsUseCases.getPaginatedTranslatedEventsByConcatenatedCodeAndTitle(
             page,
             size,

@@ -1,5 +1,6 @@
 package com.esgi.nova.query.resource
 
+import com.esgi.nova.core_api.resources.views.ResourceWithTranslationIdsView
 import com.esgi.nova.core_api.resources.views.ResourceWithTranslationsView
 import com.esgi.nova.query.choice_resource.ChoiceResource
 import com.esgi.nova.query.resource_translation.ResourceTranslation
@@ -16,10 +17,10 @@ class Resource(
     var id: UUID
 ) {
 
-    @OneToMany(mappedBy = "resource")
+    @OneToMany(mappedBy = "resource",cascade = [CascadeType.ALL])
     var choiceResources: MutableList<ChoiceResource> = mutableListOf()
 
-    @OneToMany(mappedBy = "resource")
+    @OneToMany(mappedBy = "resource", cascade = [CascadeType.ALL])
     var resourceTranslations: MutableList<ResourceTranslation> = mutableListOf()
 
     override fun equals(other: Any?): Boolean {
@@ -45,5 +46,10 @@ class Resource(
     fun toResourceWithTranslationsView(): ResourceWithTranslationsView = ResourceWithTranslationsView(
         id = id,
         translations = resourceTranslations.map { it.toResourceTranslationViewWithLanguage()}
+    )
+
+    fun toResourceWithTranslationIdsView(): ResourceWithTranslationIdsView = ResourceWithTranslationIdsView(
+        id = id,
+        translationIds = resourceTranslations.map { it.id.languageId}
     )
 }
