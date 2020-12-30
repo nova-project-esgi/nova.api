@@ -14,7 +14,7 @@ open class FindPaginatedTranslatedEventByLanguageCodeAndTitleHandler(private val
 
     @QueryHandler
     fun handle(query: FindPaginatedTranslatedEventByLanguageCodeAndTitleQuery): PageBase<TranslatedEventView> {
-        return eventTranslationRepository.findEventTranslationByLanguageCodeAndTitleStartingWith(query.code, query.title, query.toPageable())
+        return eventTranslationRepository.findEventTranslationByLanguageConcatenatedCodesAndTitleStartingWith(query.code, query.title, query.toPageable())
                 .map { it.toTranslatedEventView() }
                 .toStaticPage(query)
     }

@@ -14,4 +14,5 @@ interface LanguageRepository : JpaRepository<Language, UUID> {
     fun findAllByCodeStartingWithAndSubCodeStartingWith(code: String, subCode: String?, pageable: Pageable): Page<Language>
     fun findByCodeAndSubCode(code: String, subCode: String?): Language?
     fun findAllByCode(code: String, pageable: Pageable): Page<Language>
+    fun findAllByIsDefault(isDefault: Boolean): List<Language>
 }

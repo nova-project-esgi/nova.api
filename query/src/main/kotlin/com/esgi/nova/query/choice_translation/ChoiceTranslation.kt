@@ -15,20 +15,18 @@ class ChoiceTranslation(
     @Column(length = StringLength.LONG_STRING)
     var title: String,
     @Column
-    var description: String
-) {
-
+    var description: String,
     @ManyToOne
     @Type(type = "uuid-char")
     @JoinColumn(name = "choice_id", columnDefinition = "uniqueidentifier")
     @MapsId("choiceId")
-    lateinit var choice: Choice
-
+    var choice: Choice,
     @ManyToOne
     @Type(type = "uuid-char")
     @JoinColumn(name = "language_id", columnDefinition = "uniqueidentifier")
     @MapsId("languageId")
-    lateinit var language: Language
+    var language: Language
+) {
 
     fun toChoiceTranslationView() = ChoiceTranslationView(
         choiceId = choice.id,

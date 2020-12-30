@@ -1,7 +1,7 @@
 package com.esgi.nova.query.resource
 
 import com.esgi.nova.core_api.resources.views.ResourceWithTranslationIdsView
-import com.esgi.nova.core_api.resources.views.ResourceWithTranslationsView
+import com.esgi.nova.core_api.resources.views.ResourceWithAvailableActionsView
 import com.esgi.nova.query.choice_resource.ChoiceResource
 import com.esgi.nova.query.resource_translation.ResourceTranslation
 import org.hibernate.annotations.Type
@@ -43,9 +43,9 @@ class Resource(
         return result
     }
 
-    fun toResourceWithTranslationsView(): ResourceWithTranslationsView = ResourceWithTranslationsView(
+    fun toResourceWithAvailableActionsView(): ResourceWithAvailableActionsView = ResourceWithAvailableActionsView(
         id = id,
-        translations = resourceTranslations.map { it.toResourceTranslationViewWithLanguage()}
+        translations = resourceTranslations.map { it.toResourceTranslationViewWithLanguage()},canDelete = choiceResources.isEmpty()
     )
 
     fun toResourceWithTranslationIdsView(): ResourceWithTranslationIdsView = ResourceWithTranslationIdsView(

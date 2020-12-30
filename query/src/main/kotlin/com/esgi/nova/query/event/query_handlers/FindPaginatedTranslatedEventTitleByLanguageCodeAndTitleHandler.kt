@@ -9,13 +9,13 @@ import com.esgi.nova.query.extensions.toStaticPage
 import org.axonframework.queryhandling.QueryHandler
 import org.springframework.stereotype.Component
 
-@Component
-open class FindPaginatedTranslatedEventTitleByLanguageCodeAndTitleHandler(private val eventTranslationRepository: EventTranslationRepository) {
-
-    @QueryHandler
-    fun handle(query: FindPaginatedTranslatedEventTitleByLanguageCodeAndTitleQuery): PageBase<EventTranslationTitleView> {
-        return eventTranslationRepository.findEventTranslationByLanguageCodeAndTitleStartingWith(query.code, query.title, query.toPageable())
-                .map { it.toEventTranslationTitleView() }
-                .toStaticPage(query)
-    }
-}
+//@Component
+//open class FindPaginatedTranslatedEventTitleByLanguageCodeAndTitleHandler(private val eventTranslationRepository: EventTranslationRepository) {
+//
+//    @QueryHandler
+//    fun handle(query: FindPaginatedTranslatedEventTitleByLanguageCodeAndTitleQuery): PageBase<EventTranslationTitleView> {
+//        return eventTranslationRepository.findEventTranslationByLanguageConcatenatedCodesAndTitleStartingWith(query.code, query.title, query.toPageable())
+//                .map { it.toEventTranslationTitleView() }
+//                .toStaticPage(query)
+//    }
+//}

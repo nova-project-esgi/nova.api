@@ -25,4 +25,5 @@ interface ResourceRepository : JpaRepository<Resource, UUID> {
     fun findAllByResourceTranslationsLanguageId(
         languageId: UUID
     ): List<Resource>
+
 }

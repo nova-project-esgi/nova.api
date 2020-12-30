@@ -4,7 +4,7 @@ import com.esgi.nova.application.uses_cases.resources.ResourceWithTranslationsFo
 import com.esgi.nova.application.uses_cases.resources.ResourcesUseCases
 import com.esgi.nova.core_api.resource_translation.views.ResourceTranslationNameView
 import com.esgi.nova.core_api.resources.views.ResourceView
-import com.esgi.nova.core_api.resources.views.ResourceWithTranslationsView
+import com.esgi.nova.core_api.resources.views.ResourceWithAvailableActionsView
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
@@ -61,13 +61,13 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
             .build()
     }
 
-    @GetMapping(produces = [CustomMediaType.Application.ResourceWithTranslations])
-    fun getResourcesWithTranslations(
+    @GetMapping(produces = [CustomMediaType.Application.ResourceWithTranslations], params = ["language"])
+    fun getResourcesWithTranslationsByLanguageAndName(
         @RequestParam(value = "page", required = false, defaultValue = "${PaginationDefault.PAGE}") page: Int,
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
         @RequestParam(value = "name") name: String,
         @RequestParam(value = "language") language: String
-    ): ResponseEntity<PageMetadata<ResourceWithTranslationsView>> {
+    ): ResponseEntity<PageMetadata<ResourceWithAvailableActionsView>> {
         return ResponseEntity.ok(
             resourcesUseCases.getPaginatedResourcesWithTranslationsByNameAndConcatenatedCodes(
                 page,
@@ -77,6 +77,20 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
             ).toPageMetadata()
         )
     }
+
+    @GetMapping(produces = [CustomMediaType.Application.ResourceWithTranslations])
+    fun getResourcesWithTranslations(
+        @RequestParam(value = "page", required = false, defaultValue = "${PaginationDefault.PAGE}") page: Int,
+        @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int
+    ): ResponseEntity<PageMetadata<ResourceWithAvailableActionsView>> {
+        return ResponseEntity.ok(
+            resourcesUseCases.getPaginatedResourcesWithTranslations(
+                page,
+                size
+            ).toPageMetadata()
+        )
+    }
+
 
     @PostMapping("{id}/icon")
     fun setIcon(@RequestParam("file") file: MultipartFile, @PathVariable id: UUID): ResponseEntity<Any> {

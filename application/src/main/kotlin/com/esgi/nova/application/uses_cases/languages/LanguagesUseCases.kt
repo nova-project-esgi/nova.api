@@ -5,6 +5,8 @@ import com.esgi.nova.core_api.languages.LanguageIdentifier
 import com.esgi.nova.core_api.languages.commands.CreateLanguageCommand
 import com.esgi.nova.core_api.languages.commands.DeleteLanguageCommand
 import com.esgi.nova.core_api.languages.commands.UpdateLanguageCommand
+import com.esgi.nova.core_api.languages.commands.UpdateLanguageDefaultCommand
+import com.esgi.nova.core_api.languages.exceptions.CantUpdateDefaultLanguageException
 import com.esgi.nova.core_api.languages.exceptions.LanguageAlreadyExistException
 import com.esgi.nova.core_api.languages.exceptions.LanguageNotFoundByIdException
 import com.esgi.nova.core_api.languages.queries.*
@@ -12,8 +14,6 @@ import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
 import com.esgi.nova.core_api.pagination.PageBase
 import com.esgi.nova.core_api.resource_translation.commands.CanDeleteResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.commands.DeleteResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.commands.ResourceTranslationIdentifier
 import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
 import com.esgi.nova.core_api.resources.queries.FindAllResourcesWithTranslationIdsByLanguageIdQuery
 import com.esgi.nova.core_api.resources.views.ResourceWithTranslationIdsView
@@ -27,7 +27,7 @@ import java.util.*
 @Service
 open class LanguagesUseCases(private val commandGateway: CommandGateway, private val queryGateway: QueryGateway) {
 
-    open fun create(language: LanguageForEdition): UUID {
+    open fun create(language: LanguageForCreation): UUID {
         val hasLanguage = queryGateway
             .query<LanguageView, FindLanguageByCodeAndSubCodeQuery>(
                 FindLanguageByCodeAndSubCodeQuery(
@@ -39,9 +39,10 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
         if (hasLanguage) {
             throw LanguageAlreadyExistException()
         }
+
         return commandGateway.sendAndWait<LanguageIdentifier>(
             CreateLanguageCommand(
-                id = LanguageIdentifier(),
+                languageId = LanguageIdentifier(),
                 subCode = language.subCode,
                 code = language.code
             )
@@ -80,18 +81,19 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
     }
 
 
-
-    fun canDelete(id: UUID){
+    fun canDelete(id: UUID) {
         if (!languageExists(id)) {
             throw LanguageNotFoundByIdException()
         }
         this.queryGateway.queryMany<ResourceWithTranslationIdsView, FindAllResourcesWithTranslationIdsByLanguageIdQuery>(
             FindAllResourcesWithTranslationIdsByLanguageIdQuery(languageId = LanguageIdentifier(id.toString()))
-        ).join().forEach{ resource ->
-            commandGateway.sendAndWait(CanDeleteResourceTranslationCommand(
-                id = ResourceIdentifier(resource.id.toString()),
-                translationId = ResourceTranslationIdentifier(id.toString())
-            ))
+        ).join().forEach { resource ->
+            commandGateway.sendAndWait(
+                CanDeleteResourceTranslationCommand(
+                    resourceId = ResourceIdentifier(resource.id.toString()),
+                    translationId = LanguageIdentifier(id.toString())
+                )
+            )
         }
 
     }
@@ -100,23 +102,26 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
         if (!languageExists(id)) {
             throw LanguageNotFoundByIdException()
         }
-        val resources = this.queryGateway.queryMany<ResourceWithTranslationIdsView, FindAllResourcesWithTranslationIdsByLanguageIdQuery>(
-            FindAllResourcesWithTranslationIdsByLanguageIdQuery(languageId = LanguageIdentifier(id.toString()))
-        ).join()
-        resources.forEach { resource ->
-            commandGateway.sendAndWait(DeleteResourceTranslationCommand(
-                id = ResourceIdentifier(resource.id.toString()),
-                translationId = ResourceTranslationIdentifier(id.toString())
-            ))
-        }
-        return;
-        this.commandGateway.sendAndWait<DeleteLanguageCommand>(DeleteLanguageCommand(languageId = LanguageIdentifier(id.toString())))
+//        val resources = this.queryGateway.queryMany<ResourceWithTranslationIdsView, FindAllResourcesWithTranslationIdsByLanguageIdQuery>(
+//            FindAllResourcesWithTranslationIdsByLanguageIdQuery(languageId = LanguageIdentifier(id.toString()))
+//        ).join()
+//        resources.forEach { resource ->
+//            commandGateway.sendAndWait(DeleteResourceTranslationCommand(
+//                resourceId = ResourceIdentifier(resource.id.toString()),
+//                translationId = LanguageIdentifier(id.toString())
+//            ))
+//        }
+//        return;
+        this.commandGateway.send<LanguageIdentifier>(DeleteLanguageCommand(languageId = LanguageIdentifier(id.toString())))
     }
 
     fun languageExists(id: UUID): Boolean {
+        return findLanguage(id) != null
+    }
+    fun findLanguage(id: UUID): LanguageView?{
         return queryGateway
             .query<LanguageView, FindLanguageByIdQuery>(FindLanguageByIdQuery(LanguageIdentifier(id.toString())))
-            .join() != null
+            .join()
     }
 
     fun getPaginatedLanguagesByCodeAndSubCode(
@@ -147,14 +152,46 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
             ).join()
         }
         return queryGateway.queryPage<LanguageViewWithAvailableActions, FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeQuery>(
-            FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeQuery(page = page, size = size, code = code, subCode = subCode)
+            FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeQuery(
+                page = page,
+                size = size,
+                code = code,
+                subCode = subCode
+            )
         ).join()
     }
 
 
-    fun update(language: LanguageForEdition, id: UUID) {
-        if (!languageExists(id)) {
-            throw LanguageNotFoundByIdException()
+    fun update(language: LanguageForUpdate, id: UUID) {
+        val existingLanguage = findLanguage(id) ?: throw LanguageNotFoundByIdException()
+        if(existingLanguage.isDefault && !language.isDefault){
+            throw CantUpdateDefaultLanguageException()
+        }
+        if (language.isDefault) {
+            val defaultLanguage =
+                queryGateway.query<LanguageView?, FindDefaultLanguageQuery>(FindDefaultLanguageQuery()).join()
+            if (defaultLanguage?.id != id) {
+                val canSetDefault = queryGateway.query(
+                    CanSetLanguageDefaultQuery(LanguageIdentifier(id.toString())),
+                    Boolean::class.java
+                ).join()
+                if (canSetDefault) {
+                    defaultLanguage?.let {
+                        commandGateway.sendAndWait<LanguageIdentifier>(
+                            UpdateLanguageDefaultCommand(
+                                languageId = LanguageIdentifier(defaultLanguage.id.toString()),
+                                isDefault = false
+                            )
+                        )
+                    }
+                    commandGateway.sendAndWait<LanguageIdentifier>(
+                        UpdateLanguageDefaultCommand(
+                            languageId = LanguageIdentifier(id.toString()),
+                            isDefault = true
+                        )
+                    )
+                }
+            }
         }
         this.commandGateway.sendAndWait<LanguageIdentifier>(
             UpdateLanguageCommand(

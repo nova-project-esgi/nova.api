@@ -23,7 +23,11 @@ class Language(
     var id: UUID,
 
     @Column(length = StringLength.SHORT_STRING)
-    var code: String, @Column(length = StringLength.SHORT_STRING, name = "sub_code") var subCode: String? = null
+    var code: String,
+    @Column(length = StringLength.SHORT_STRING, name = "sub_code")
+    var subCode: String? = null,
+    @Column(name = "is_default")
+    var isDefault: Boolean = false
 ) {
 
     @OneToMany(mappedBy = "language", cascade = [CascadeType.ALL])
@@ -42,15 +46,22 @@ class Language(
     fun toLanguageView() = LanguageView(
         id = id,
         code = code,
-        subCode = subCode
+        subCode = subCode,
+        isDefault = isDefault
     )
-    fun toLanguageViewWithAvailableActions() = LanguageViewWithAvailableActions(
+    fun toLanguageViewWithAvailableActions(canSetDefault: Boolean = false) = LanguageViewWithAvailableActions(
         id = id,
         code = code,
         subCode = subCode,
         canDelete = resourceTranslations.all { translation ->
             translation.resource.resourceTranslations.size > 1
-        }
+        } && eventTranslations.all { translation ->
+            translation.event.eventTranslations.size > 1
+        } && choiceTranslations.all { translation ->
+            translation.choice.choiceTranslations.size > 1
+        },
+        isDefault = isDefault,
+        canSetDefault = canSetDefault
     )
 
     override fun equals(other: Any?): Boolean {

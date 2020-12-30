@@ -1,6 +1,7 @@
 package com.esgi.nova.web.controllers
 
-import com.esgi.nova.application.uses_cases.languages.LanguageForEdition
+import com.esgi.nova.application.uses_cases.languages.LanguageForCreation
+import com.esgi.nova.application.uses_cases.languages.LanguageForUpdate
 import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
 import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
@@ -9,7 +10,6 @@ import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import com.esgi.nova.web.pagination.PageMetadata
 import com.esgi.nova.web.pagination.PaginationDefault
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
@@ -22,7 +22,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
 
     @Secured("ROLE_ADMIN")
     @PostMapping
-    open fun create(@RequestBody language: LanguageForEdition): ResponseEntity<Any> {
+    open fun create(@RequestBody language: LanguageForCreation): ResponseEntity<Any> {
         val id = languagesUseCases.create(language)
         return ResponseEntity
             .created(
@@ -33,7 +33,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
 
     @Secured("ROLE_ADMIN")
     @PutMapping("{id}")
-    open fun update(@RequestBody language: LanguageForEdition, @PathVariable id: UUID): ResponseEntity<Any>{
+    open fun update(@RequestBody language: LanguageForUpdate, @PathVariable id: UUID): ResponseEntity<Any>{
         languagesUseCases.update(language, id)
         return ResponseEntity.noContent().build<Any>()
     }

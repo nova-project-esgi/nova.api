@@ -11,22 +11,20 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "event_translation")
-class EventTranslation(@EmbeddedId
-                       var id: EventTranslationId, @Column(length = StringLength.LONG_STRING)
-                       var title: String, @Column
-                       var description: String) {
-
-    @ManyToOne
-    @Type(type = "uuid-char")
-    @JoinColumn(name = "event_id", columnDefinition = "uniqueidentifier")
-    @MapsId("eventId")
-    lateinit var event: Event
-
-    @ManyToOne
+class EventTranslation(
+    @EmbeddedId
+    var id: EventTranslationId, @Column(length = StringLength.LONG_STRING)
+    var title: String, @Column
+    var description: String, @ManyToOne
     @Type(type = "uuid-char")
     @JoinColumn(name = "language_id", columnDefinition = "uniqueidentifier")
     @MapsId("languageId")
-    lateinit var language: Language
+    var language: Language, @ManyToOne
+    @Type(type = "uuid-char")
+    @JoinColumn(name = "event_id", columnDefinition = "uniqueidentifier")
+    @MapsId("eventId")
+    var event: Event
+) {
 
     fun toTranslatedEventView() =
             TranslatedEventView(

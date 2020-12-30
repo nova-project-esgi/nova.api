@@ -7,14 +7,15 @@ import javax.persistence.Column
 import javax.persistence.Embeddable
 
 @Embeddable
-class ChoiceResourceId : Serializable {
+class ChoiceResourceId(
     @Type(type = "uuid-char")
     @Column(name = "choice_id", columnDefinition = "uniqueidentifier")
-    lateinit var choiceId: UUID
-
+    var choiceId: UUID,
     @Type(type = "uuid-char")
     @Column(name = "resource_id", columnDefinition = "uniqueidentifier")
-    lateinit var resourceId: UUID
+    var resourceId: UUID
+) : Serializable {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

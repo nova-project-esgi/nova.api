@@ -5,7 +5,7 @@ import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 data class UpdateResourceTranslationCommand(
-    @TargetAggregateIdentifier val id: ResourceIdentifier,
-    val translationId: ResourceTranslationIdentifier,
+    @TargetAggregateIdentifier val resourceId: ResourceIdentifier,
+    val translationId: LanguageIdentifier,
     val name: String
 )

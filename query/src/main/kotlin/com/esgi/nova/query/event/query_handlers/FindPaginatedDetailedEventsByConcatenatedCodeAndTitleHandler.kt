@@ -2,7 +2,6 @@ package com.esgi.nova.query.event.query_handlers
 
 import com.esgi.nova.core_api.events.queries.FindPaginatedDetailedEventsByConcatenatedCodeAndTitleQuery
 import com.esgi.nova.core_api.events.views.DetailedEventView
-import com.esgi.nova.core_api.events.views.TranslatedEventView
 import com.esgi.nova.core_api.pagination.PageBase
 import com.esgi.nova.query.event.EventRepository
 import com.esgi.nova.query.extensions.toPageable
@@ -24,3 +23,4 @@ open class FindPaginatedDetailedEventsByConcatenatedCodeAndTitleHandler(private 
         return events.map{it.toDetailedEvent()}.toStaticPage(query)
     }
 }
+

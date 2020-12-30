@@ -17,3 +17,4 @@ open class FindAllResourcesWithTranslationIdsByLanguageIdHandler(private val res
             .map { it.toResourceWithTranslationIdsView()}
     }
 }
+

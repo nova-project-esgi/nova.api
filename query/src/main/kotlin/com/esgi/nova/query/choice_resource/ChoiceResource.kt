@@ -1,5 +1,6 @@
 package com.esgi.nova.query.choice_resource
 
+import com.esgi.nova.core_api.choice_resource.views.ChoiceResourceView
 import com.esgi.nova.query.choice.Choice
 import com.esgi.nova.query.resource.Resource
 import org.hibernate.annotations.Type
@@ -42,4 +43,10 @@ class ChoiceResource(@EmbeddedId
         result = 31 * result + changeValue
         return result
     }
+
+    fun toChoiceResourceView() = ChoiceResourceView(
+        choiceId = id.choiceId,
+        changeValue = changeValue,
+        resource = resource.toResourceWithAvailableActionsView()
+    )
 }

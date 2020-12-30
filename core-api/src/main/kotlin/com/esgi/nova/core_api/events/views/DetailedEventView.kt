@@ -6,5 +6,7 @@ import java.util.*
 data class DetailedEventView(
     val id: UUID,
     val translations: List<EventTranslationView>,
-    val choices: List<DetailedChoiceView>
+    val choices: List<DetailedChoiceView>,
+    val isDaily: Boolean,
+    val isActive: Boolean
 )

@@ -4,18 +4,23 @@ import com.esgi.nova.application.axon.queryPage
 import com.esgi.nova.application.services.files.FileService
 import com.esgi.nova.common.extensions.extractFileName
 import com.esgi.nova.core_api.languages.LanguageIdentifier
+import com.esgi.nova.core_api.languages.exceptions.DefaultLanguageNotFound
 import com.esgi.nova.core_api.languages.exceptions.LanguagesNotFoundByIdsException
 import com.esgi.nova.core_api.languages.queries.AllLanguagesExistsByIdsQuery
+import com.esgi.nova.core_api.languages.queries.FindDefaultLanguageQuery
+import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.core_api.pagination.PageBase
 import com.esgi.nova.core_api.resource_translation.commands.CreateResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.commands.ResourceTranslationIdentifier
+import com.esgi.nova.core_api.resource_translation.exceptions.NoDefaultLanguageResourceTranslation
 import com.esgi.nova.core_api.resource_translation.queries.FindPaginatedResourceByNameAndConcatenatedCodeQuery
 import com.esgi.nova.core_api.resource_translation.views.ResourceTranslationNameView
 import com.esgi.nova.core_api.resources.commands.*
+import com.esgi.nova.core_api.resources.queries.CanDeleteResourceByIdQuery
 import com.esgi.nova.core_api.resources.queries.FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameQuery
+import com.esgi.nova.core_api.resources.queries.FindPaginatedResourcesWithTranslationsQuery
 import com.esgi.nova.core_api.resources.queries.FindResourceByIdQuery
 import com.esgi.nova.core_api.resources.views.ResourceView
-import com.esgi.nova.core_api.resources.views.ResourceWithTranslationsView
+import com.esgi.nova.core_api.resources.views.ResourceWithAvailableActionsView
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
 import org.axonframework.queryhandling.QueryGateway
@@ -33,28 +38,36 @@ open class ResourcesUseCases(
 ) {
 
     private val resourcesDir = "resources"
+    fun getDefaultLanguageId(): UUID {
+        return queryGateway.query<LanguageView?, FindDefaultLanguageQuery>(FindDefaultLanguageQuery()).join()?.id
+            ?: throw DefaultLanguageNotFound()
+    }
 
     fun createResourceWithTranslations(resourceWithTranslations: ResourceWithTranslationsForEdition): UUID {
         val languageIds = resourceWithTranslations.translations.map { translation -> translation.languageId };
+        val defaultLanguageId = getDefaultLanguageId()
+        if (languageIds.none { it == defaultLanguageId }) {
+            throw NoDefaultLanguageResourceTranslation()
+        }
         val languagesExists = queryGateway.query(
             AllLanguagesExistsByIdsQuery(languageIds = languageIds.map { LanguageIdentifier(it.toString()) }),
             Boolean::class.java
         ).join()
-        if (languagesExists) {
-            commandGateway.sendAndWait<ResourceIdentifier>(CreateResourceCommand(ResourceIdentifier()))?.let { id ->
-                resourceWithTranslations.translations.forEach { translation ->
-                    commandGateway.sendAndWait<ResourceTranslationIdentifier>(
-                        CreateResourceTranslationCommand(
-                            id = ResourceIdentifier(id.identifier),
-                            translationId = ResourceTranslationIdentifier(translation.languageId.toString()),
-                            name = translation.name
-                        )
-                    )
-                }
-                return id.toUUID();
-            }
+        if (!languagesExists) {
+            throw LanguagesNotFoundByIdsException(languageIds)
         }
-        throw LanguagesNotFoundByIdsException(languageIds)
+        commandGateway.sendAndWait<ResourceIdentifier>(CreateResourceCommand(ResourceIdentifier())).let { id ->
+            resourceWithTranslations.translations.forEach { translation ->
+                commandGateway.sendAndWait<LanguageIdentifier>(
+                    CreateResourceTranslationCommand(
+                        resourceId = ResourceIdentifier(id.identifier),
+                        translationId = LanguageIdentifier(translation.languageId.toString()),
+                        name = translation.name
+                    )
+                )
+            }
+            return id.toUUID();
+        }
     }
 
 
@@ -105,8 +118,8 @@ open class ResourcesUseCases(
         size: Int,
         name: String,
         language: String
-    ): PageBase<ResourceWithTranslationsView> {
-        return queryGateway.queryPage<ResourceWithTranslationsView, FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameQuery>(
+    ): PageBase<ResourceWithAvailableActionsView> {
+        return queryGateway.queryPage<ResourceWithAvailableActionsView, FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameQuery>(
             FindPaginatedResourcesWithTranslationsConcatenatedCodesAndNameQuery(
                 concatenatedCodes = language,
                 name = name,
@@ -116,23 +129,41 @@ open class ResourcesUseCases(
         ).join()
     }
 
-    fun deleteOneResourceById(id: UUID): UUID {
-        return this.commandGateway
-            .sendAndWait<ResourceIdentifier>(DeleteResourceCommand(resourceId = ResourceIdentifier(id.toString())))
-            .toUUID()
+    fun getPaginatedResourcesWithTranslations(
+        page: Int,
+        size: Int
+    ): PageBase<ResourceWithAvailableActionsView> {
+        return queryGateway.queryPage<ResourceWithAvailableActionsView, FindPaginatedResourcesWithTranslationsQuery>(
+            FindPaginatedResourcesWithTranslationsQuery(
+                page = page,
+                size = size
+            )
+        ).join()
+    }
+
+
+    fun deleteOneResourceById(id: UUID) {
+        val canDelete = this.queryGateway.query(CanDeleteResourceByIdQuery(ResourceIdentifier(id.toString())), Boolean::class.java).join()
+        if(!canDelete){
+            throw CantDeleteResourceException()
+        }
+        this.commandGateway
+            .sendAndWait<Any>(DeleteResourceCommand(resourceId = ResourceIdentifier(id.toString())))
     }
 
     fun updateResourceWithTranslations(id: UUID, resourceForUpdate: ResourceWithTranslationsForEdition) {
         this.commandGateway.sendAndWait<ResourceIdentifier>(
-                UpdateResourceCommand(
-                    resourceId = ResourceIdentifier(id.toString()),
-                                translations = resourceForUpdate.translations.map { TranslationEditionDto(
-                                    resourceId = ResourceIdentifier(id.toString()),
-                                    translationId = ResourceTranslationIdentifier(it.languageId.toString()),
-                                    name = it.name
-                                ) }
+            UpdateResourceCommand(
+                resourceId = ResourceIdentifier(id.toString()),
+                translations = resourceForUpdate.translations.map {
+                    TranslationEditionDto(
+                        resourceId = ResourceIdentifier(id.toString()),
+                        translationId = LanguageIdentifier(it.languageId.toString()),
+                        name = it.name
                     )
+                }
             )
+        )
     }
 
 

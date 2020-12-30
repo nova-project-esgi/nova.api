@@ -5,3 +5,5 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 class DeleteChoiceCommand(@TargetAggregateIdentifier val choiceId: ChoiceIdentifier) {
 }
 
+
+

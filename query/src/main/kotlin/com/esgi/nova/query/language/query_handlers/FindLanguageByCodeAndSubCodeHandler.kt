@@ -14,3 +14,4 @@ open class FindLanguageByCodeAndSubCodeHandler(private val languageRepository: L
         return languageRepository.findByCodeAndSubCode(query.code, query.subCode)?.toLanguageView()
     }
 }
+

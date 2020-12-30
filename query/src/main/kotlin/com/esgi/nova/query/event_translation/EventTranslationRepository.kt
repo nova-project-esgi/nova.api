@@ -17,8 +17,9 @@ interface EventTranslationRepository : JpaRepository<EventTranslation, EventTran
 
     fun findEventTranslationByEventIdAndLanguageIdIn(eventId: UUID, languageIds: List<UUID>, pageable: Pageable):Page<EventTranslation>
 
-    fun findEventTranslationByLanguageCodeAndTitleStartingWith(
-        code: String,
+
+    fun findEventTranslationByLanguageConcatenatedCodesAndTitleStartingWith(
+        concatenatedCode: String,
         title: String,
         pageable: Pageable
     ): Page<EventTranslation>

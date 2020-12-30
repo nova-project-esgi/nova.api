@@ -7,7 +7,7 @@ object CustomMediaType {
         const val ResourceWithTranslations  = "application/vnd+nova.resource_translations+json"
         const val ResourceName  = "application/vnd+nova.resource_name+json"
         const val EventTranslation  = "application/vnd+nova.event_translation+json"
-        const val EventTitle  = "application/vnd+nova.event_title"
+        const val EventTitle  = "application/vnd+nova.event_title+json"
         const val ChoiceWithResource  = "application/vnd+nova.choice_with_resources+json"
         const val ChoiceNavigation  = "application/vnd+nova.choice_navigation+json"
         const val DetailedEvent  = "application/vnd+nova.detailed_event+json"

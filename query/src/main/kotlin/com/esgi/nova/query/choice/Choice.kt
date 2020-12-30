@@ -8,6 +8,7 @@ import com.esgi.nova.query.event.Event
 import org.hibernate.annotations.Type
 import java.util.*
 import javax.persistence.*
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "choice")
@@ -15,11 +16,12 @@ class Choice(
     @Id
     @Type(type = "uuid-char")
     @Column(name = "id", columnDefinition = "uniqueidentifier")
-    var id: UUID
-) {
+    var id: UUID,
 
+    @JoinColumn(name = "event_id",  columnDefinition = "uniqueidentifier" ,nullable = false)
     @ManyToOne
-    lateinit var event: Event
+    var event: Event
+) {
 
     @OneToMany(mappedBy = "choice", cascade = [CascadeType.ALL])
     var choiceResources: MutableList<ChoiceResource> = mutableListOf()
@@ -36,7 +38,8 @@ class Choice(
     fun toDetailedChoiceView() = DetailedChoiceView(
         id = id,
         eventId = event.id,
-        translations = choiceTranslations.map { it.toChoiceTranslationView() }
+        translations = choiceTranslations.map { it.toChoiceTranslationView() },
+        resources = choiceResources.map{it.toChoiceResourceView()}
     )
 
     override fun equals(other: Any?): Boolean {

@@ -4,3 +4,4 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 data class DeleteEventCommand(@TargetAggregateIdentifier val eventId: EventIdentifier) {
 }
+
