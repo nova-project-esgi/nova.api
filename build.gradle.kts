@@ -34,11 +34,6 @@ extra.apply {
 allprojects {
     group = "com.esgi.nova"
     version = "0.0.1-SNAPSHOT"
-//    configurations{
-//        all{
-//            exclude("org.springframework.boot" ,"spring-boot-starter-logging")
-//        }
-//    }
 
 
     tasks.withType<KotlinCompile> {
@@ -71,13 +66,6 @@ subprojects {
         }
     }
 }
-
-
-//bootBuildImage{
-//    builder=".."
-//    imageName=tailender/imagedemo
-//}
-
 
 
 

@@ -1,9 +1,16 @@
 package com.esgi.nova.web.controllers
 
+import com.esgi.nova.application.pagination.PageMetadata
+import com.esgi.nova.application.pagination.PaginationDefault
+import com.esgi.nova.application.uses_cases.events.models.TranslatedEventsWithBackgroundDto
 import com.esgi.nova.application.uses_cases.games.GameForCreation
 import com.esgi.nova.application.uses_cases.games.GameForUpdate
 import com.esgi.nova.application.uses_cases.games.GamesUseCases
 import com.esgi.nova.core_api.games.views.GameView
+import com.esgi.nova.core_api.games.views.LeaderBoardGameView
+import com.esgi.nova.core_api.resources.views.ResourceTranslationNameView
+import com.esgi.nova.web.content_negociation.CustomMediaType
+import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -46,4 +53,35 @@ open class GameController constructor(
             .noContent()
             .build()
     }
+
+    @GetMapping("{id}/daily", produces = [CustomMediaType.Application.TranslatedEvent])
+    fun getOneDailyEvent(
+        @PathVariable("id") id: UUID,
+        @RequestParam(
+            value = "language",
+            required = true
+        ) language: String
+    ): ResponseEntity<TranslatedEventsWithBackgroundDto?> {
+        gameUseCases.getOneDailyEvent(
+            language,
+            id,
+            MvcUriComponentsBuilder.fromController(EventController::class.java).toUriString()
+        )?.let { dailyEvent -> return ResponseEntity.ok(dailyEvent) }
+        return ResponseEntity.notFound().build()
+    }
+
+    @GetMapping(produces = [CustomMediaType.Application.LeaderBoardGame])
+    open fun getPaginatedLeaderBoardGamesOrderedByEventCount(
+        @RequestParam(value = "page", required = false, defaultValue = "${PaginationDefault.PAGE}") page: Int,
+        @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
+        @RequestParam(value = "difficultyId", required = false) difficultyId: UUID?
+    ): PageMetadata<LeaderBoardGameView> {
+        return gameUseCases.getPaginatedLeaderBoardGamesOrderedByEventCount(
+            page,
+            size,
+            difficultyId
+        ).toPageMetadata()
+    }
+
+
 }

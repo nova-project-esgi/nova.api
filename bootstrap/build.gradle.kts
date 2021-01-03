@@ -24,3 +24,6 @@ dependencies {
     runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")
 }
 
+tasks.getByName<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    args = mutableListOf("--spring.profiles.active=prod" )
+}

@@ -1,6 +1,6 @@
 package com.esgi.nova.query.game_resource
 
-import com.esgi.nova.query.choice.Choice
+import com.esgi.nova.core_api.games.views.GameResourceView
 import com.esgi.nova.query.game.Game
 import com.esgi.nova.query.resource.Resource
 import org.hibernate.annotations.Type
@@ -42,5 +42,12 @@ class GameResource(
         result = 31 * result + resource.hashCode()
         result = 31 * result + total
         return result
+    }
+
+    fun toGameResourceView(): GameResourceView {
+        return GameResourceView(
+            resourceId = resource.id,
+            total = total
+        )
     }
 }

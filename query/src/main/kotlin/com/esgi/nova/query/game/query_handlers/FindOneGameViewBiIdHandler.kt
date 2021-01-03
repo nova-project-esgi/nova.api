@@ -15,3 +15,4 @@ open class FindOneGameViewBiIdHandler(private val gameRepository: GameRepository
         return gameRepository.findByIdOrNull(query.id.toUUID())?.toGameView()
     }
 }
+
