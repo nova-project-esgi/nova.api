@@ -33,7 +33,7 @@ class DifficultyResource(
     )
 
     fun toDifficultyResourceView() = DifficultyResourceView(
-        difficultyId = resource.id,
+        resourceId = resource.id,
         startValue = startValue
     )
 }
