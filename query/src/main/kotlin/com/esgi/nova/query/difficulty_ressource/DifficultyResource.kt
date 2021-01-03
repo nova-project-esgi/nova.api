@@ -1,5 +1,6 @@
 package com.esgi.nova.query.difficulty_ressource
 
+import com.esgi.nova.core_api.difficulty.views.DifficultyResourceView
 import com.esgi.nova.core_api.resources.views.ResourceDifficultyView
 import com.esgi.nova.query.difficulty.Difficulty
 import com.esgi.nova.query.resource.Resource
@@ -29,6 +30,11 @@ class DifficultyResource(
         resourceId = resource.id,
         startValue = startValue,
         difficulty = difficulty.toDetailedDifficultyView()
+    )
+
+    fun toDifficultyResourceView() = DifficultyResourceView(
+        difficultyId = resource.id,
+        startValue = startValue
     )
 }
 
