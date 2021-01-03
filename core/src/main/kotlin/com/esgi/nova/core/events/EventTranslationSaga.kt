@@ -1,9 +1,9 @@
 package com.esgi.nova.core.events
 
-import com.esgi.nova.core_api.choice_translations.commands.DeleteChoiceTranslationCommand
-import com.esgi.nova.core_api.event_translations.commands.DeleteEventTranslationCommand
-import com.esgi.nova.core_api.event_translations.events.CreatedEventTranslationEvent
-import com.esgi.nova.core_api.event_translations.events.DeletedEventTranslationEvent
+import com.esgi.nova.core_api.choices.commands.DeleteChoiceTranslationCommand
+import com.esgi.nova.core_api.events.commands.DeleteEventTranslationCommand
+import com.esgi.nova.core_api.events.events.CreatedEventTranslationEvent
+import com.esgi.nova.core_api.events.events.DeletedEventTranslationEvent
 import com.esgi.nova.core_api.events.commands.EventIdentifier
 import com.esgi.nova.core_api.events.events.DeletedEventEvent
 import com.esgi.nova.core_api.languages.events.LanguageDeletedEvent

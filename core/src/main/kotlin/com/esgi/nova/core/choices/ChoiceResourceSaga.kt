@@ -1,8 +1,8 @@
 package com.esgi.nova.core.choices
 
-import com.esgi.nova.core_api.choice_resource.commands.DeleteChoiceResourceCommand
-import com.esgi.nova.core_api.choice_resource.events.CreatedChoiceResourceEvent
-import com.esgi.nova.core_api.choice_resource.events.DeletedChoiceResourceEvent
+import com.esgi.nova.core_api.choices.commands.DeleteChoiceResourceCommand
+import com.esgi.nova.core_api.choices.events.CreatedChoiceResourceEvent
+import com.esgi.nova.core_api.choices.events.DeletedChoiceResourceEvent
 import com.esgi.nova.core_api.choices.commands.ChoiceIdentifier
 import com.esgi.nova.core_api.choices.events.DeletedChoiceEvent
 import com.esgi.nova.core_api.resources.commands.ResourceIdentifier

@@ -26,15 +26,6 @@ class EventTranslation(
     var event: Event
 ) {
 
-    fun toTranslatedEventView() =
-            TranslatedEventView(
-                    id = event.id,
-                    languageIds = event.eventTranslations.map { it.language.id },
-                    title = title,
-                    description = description,
-                    language = language.concatenatedCodes,
-                    choiceIds = event.choices.map { choice -> choice.id }
-            )
 
 
     fun toEventTranslationTitleView() = EventTranslationTitleView(

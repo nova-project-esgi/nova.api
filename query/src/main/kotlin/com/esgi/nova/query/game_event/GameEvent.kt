@@ -2,6 +2,7 @@ package com.esgi.nova.query.game_event
 
 import com.esgi.nova.query.event.Event
 import com.esgi.nova.query.game.Game
+import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 import java.util.*
@@ -9,22 +10,23 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "game_event")
-class GameEvent {
+class GameEvent(
+    @ManyToOne
+    @JoinColumn(name = "game_id", columnDefinition = "uniqueidentifier")
+    var game: Game,
+    @ManyToOne
+    @JoinColumn(name = "event_id", columnDefinition = "uniqueidentifier")
+    var event: Event,
+    @Column(name = "link_time")
+    var linkTime: LocalDateTime,
+
     @Id
     @Type(type = "uuid-char")
     @Column(name = "id", columnDefinition = "uniqueidentifier")
-    lateinit var id: UUID
+    var id: UUID = UUID.randomUUID()
+) {
 
-    @ManyToOne
-    @JoinColumn(name = "game_id", columnDefinition = "uniqueidentifier")
-    lateinit var game: Game
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", columnDefinition = "uniqueidentifier")
-    lateinit var event: Event
-
-    @Column(name = "link_time")
-    lateinit var linkTime: LocalDateTime
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

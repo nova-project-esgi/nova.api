@@ -1,6 +1,6 @@
 package com.esgi.nova.query.resource.query_handlers
 
-import com.esgi.nova.core_api.resource_translation.queries.FindAllResourceTranslationsByResourceIdQuery
+import com.esgi.nova.core_api.resources.queries.FindAllResourceTranslationsByResourceIdQuery
 import com.esgi.nova.core_api.resources.views.ResourceWithAvailableActionsView
 import com.esgi.nova.query.resource.ResourceRepository
 import org.axonframework.queryhandling.QueryHandler
@@ -14,3 +14,4 @@ open class FindResourceWithTranslationsByResourceIdHandler(private val resourceR
         return resourceRepository.findByIdOrNull(query.id.toUUID())?.toResourceWithAvailableActionsView()
     }
 }
+

@@ -1,14 +1,7 @@
 package com.esgi.nova.core.resources
 
-import com.esgi.nova.core_api.resource_translation.commands.CanDeleteResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.commands.CreateResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.commands.DeleteResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.events.CreatedResourceTranslationEvent
-import com.esgi.nova.core_api.resource_translation.events.DeletedResourceTranslationEvent
-import com.esgi.nova.core_api.resource_translation.events.UpdatedResourceTranslationEvent
 import com.esgi.nova.core_api.resources.commands.*
-import com.esgi.nova.core_api.resources.events.CreatedResourceEvent
-import com.esgi.nova.core_api.resources.events.DeletedResourceEvent
+import com.esgi.nova.core_api.resources.events.*
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
@@ -24,6 +17,9 @@ class ResourceAggregate constructor() {
     @AggregateMember
     private var translations: MutableList<ResourceTranslationEntity> = mutableListOf()
 
+    @AggregateMember
+    private var difficulties: MutableList<ResourceDifficultyEntity> = mutableListOf()
+
     @CommandHandler
     constructor(cmd: CreateResourceCommand) : this() {
         AggregateLifecycle.apply(CreatedResourceEvent(resourceId = cmd.resourceId))
@@ -36,8 +32,13 @@ class ResourceAggregate constructor() {
 
     @CommandHandler
     fun handle(cmd: UpdateResourceCommand) {
-        val translationsForCreation = mutableListOf<TranslationEditionDto>()
-        val translationsForUpdate = mutableListOf<TranslationEditionDto>()
+        updateTranslations(cmd)
+        updateDifficulties(cmd)
+    }
+
+    private fun updateTranslations(cmd: UpdateResourceCommand) {
+        val translationsForCreation = mutableListOf<ResourceTranslationEditionDto>()
+        val translationsForUpdate = mutableListOf<ResourceTranslationEditionDto>()
         val translationsDeleteIds = translations
             .filter { translation ->
                 cmd.translations.none { translationEdition -> translationEdition.translationId == translation.id }
@@ -78,7 +79,51 @@ class ResourceAggregate constructor() {
                 )
             )
         }
+    }
 
+    private fun updateDifficulties(cmd: UpdateResourceCommand) {
+        val difficultiesForCreation = mutableListOf<ResourceDifficultyEditionDto>()
+        val difficultiesForUpdate = mutableListOf<ResourceDifficultyEditionDto>()
+        val difficultiesDeleteIds = difficulties
+            .filter { difficulty ->
+                cmd.difficulties.none { difficultyEdition -> difficultyEdition.difficultyId == difficulty.id }
+            }
+            .map { t -> t.id }
+        cmd.difficulties.forEach { difficultyEdition ->
+            val difficultyEntity =
+                difficulties.firstOrNull { difficulty -> difficultyEdition.difficultyId == difficulty.id }
+            if (difficultyEntity == null) {
+                difficultiesForCreation.add(difficultyEdition)
+            } else {
+                difficultiesForUpdate.add(difficultyEdition)
+            }
+        }
+        if (difficultiesDeleteIds.size == this.difficulties.size || cmd.difficulties.isEmpty()) {
+            throw ResourceDifficultiesMinimalSizeException()
+        } else {
+            difficultiesDeleteIds.forEach { difficultyId ->
+                AggregateLifecycle.apply(
+                    DeletedResourceDifficultyEvent(
+                        resourceId = id,
+                        difficultyId = difficultyId
+                    )
+                )
+            }
+        }
+        difficultiesForUpdate.forEach { d ->
+            AggregateLifecycle.apply(
+                UpdatedResourceDifficultyEvent(
+                    resourceId = id, difficultyId = d.difficultyId, startValue = d.startValue
+                )
+            )
+        }
+        difficultiesForCreation.forEach { d ->
+            AggregateLifecycle.apply(
+                CreatedResourceDifficultyEvent(
+                    resourceId = id, difficultyId = d.difficultyId, startValue = d.startValue
+                )
+            )
+        }
     }
 
     @CommandHandler
@@ -95,6 +140,22 @@ class ResourceAggregate constructor() {
     @EventSourcingHandler
     fun on(event: CreatedResourceTranslationEvent) {
         this.translations.add(ResourceTranslationEntity(id = event.translationId, name = event.name))
+    }
+
+    @CommandHandler
+    fun handle(cmd: CreateResourceDifficultyCommand) {
+        AggregateLifecycle.apply(
+            CreatedResourceDifficultyEvent(
+                resourceId = cmd.resourceId,
+                difficultyId = cmd.difficultyId,
+                startValue = cmd.startValue
+            )
+        )
+    }
+
+    @EventSourcingHandler
+    fun on(event: CreatedResourceDifficultyEvent) {
+        this.difficulties.add(ResourceDifficultyEntity(id = event.difficultyId, startValue = event.startValue))
     }
 
 

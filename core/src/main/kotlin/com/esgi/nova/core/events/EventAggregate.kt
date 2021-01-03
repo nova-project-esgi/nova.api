@@ -3,9 +3,8 @@ package com.esgi.nova.core.events
 import com.esgi.nova.core.choices.ChoiceEntity
 import com.esgi.nova.core.resources.ResourceTranslationMinimalSizeException
 import com.esgi.nova.core_api.choices.commands.ChoiceIdentifier
-import com.esgi.nova.core_api.event_translations.commands.CreateEventTranslationCommand
-import com.esgi.nova.core_api.event_translations.commands.DeleteEventTranslationCommand
-import com.esgi.nova.core_api.event_translations.events.*
+import com.esgi.nova.core_api.events.commands.CreateEventTranslationCommand
+import com.esgi.nova.core_api.events.commands.DeleteEventTranslationCommand
 import com.esgi.nova.core_api.events.commands.*
 import com.esgi.nova.core_api.events.events.*
 import org.axonframework.commandhandling.CommandHandler

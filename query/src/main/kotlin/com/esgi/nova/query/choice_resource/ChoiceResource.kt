@@ -1,6 +1,7 @@
 package com.esgi.nova.query.choice_resource
 
-import com.esgi.nova.core_api.choice_resource.views.ChoiceResourceView
+import com.esgi.nova.core_api.choices.views.ChoiceResourceView
+import com.esgi.nova.core_api.resources.views.TranslatedChoiceResourceView
 import com.esgi.nova.query.choice.Choice
 import com.esgi.nova.query.resource.Resource
 import org.hibernate.annotations.Type
@@ -49,4 +50,14 @@ class ChoiceResource(@EmbeddedId
         changeValue = changeValue,
         resource = resource.toResourceWithAvailableActionsView()
     )
+
+    fun toTranslatedResourceView(language: String): TranslatedChoiceResourceView {
+        val translation =  resource.resourceTranslations.firstOrNull{ t -> t.language.concatenatedCodes == language  } ?: resource.resourceTranslations.first { t -> t.language.isDefault }
+        return TranslatedChoiceResourceView(
+            id = resource.id,
+            language = translation.language.concatenatedCodes,
+            changeValue = changeValue,
+            name = translation.name
+        )
+    }
 }

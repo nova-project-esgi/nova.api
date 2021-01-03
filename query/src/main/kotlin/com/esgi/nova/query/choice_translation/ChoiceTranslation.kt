@@ -1,7 +1,7 @@
 package com.esgi.nova.query.choice_translation
 
 import com.esgi.nova.common.StringLength
-import com.esgi.nova.core_api.choice_translations.views.ChoiceTranslationView
+import com.esgi.nova.core_api.choices.views.ChoiceTranslationView
 import com.esgi.nova.query.choice.Choice
 import com.esgi.nova.query.language.Language
 import org.hibernate.annotations.Type

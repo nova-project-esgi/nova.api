@@ -1,19 +1,16 @@
 package com.esgi.nova.web.controllers
 
-import com.esgi.nova.application.uses_cases.events.DetailedChoiceForEdition
-import com.esgi.nova.application.uses_cases.events.DetailedChoiceForUpdate
-import com.esgi.nova.application.uses_cases.events.DetailedEventForEdition
-import com.esgi.nova.application.uses_cases.events.EventsUseCases
+import com.esgi.nova.application.pagination.PageMetadata
+import com.esgi.nova.application.pagination.PaginationDefault
+import com.esgi.nova.application.uses_cases.events.*
+import com.esgi.nova.application.uses_cases.events.models.*
 import com.esgi.nova.core_api.events.views.DetailedEventView
 import com.esgi.nova.core_api.events.views.EventTranslationTitleView
 import com.esgi.nova.core_api.events.views.EventTranslationView
 import com.esgi.nova.core_api.events.views.EventView
-import com.esgi.nova.core_api.resources.views.ResourceView
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
-import com.esgi.nova.web.pagination.PageMetadata
-import com.esgi.nova.web.pagination.PaginationDefault
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -60,8 +57,9 @@ open class EventController constructor(
         eventsUseCases.deleteOneEventById(id)
         return ResponseEntity.noContent().build()
     }
+
     @PostMapping(consumes = [CustomMediaType.Application.DetailedEvent])
-    open fun createDetailedEvent(@RequestBody event: DetailedEventForEdition<DetailedChoiceForEdition>): ResponseEntity<Message>{
+    open fun createDetailedEvent(@RequestBody event: DetailedEventForEdition<DetailedChoiceForEdition>): ResponseEntity<Message> {
         val id = eventsUseCases.createEvent(event)
         return ResponseEntity
             .created(
@@ -70,8 +68,11 @@ open class EventController constructor(
             .build()
     }
 
-    @PutMapping("{id}",consumes = [CustomMediaType.Application.DetailedEvent])
-    open fun updateDetailedEvent(@PathVariable id: UUID, @RequestBody event: DetailedEventForEdition<DetailedChoiceForUpdate>): ResponseEntity<Any>{
+    @PutMapping("{id}", consumes = [CustomMediaType.Application.DetailedEvent])
+    open fun updateDetailedEvent(
+        @PathVariable id: UUID,
+        @RequestBody event: DetailedEventForEdition<DetailedChoiceForUpdate>
+    ): ResponseEntity<Any> {
         eventsUseCases.updateEvent(id, event)
         return ResponseEntity
             .noContent()
@@ -126,6 +127,21 @@ open class EventController constructor(
                 "attachment; filename=\"" + background.filename.toString() + "\""
             )
             .body<Resource>(background)
+    }
+
+    @GetMapping(produces = [CustomMediaType.Application.TranslatedEvent])
+    fun getAllStandardTranslatedEvents(
+        @RequestParam(
+            value = "language",
+            required = true
+        ) language: String
+    ): ResponseEntity<List<TranslatedEventsWithBackgroundDto>> {
+        return ResponseEntity.ok(
+            eventsUseCases.loadAllStandardEventsByLanguage(
+                language,
+                MvcUriComponentsBuilder.fromController(EventController::class.java).toUriString()
+            )
+        )
     }
 
 

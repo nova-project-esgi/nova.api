@@ -14,4 +14,6 @@ interface EventRepository : JpaRepository<Event, UUID> {
         concatenatedCodes: String,
         page: Pageable
     ): Page<Event>
+
+    fun findAllByIsActiveAndIsDaily(isActive: Boolean, isDaily: Boolean): List<Event>
 }

@@ -4,13 +4,11 @@ import com.esgi.nova.core_api.choices.commands.ChoiceIdentifier
 import com.esgi.nova.core_api.choices.commands.DeleteChoiceCommand
 import com.esgi.nova.core_api.choices.events.CreatedChoiceEvent
 import com.esgi.nova.core_api.choices.events.DeletedChoiceEvent
-import com.esgi.nova.core_api.event_translations.events.AddedChoiceEvent
-import com.esgi.nova.core_api.event_translations.events.RemovedChoiceEvent
+import com.esgi.nova.core_api.events.events.RemovedChoiceEvent
 import com.esgi.nova.core_api.events.commands.AddChoiceCommand
 import com.esgi.nova.core_api.events.commands.EventIdentifier
 import com.esgi.nova.core_api.events.events.DeletedEventEvent
 import org.axonframework.commandhandling.gateway.CommandGateway
-import org.axonframework.extensions.kotlin.send
 import org.axonframework.modelling.saga.SagaEventHandler
 import org.axonframework.modelling.saga.SagaLifecycle
 import org.axonframework.modelling.saga.StartSaga
@@ -31,7 +29,6 @@ open class EventChoiceSaga constructor() {
         SagaLifecycle.associateWith("eventId", event.eventId.toString())
         commandGateway.send<EventIdentifier>(AddChoiceCommand(eventId = event.eventId, choiceId = event.choiceId))
     }
-
 
     @SagaEventHandler(associationProperty = "eventId")
     fun on(event: DeletedEventEvent){

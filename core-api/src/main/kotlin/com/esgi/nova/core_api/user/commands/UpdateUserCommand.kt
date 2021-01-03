@@ -8,6 +8,6 @@ data class UpdateUserCommand(
         @TargetAggregateIdentifier val userId: UserIdentifier,
         val email: String,
         val username: String,
-        val password: String,
-        val role: Role
+        val password: String
 )
+

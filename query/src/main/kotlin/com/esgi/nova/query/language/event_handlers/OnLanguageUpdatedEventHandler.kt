@@ -12,7 +12,7 @@ open class OnLanguageUpdatedEventHandler constructor(private val languageReposit
     fun on(event: LanguageUpdateEvent) {
         languageRepository.findByIdOrNull(event.languageId.toUUID())?.let { language ->
             language.code = event.code
-            language.subCode = event.subCode
+            language.subCode = if (event.subCode.isNullOrBlank()) null else event.subCode
             language.isDefault = event.isDefault
             languageRepository.saveAndFlush(language)
         }

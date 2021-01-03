@@ -1,6 +1,6 @@
 package com.esgi.nova.query.choice_translation.event_handlers
 
-import com.esgi.nova.core_api.choice_translations.events.UpdatedChoiceTranslationEvent
+import com.esgi.nova.core_api.choices.events.UpdatedChoiceTranslationEvent
 import com.esgi.nova.query.choice_translation.ChoiceTranslationId
 import com.esgi.nova.query.choice_translation.ChoiceTranslationRepository
 import org.axonframework.eventhandling.EventHandler

@@ -1,6 +1,6 @@
 package com.esgi.nova.query.choice_resource.event_handlers
 
-import com.esgi.nova.core_api.choice_resource.events.CreatedChoiceResourceEvent
+import com.esgi.nova.core_api.choices.events.CreatedChoiceResourceEvent
 import com.esgi.nova.query.choice.ChoiceRepository
 import com.esgi.nova.query.choice_resource.ChoiceResource
 import com.esgi.nova.query.choice_resource.ChoiceResourceId

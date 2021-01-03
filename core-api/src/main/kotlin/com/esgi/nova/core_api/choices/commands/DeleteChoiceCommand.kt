@@ -6,4 +6,3 @@ class DeleteChoiceCommand(@TargetAggregateIdentifier val choiceId: ChoiceIdentif
 }
 
 
-

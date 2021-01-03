@@ -5,3 +5,5 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 data class CreateResourceCommand(@TargetAggregateIdentifier val resourceId: ResourceIdentifier) {
 }
 
+
+

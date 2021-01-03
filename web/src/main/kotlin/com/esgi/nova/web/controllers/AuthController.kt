@@ -1,8 +1,8 @@
 package com.esgi.nova.web.controllers
 
-import com.esgi.nova.application.uses_cases.users.ConnectedUser
-import com.esgi.nova.application.uses_cases.users.UserLogin
-import com.esgi.nova.application.uses_cases.users.UserRegister
+import com.esgi.nova.application.uses_cases.users.models.ConnectedUser
+import com.esgi.nova.application.uses_cases.users.models.UserLogin
+import com.esgi.nova.application.uses_cases.users.models.UserEdition
 import com.esgi.nova.application.uses_cases.users.UsersUseCases
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,7 +13,7 @@ open class AuthController constructor(private val usersUseCases: UsersUseCases) 
 
 
     @PostMapping("register")
-    open fun register(@RequestBody user: UserRegister): ResponseEntity<ConnectedUser> {
+    open fun register(@RequestBody user: UserEdition): ResponseEntity<ConnectedUser> {
         return ResponseEntity.ok(usersUseCases.register(user))
     }
 

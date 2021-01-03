@@ -15,3 +15,6 @@ open class FindOneDetailedEventByIdHandler(private val eventRepository: EventRep
         return eventRepository.findByIdOrNull(query.id.toUUID())?.toDetailedEvent()
     }
 }
+
+
+

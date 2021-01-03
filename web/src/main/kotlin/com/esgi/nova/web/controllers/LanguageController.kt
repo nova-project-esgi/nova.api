@@ -1,15 +1,15 @@
 package com.esgi.nova.web.controllers
 
-import com.esgi.nova.application.uses_cases.languages.LanguageForCreation
-import com.esgi.nova.application.uses_cases.languages.LanguageForUpdate
+import com.esgi.nova.application.uses_cases.languages.models.LanguageForCreation
+import com.esgi.nova.application.uses_cases.languages.models.LanguageForUpdate
 import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
 import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
-import com.esgi.nova.web.pagination.PageMetadata
-import com.esgi.nova.web.pagination.PaginationDefault
+import com.esgi.nova.application.pagination.PageMetadata
+import com.esgi.nova.application.pagination.PaginationDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*

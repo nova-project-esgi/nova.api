@@ -1,9 +1,9 @@
 package com.esgi.nova.core.resources
 
 import com.esgi.nova.core_api.languages.events.LanguageDeletedEvent
-import com.esgi.nova.core_api.resource_translation.commands.DeleteResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.events.CreatedResourceTranslationEvent
-import com.esgi.nova.core_api.resource_translation.events.DeletedResourceTranslationEvent
+import com.esgi.nova.core_api.resources.commands.DeleteResourceTranslationCommand
+import com.esgi.nova.core_api.resources.events.CreatedResourceTranslationEvent
+import com.esgi.nova.core_api.resources.events.DeletedResourceTranslationEvent
 import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
 import com.esgi.nova.core_api.resources.events.DeletedResourceEvent
 import org.axonframework.commandhandling.gateway.CommandGateway

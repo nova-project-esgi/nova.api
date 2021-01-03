@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component
 open class CanDeleteResourceByIdHandler(private val resourceRepository: ResourceRepository) {
 
     @QueryHandler
-    fun handle(query: CanDeleteResourceByIdQuery):Boolean {
-        resourceRepository.findNullableById(query.id.toUUID())?.let{
-            return it.choiceResources.isEmpty()
+    fun handle(query: CanDeleteResourceByIdQuery): Boolean {
+        resourceRepository.findNullableById(query.id.toUUID())?.let {
+            return it.choiceResources.isEmpty() && it.gameResources.isEmpty()
         }
         return false;
     }
 }
+

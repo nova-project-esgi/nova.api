@@ -6,3 +6,4 @@ import java.io.Serializable
 data class DeletedResourceEvent(
     val resourceId: ResourceIdentifier
 ) : Serializable
+

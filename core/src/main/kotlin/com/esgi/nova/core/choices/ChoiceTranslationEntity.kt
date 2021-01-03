@@ -1,12 +1,8 @@
 package com.esgi.nova.core.choices
 
-import com.esgi.nova.core_api.choice_translations.events.UpdatedChoiceTranslationEvent
+import com.esgi.nova.core_api.choices.events.UpdatedChoiceTranslationEvent
 import com.esgi.nova.core_api.languages.LanguageIdentifier
-import com.esgi.nova.core_api.resource_translation.commands.UpdateResourceTranslationCommand
-import com.esgi.nova.core_api.resource_translation.events.UpdatedResourceTranslationEvent
-import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
-import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.modelling.command.EntityId
 
 

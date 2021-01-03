@@ -1,31 +1,34 @@
 package com.esgi.nova.application.uses_cases.events
 
 import com.esgi.nova.application.axon.queryPage
+import com.esgi.nova.application.pagination.Link
+import com.esgi.nova.application.pagination.Relation
 import com.esgi.nova.application.services.files.FileService
+import com.esgi.nova.application.uses_cases.events.models.*
+import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
 import com.esgi.nova.application.uses_cases.resources.ResourceIconNotFoundException
 import com.esgi.nova.common.extensions.extractFileName
-import com.esgi.nova.core_api.choice_resource.commands.CreateChoiceResourceCommand
-import com.esgi.nova.core_api.choice_translations.commands.CreateChoiceTranslationCommand
-import com.esgi.nova.core_api.choice_translations.exceptions.NoDefaultLanguageChoiceTranslation
+import com.esgi.nova.core_api.choices.commands.CreateChoiceResourceCommand
+import com.esgi.nova.core_api.choices.commands.CreateChoiceTranslationCommand
+import com.esgi.nova.core_api.choices.exceptions.NoDefaultLanguageChoiceTranslation
 import com.esgi.nova.core_api.choices.commands.*
 import com.esgi.nova.core_api.choices.exceptions.ChoiceWithoutResourcesException
-import com.esgi.nova.core_api.event_translations.commands.CreateEventTranslationCommand
-import com.esgi.nova.core_api.event_translations.exceptions.NoDefaultLanguageEventTranslation
+import com.esgi.nova.core_api.events.commands.CreateEventTranslationCommand
+import com.esgi.nova.core_api.events.exceptions.NoDefaultLanguageEventTranslation
 import com.esgi.nova.core_api.events.commands.*
 import com.esgi.nova.core_api.events.exceptions.EventWithoutChoicesException
 import com.esgi.nova.core_api.events.queries.*
-import com.esgi.nova.core_api.events.views.DetailedEventView
-import com.esgi.nova.core_api.events.views.EventTranslationTitleView
-import com.esgi.nova.core_api.events.views.EventTranslationView
-import com.esgi.nova.core_api.events.views.EventView
+import com.esgi.nova.core_api.events.views.*
 import com.esgi.nova.core_api.languages.LanguageIdentifier
 import com.esgi.nova.core_api.languages.exceptions.DefaultLanguageNotFound
 import com.esgi.nova.core_api.languages.queries.FindDefaultLanguageQuery
 import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.core_api.pagination.PageBase
 import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
+import io.netty.handler.codec.http.HttpMethod
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
+import org.axonframework.extensions.kotlin.queryMany
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
@@ -37,35 +40,16 @@ import java.util.*
 open class EventsUseCases(
     private val queryGateway: QueryGateway,
     private val commandGateway: CommandGateway,
-    private val fileService: FileService
+    private val fileService: FileService,
+    private val languageUsesCases: LanguagesUseCases
 ) {
     private val eventDir = "events"
 
-    fun getDefaultLanguageId(): UUID {
-        return queryGateway.query<LanguageView?, FindDefaultLanguageQuery>(FindDefaultLanguageQuery()).join()?.id
-            ?: throw DefaultLanguageNotFound()
-    }
 
     open fun getOneById(id: UUID): EventView {
         return queryGateway.query<EventView, FindOneEventByIdQuery>(FindOneEventByIdQuery(EventIdentifier(id.toString())))
             .join()
     }
-
-//    open fun testCreateEvent(event: DetailedEventForEdition) {
-//        val eventId = commandGateway.sendAndWait<EventIdentifier>(
-//            CreateEventCommand(
-//                isDaily = true,
-//                isActive = true,
-//                eventId = EventIdentifier()
-//            )
-//        )
-//        val choiceId = commandGateway.sendAndWait<ChoiceIdentifier>(
-//            CreateChoiceCommand(
-//                choiceId = ChoiceIdentifier(),
-//                eventId = eventId
-//            )
-//        )
-//    }
 
     open fun createEvent(event: DetailedEventForEdition<DetailedChoiceForEdition>): UUID {
         validateEventEdition(event)
@@ -167,7 +151,7 @@ open class EventsUseCases(
 
 
     private fun <Choice : DetailedChoiceForEdition> validateEventEdition(event: DetailedEventForEdition<Choice>) {
-        val defaultLanguageId = getDefaultLanguageId();
+        val defaultLanguageId = languageUsesCases.getDefaultLanguageId();
         if (event.translations.none { t -> t.languageId == defaultLanguageId }) {
             throw NoDefaultLanguageEventTranslation()
         }
@@ -239,23 +223,42 @@ open class EventsUseCases(
 
     fun getEventBackground(id: UUID): Resource {
         try {
-            return this.fileService.loadFileAsResource(eventDir, id.toString())
+            return fileService.loadFileAsResource(eventDir, id.toString())
         } catch (e: FileNotFoundException) {
             throw ResourceIconNotFoundException()
         }
     }
 
     fun deleteOneEventById(id: UUID) {
-        this.commandGateway
+        commandGateway
             .sendAndWait<Any>(DeleteEventCommand(eventId = EventIdentifier(id.toString())))
     }
 
     fun getOneDetailedById(id: UUID): DetailedEventView {
-        return this.queryGateway.query<DetailedEventView, FindOneDetailedEventByIdQuery>(
+        return queryGateway.query<DetailedEventView, FindOneDetailedEventByIdQuery>(
             FindOneDetailedEventByIdQuery(
                 EventIdentifier(id.toString())
             )
         ).join()
+    }
+
+    fun loadAllStandardEventsByLanguage(language: String, backgroundBaseUrl: String): List<TranslatedEventsWithBackgroundDto> {
+        return queryGateway.queryMany<TranslatedEventView, FindAllTranslatedEventsByLanguageFrequencyAndActiveStateQuery>(
+            FindAllTranslatedEventsByLanguageFrequencyAndActiveStateQuery(
+                language = language,
+                isActive = true,
+                isDaily = false
+            )
+        ).join().map { e ->
+            TranslatedEventsWithBackgroundDto(
+                id = e.id,
+                language = e.language,
+                description = e.description,
+                title = e.title,
+                choices = e.choices,
+                backgroundUrl = Link(Relation.ASSET, "$backgroundBaseUrl/${e.id}/background", HttpMethod.GET)
+            )
+        }
     }
 
 

@@ -1,7 +1,8 @@
 package com.esgi.nova.core.choices
 
-import com.esgi.nova.core_api.choice_resource.events.UpdatedChoiceResourceEvent
+import com.esgi.nova.core_api.choices.events.UpdatedChoiceResourceEvent
 import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
+import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.EntityId
 
 class ChoiceResourceEntity() {
@@ -16,6 +17,7 @@ class ChoiceResourceEntity() {
         this.changeValue = changeValue
     }
 
+    @EventSourcingHandler
     fun on(event: UpdatedChoiceResourceEvent){
         changeValue = event.changeValue
     }

@@ -26,7 +26,11 @@ open class FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeHandler(
         val choiceCount = choiceRepository.count()
         val resourceCount = resourceRepository.count()
         return languageRepository
-            .findAllByCodeStartingWithAndSubCodeStartingWith(code = query.code, subCode = query.subCode, pageable = query.toPageable())
+            .findAllByCodeStartingWithAndSubCodeStartingWith(
+                code = query.code,
+                subCode = query.subCode,
+                pageable = query.toPageable()
+            )
             .map { language ->
                 val canSetDefault = eventCount.toInt() == language.eventTranslations.size
                         && choiceCount.toInt() == language.choiceTranslations.size
@@ -38,3 +42,4 @@ open class FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeHandler(
 
     }
 }
+

@@ -2,6 +2,7 @@ package com.esgi.nova.query.choice
 
 import com.esgi.nova.core_api.choices.views.ChoiceView
 import com.esgi.nova.core_api.choices.views.DetailedChoiceView
+import com.esgi.nova.core_api.choices.views.TranslatedChoiceView
 import com.esgi.nova.query.choice_resource.ChoiceResource
 import com.esgi.nova.query.choice_translation.ChoiceTranslation
 import com.esgi.nova.query.event.Event
@@ -62,6 +63,18 @@ class Choice(
         result = 31 * result + choiceResources.hashCode()
         result = 31 * result + choiceTranslations.hashCode()
         return result
+    }
+
+    fun toTranslatedChoiceView(language: String): TranslatedChoiceView {
+        val translation =  choiceTranslations.firstOrNull{ t -> t.language.concatenatedCodes == language  } ?: choiceTranslations.first { t -> t.language.isDefault }
+        return TranslatedChoiceView(
+            id = id,
+            language = translation.language.code,
+            title = translation.title,
+            description = translation.description,
+            eventId = event.id,
+            resources = choiceResources.map { r -> r.toTranslatedResourceView(language) }
+        )
     }
 
 

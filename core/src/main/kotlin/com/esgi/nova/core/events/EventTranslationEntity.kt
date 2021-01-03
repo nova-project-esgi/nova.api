@@ -1,7 +1,7 @@
 package com.esgi.nova.core.events
 
-import com.esgi.nova.core_api.event_translations.commands.UpdateEventTranslationCommand
-import com.esgi.nova.core_api.event_translations.events.UpdatedEventTranslationEvent
+import com.esgi.nova.core_api.events.commands.UpdateEventTranslationCommand
+import com.esgi.nova.core_api.events.events.UpdatedEventTranslationEvent
 import com.esgi.nova.core_api.languages.LanguageIdentifier
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler

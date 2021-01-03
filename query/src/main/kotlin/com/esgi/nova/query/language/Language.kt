@@ -4,6 +4,7 @@ import com.esgi.nova.common.StringLength
 import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
 import com.esgi.nova.query.choice_translation.ChoiceTranslation
+import com.esgi.nova.query.difficulty_translation.DifficultyTranslation
 import com.esgi.nova.query.event_translation.EventTranslation
 import com.esgi.nova.query.resource_translation.ResourceTranslation
 import org.hibernate.annotations.Formula
@@ -39,9 +40,11 @@ class Language(
     @OneToMany(mappedBy = "language", cascade = [CascadeType.ALL])
     var resourceTranslations: MutableList<ResourceTranslation> = mutableListOf()
 
+    @OneToMany(mappedBy = "language", cascade = [CascadeType.ALL])
+    var difficultyTranslations: MutableList<DifficultyTranslation> = mutableListOf()
 
-    @Formula(value = "concat(code, '-', sub_code)")
-    val concatenatedCodes = if (subCode != null) "${code}-${subCode}" else code
+    @Formula(value = "iif(sub_code IS NULL , code, concat(code, '-', sub_code))")
+    val concatenatedCodes = if (!subCode.isNullOrBlank()) "${code}-${subCode}" else code
 
     fun toLanguageView() = LanguageView(
         id = id,
@@ -59,6 +62,8 @@ class Language(
             translation.event.eventTranslations.size > 1
         } && choiceTranslations.all { translation ->
             translation.choice.choiceTranslations.size > 1
+        } && difficultyTranslations.all { translation ->
+            translation.difficulty.difficultyTranslations.size > 1
         },
         isDefault = isDefault,
         canSetDefault = canSetDefault
@@ -66,16 +71,17 @@ class Language(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Language
+        if (other !is Language) return false
 
         if (id != other.id) return false
         if (code != other.code) return false
         if (subCode != other.subCode) return false
+        if (isDefault != other.isDefault) return false
         if (choiceTranslations != other.choiceTranslations) return false
         if (eventTranslations != other.eventTranslations) return false
         if (resourceTranslations != other.resourceTranslations) return false
+        if (difficultyTranslations != other.difficultyTranslations) return false
+        if (concatenatedCodes != other.concatenatedCodes) return false
 
         return true
     }
@@ -84,9 +90,12 @@ class Language(
         var result = id.hashCode()
         result = 31 * result + code.hashCode()
         result = 31 * result + (subCode?.hashCode() ?: 0)
+        result = 31 * result + isDefault.hashCode()
         result = 31 * result + choiceTranslations.hashCode()
         result = 31 * result + eventTranslations.hashCode()
         result = 31 * result + resourceTranslations.hashCode()
+        result = 31 * result + difficultyTranslations.hashCode()
+        result = 31 * result + concatenatedCodes.hashCode()
         return result
     }
 

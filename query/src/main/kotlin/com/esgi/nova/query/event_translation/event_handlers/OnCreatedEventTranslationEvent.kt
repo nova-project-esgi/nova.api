@@ -1,6 +1,6 @@
 package com.esgi.nova.query.event_translation.event_handlers
 
-import com.esgi.nova.core_api.event_translations.events.CreatedEventTranslationEvent
+import com.esgi.nova.core_api.events.events.CreatedEventTranslationEvent
 import com.esgi.nova.query.event.EventRepository
 import com.esgi.nova.query.event_translation.EventTranslation
 import com.esgi.nova.query.event_translation.EventTranslationId

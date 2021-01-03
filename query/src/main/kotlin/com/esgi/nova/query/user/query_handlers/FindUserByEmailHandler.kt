@@ -14,3 +14,4 @@ open class FindUserByEmailHandler(private val userRepository: UserRepository) {
         return userRepository.findByEmail(query.email)?.toUserResume()
     }
 }
+

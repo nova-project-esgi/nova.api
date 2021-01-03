@@ -2,6 +2,7 @@ package com.esgi.nova.query.event
 
 import com.esgi.nova.core_api.events.views.DetailedEventView
 import com.esgi.nova.core_api.events.views.EventView
+import com.esgi.nova.core_api.events.views.TranslatedEventView
 import com.esgi.nova.query.choice.Choice
 import com.esgi.nova.query.event_translation.EventTranslation
 import org.hibernate.annotations.Type
@@ -31,6 +32,17 @@ class Event(
         isDaily = isDaily,
         isActive = isActive
     )
+
+    fun toTranslatedEvent(language: String): TranslatedEventView {
+        val translation =  eventTranslations.firstOrNull{ t -> t.language.concatenatedCodes == language  } ?: eventTranslations.first { t -> t.language.isDefault }
+        return TranslatedEventView(
+            id = id,
+            description = translation.description,
+            title = translation.title,
+            language = translation.language.concatenatedCodes,
+            choices = choices.map { c -> c.toTranslatedChoiceView(language)}
+        )
+    }
 
     fun toEventView() = EventView(
         id = id,

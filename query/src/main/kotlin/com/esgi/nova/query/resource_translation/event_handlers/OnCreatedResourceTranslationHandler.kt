@@ -1,6 +1,6 @@
 package com.esgi.nova.query.resource_translation.event_handlers
 
-import com.esgi.nova.core_api.resource_translation.events.CreatedResourceTranslationEvent
+import com.esgi.nova.core_api.resources.events.CreatedResourceTranslationEvent
 import com.esgi.nova.query.language.LanguageRepository
 import com.esgi.nova.query.resource.ResourceRepository
 import com.esgi.nova.query.resource_translation.ResourceTranslation

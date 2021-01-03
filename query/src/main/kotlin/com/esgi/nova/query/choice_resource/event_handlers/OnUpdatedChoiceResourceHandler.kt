@@ -1,6 +1,6 @@
 package com.esgi.nova.query.choice_resource.event_handlers
 
-import com.esgi.nova.core_api.choice_resource.events.UpdatedChoiceResourceEvent
+import com.esgi.nova.core_api.choices.events.UpdatedChoiceResourceEvent
 import com.esgi.nova.query.choice_resource.ChoiceResourceId
 import com.esgi.nova.query.choice_resource.ChoiceResourceRepository
 import org.axonframework.eventhandling.EventHandler

@@ -1,15 +1,16 @@
 package com.esgi.nova.web.controllers
 
-import com.esgi.nova.application.uses_cases.resources.ResourceWithTranslationsForEdition
+import com.esgi.nova.application.uses_cases.resources.models.DetailedResourceForEdition
 import com.esgi.nova.application.uses_cases.resources.ResourcesUseCases
-import com.esgi.nova.core_api.resource_translation.views.ResourceTranslationNameView
+import com.esgi.nova.core_api.resources.views.ResourceTranslationNameView
 import com.esgi.nova.core_api.resources.views.ResourceView
 import com.esgi.nova.core_api.resources.views.ResourceWithAvailableActionsView
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
-import com.esgi.nova.web.pagination.PageMetadata
-import com.esgi.nova.web.pagination.PaginationDefault
+import com.esgi.nova.application.pagination.PageMetadata
+import com.esgi.nova.application.pagination.PaginationDefault
+import com.esgi.nova.application.uses_cases.resources.TranslatedResourceWithIconDto
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -40,7 +41,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
 
     @PostMapping(consumes = [CustomMediaType.Application.ResourceWithTranslations])
     fun createResourceWithTranslations(
-        @RequestBody resource: ResourceWithTranslationsForEdition
+        @RequestBody resource: DetailedResourceForEdition
     ): ResponseEntity<Message> {
         val id = this.resourcesUseCases.createResourceWithTranslations(resource)
         return ResponseEntity
@@ -53,7 +54,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
     @PutMapping("{id}", consumes = [CustomMediaType.Application.ResourceWithTranslations])
     fun updateResourceWithTranslations(
         @PathVariable id: UUID,
-        @RequestBody resource: ResourceWithTranslationsForEdition
+        @RequestBody resource: DetailedResourceForEdition
     ): ResponseEntity<Any> {
         this.resourcesUseCases.updateResourceWithTranslations(id, resource)
         return ResponseEntity
@@ -131,4 +132,21 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
             language
         ).toPageMetadata()
     }
+
+    @GetMapping(produces = [CustomMediaType.Application.TranslatedResource])
+    fun getAllStandardTranslatedResources(
+        @RequestParam(
+            value = "language",
+            required = true
+        ) language: String
+    ): ResponseEntity<List<TranslatedResourceWithIconDto>> {
+        return ResponseEntity.ok(
+            resourcesUseCases.loadAllStandardResourcesByLanguage(
+                language,
+                MvcUriComponentsBuilder.fromController(ResourceController::class.java).toUriString()
+            )
+        )
+    }
+
+
 }

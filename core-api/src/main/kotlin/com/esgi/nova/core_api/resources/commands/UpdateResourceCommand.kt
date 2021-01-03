@@ -1,6 +1,8 @@
 package com.esgi.nova.core_api.resources.commands
 
+import com.esgi.nova.core_api.difficulty.commands.DifficultyIdentifier
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
-data class UpdateResourceCommand(@TargetAggregateIdentifier val resourceId: ResourceIdentifier, val translations: List<TranslationEditionDto>) {
+data class UpdateResourceCommand(@TargetAggregateIdentifier val resourceId: ResourceIdentifier, val translations: List<ResourceTranslationEditionDto>, val difficulties: List<ResourceDifficultyEditionDto>) {
 }
+

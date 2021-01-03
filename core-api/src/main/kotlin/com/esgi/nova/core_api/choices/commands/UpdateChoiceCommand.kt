@@ -4,3 +4,4 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 class UpdateChoiceCommand(@TargetAggregateIdentifier val choiceId: ChoiceIdentifier,val translations: List<ChoiceTranslationEditionDto>, val resources: List<ChoiceResourceEditionDto>) {
 }
+

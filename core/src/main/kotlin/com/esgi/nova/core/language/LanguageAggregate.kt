@@ -63,10 +63,6 @@ class LanguageAggregate constructor() {
 
     @CommandHandler
     fun handle(command: UpdateLanguageCommand) {
-        validateCodesAreDifferent(
-            testCode = command.code,
-            testSubCode = command.subCode
-        )
         AggregateLifecycle.apply(
             LanguageUpdateEvent(
                 languageId = command.languageId,

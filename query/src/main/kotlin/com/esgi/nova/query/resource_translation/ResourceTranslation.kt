@@ -1,10 +1,9 @@
 package com.esgi.nova.query.resource_translation
 
 import com.esgi.nova.common.StringLength
-import com.esgi.nova.core_api.resource_translation.views.ResourceTranslationNameView
-import com.esgi.nova.core_api.resource_translation.views.ResourceTranslationView
+import com.esgi.nova.core_api.resources.views.ResourceTranslationNameView
+import com.esgi.nova.core_api.resources.views.ResourceTranslationView
 import com.esgi.nova.core_api.resources.views.ResourceTranslationViewWithLanguage
-import com.esgi.nova.core_api.resources.views.TranslatedResourceView
 import com.esgi.nova.query.language.Language
 import com.esgi.nova.query.resource.Resource
 import org.hibernate.annotations.Type
@@ -29,12 +28,6 @@ class ResourceTranslation(
     var language: Language
 ) {
 
-    fun toTranslatedResourceView(): TranslatedResourceView =
-        TranslatedResourceView(
-            id = resource.id,
-            languageIds = resource.resourceTranslations.map { it.id.languageId },
-            name = name
-        )
 
     fun toResourceTranslationView(): ResourceTranslationView = ResourceTranslationView(
         resourceId = resource.id,
