@@ -1,8 +1,8 @@
 package com.esgi.nova.query.language
 
 import com.esgi.nova.common.StringLength
-import com.esgi.nova.core_api.languages.queries.views.LanguageView
-import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
+import com.esgi.nova.core_api.languages.views.LanguageView
+import com.esgi.nova.core_api.languages.views.LanguageViewWithAvailableActions
 import com.esgi.nova.query.choice_translation.ChoiceTranslation
 import com.esgi.nova.query.difficulty_translation.DifficultyTranslation
 import com.esgi.nova.query.event_translation.EventTranslation
@@ -52,6 +52,7 @@ class Language(
         subCode = subCode,
         isDefault = isDefault
     )
+
     fun toLanguageViewWithAvailableActions(canSetDefault: Boolean = false) = LanguageViewWithAvailableActions(
         id = id,
         code = code,

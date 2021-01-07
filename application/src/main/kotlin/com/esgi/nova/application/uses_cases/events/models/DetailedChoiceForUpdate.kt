@@ -6,4 +6,4 @@ class DetailedChoiceForUpdate(
     val id: UUID,
     translations: List<ChoiceTranslationForEdition>,
     resources: List<ChoiceResourceForEdition>
-): DetailedChoiceForEdition(translations, resources)
+) : DetailedChoiceForEdition(translations, resources)

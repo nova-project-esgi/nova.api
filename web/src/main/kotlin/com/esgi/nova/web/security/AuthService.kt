@@ -14,9 +14,10 @@ class AuthService(private val usersUseCases: UsersUseCases) : UserDetailsService
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
-        try{
-            usersUseCases.getCredentialByUsername(username).let { credential -> return User(credential.username, credential.password, emptyList()) }
-        }catch(e: UserNotFoundByUsernameException){
+        try {
+            usersUseCases.getCredentialByUsername(username)
+                .let { credential -> return User(credential.username, credential.password, emptyList()) }
+        } catch (e: UserNotFoundByUsernameException) {
             throw UsernameNotFoundException(username)
         }
     }

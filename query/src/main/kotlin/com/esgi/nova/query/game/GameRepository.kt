@@ -19,6 +19,10 @@ interface GameRepository : JpaRepository<Game, UUID> {
         value = "SELECT g FROM Game g WHERE g.isEnded = ?1 AND g.difficulty.id = ?2 ORDER BY g.gameEvents.size DESC",
         countQuery = "SELECT COUNT(g) FROM Game g WHERE g.isEnded = ?1 AND g.difficulty.id = ?2"
     )
-    fun findAllByIsEndedAndDifficultyIdOrderByEventsCountDesc(isEnded: Boolean, difficultyId: UUID, pageable: Pageable): Page<Game>
+    fun findAllByIsEndedAndDifficultyIdOrderByEventsCountDesc(
+        isEnded: Boolean,
+        difficultyId: UUID,
+        pageable: Pageable
+    ): Page<Game>
 
 }

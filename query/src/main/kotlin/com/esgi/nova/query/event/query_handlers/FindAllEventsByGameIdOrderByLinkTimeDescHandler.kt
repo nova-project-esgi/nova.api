@@ -11,6 +11,7 @@ open class FindAllEventsByGameIdOrderByLinkTimeDescHandler(private val gameEvent
 
     @QueryHandler
     fun handle(query: FindAllEventsByGameIdOrderByLinkTimeDescQuery): List<EventView> {
-        return gameEventRepository.findAllByGameIdOrderByLinkTimeDesc(query.gameId.toUUID()).map { it.event.toEventView() }
+        return gameEventRepository.findAllByGameIdOrderByLinkTimeDesc(query.gameId.toUUID())
+            .map { it.event.toEventView() }
     }
 }

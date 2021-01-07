@@ -1,30 +1,34 @@
 package com.esgi.nova.application.uses_cases.events
 
-import com.esgi.nova.application.axon.queryPage
+import com.esgi.nova.application.extensions.queryPage
 import com.esgi.nova.application.pagination.Link
 import com.esgi.nova.application.pagination.Relation
 import com.esgi.nova.application.services.files.FileService
-import com.esgi.nova.application.uses_cases.events.models.*
+import com.esgi.nova.application.uses_cases.events.exceptions.ChoiceWithoutResourcesException
+import com.esgi.nova.application.uses_cases.events.exceptions.EventWithoutChoicesException
+import com.esgi.nova.application.uses_cases.events.exceptions.NoDefaultLanguageChoiceTranslationException
+import com.esgi.nova.application.uses_cases.events.exceptions.NoDefaultLanguageEventTranslationException
+import com.esgi.nova.application.uses_cases.events.models.DetailedChoiceForEdition
+import com.esgi.nova.application.uses_cases.events.models.DetailedChoiceForUpdate
+import com.esgi.nova.application.uses_cases.events.models.DetailedEventForEdition
+import com.esgi.nova.application.uses_cases.events.models.TranslatedEventsWithBackgroundDto
 import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
-import com.esgi.nova.application.uses_cases.resources.ResourceIconNotFoundException
+import com.esgi.nova.application.uses_cases.resources.exceptions.ResourceIconNotFoundException
 import com.esgi.nova.common.extensions.extractFileName
+import com.esgi.nova.core_api.choices.ChoiceIdentifier
+import com.esgi.nova.core_api.choices.commands.CreateChoiceCommand
 import com.esgi.nova.core_api.choices.commands.CreateChoiceResourceCommand
 import com.esgi.nova.core_api.choices.commands.CreateChoiceTranslationCommand
-import com.esgi.nova.core_api.choices.exceptions.NoDefaultLanguageChoiceTranslation
-import com.esgi.nova.core_api.choices.commands.*
-import com.esgi.nova.core_api.choices.exceptions.ChoiceWithoutResourcesException
-import com.esgi.nova.core_api.events.commands.CreateEventTranslationCommand
-import com.esgi.nova.core_api.events.exceptions.NoDefaultLanguageEventTranslation
+import com.esgi.nova.core_api.choices.commands.UpdateChoiceCommand
+import com.esgi.nova.core_api.choices.dtos.ChoiceResourceEditionDto
+import com.esgi.nova.core_api.choices.dtos.ChoiceTranslationEditionDto
+import com.esgi.nova.core_api.events.EventIdentifier
 import com.esgi.nova.core_api.events.commands.*
-import com.esgi.nova.core_api.events.exceptions.EventWithoutChoicesException
 import com.esgi.nova.core_api.events.queries.*
 import com.esgi.nova.core_api.events.views.*
 import com.esgi.nova.core_api.languages.LanguageIdentifier
-import com.esgi.nova.core_api.languages.exceptions.DefaultLanguageNotFound
-import com.esgi.nova.core_api.languages.queries.FindDefaultLanguageQuery
-import com.esgi.nova.core_api.languages.queries.views.LanguageView
 import com.esgi.nova.core_api.pagination.PageBase
-import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
+import com.esgi.nova.core_api.resources.ResourceIdentifier
 import io.netty.handler.codec.http.HttpMethod
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
@@ -153,7 +157,7 @@ open class EventsUseCases(
     private fun <Choice : DetailedChoiceForEdition> validateEventEdition(event: DetailedEventForEdition<Choice>) {
         val defaultLanguageId = languageUsesCases.getDefaultLanguageId();
         if (event.translations.none { t -> t.languageId == defaultLanguageId }) {
-            throw NoDefaultLanguageEventTranslation()
+            throw NoDefaultLanguageEventTranslationException()
         }
         if (event.choices.isEmpty()) {
             throw EventWithoutChoicesException()
@@ -166,7 +170,7 @@ open class EventsUseCases(
                     t.languageId == defaultLanguageId
                 }
             }) {
-            throw NoDefaultLanguageChoiceTranslation()
+            throw NoDefaultLanguageChoiceTranslationException()
         }
     }
 
@@ -242,7 +246,10 @@ open class EventsUseCases(
         ).join()
     }
 
-    fun loadAllStandardEventsByLanguage(language: String, backgroundBaseUrl: String): List<TranslatedEventsWithBackgroundDto> {
+    fun loadAllStandardEventsByLanguage(
+        language: String,
+        backgroundBaseUrl: String
+    ): List<TranslatedEventsWithBackgroundDto> {
         return queryGateway.queryMany<TranslatedEventView, FindAllTranslatedEventsByLanguageFrequencyAndActiveStateQuery>(
             FindAllTranslatedEventsByLanguageFrequencyAndActiveStateQuery(
                 language = language,

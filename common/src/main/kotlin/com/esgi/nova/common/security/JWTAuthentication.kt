@@ -7,16 +7,16 @@ import java.util.*
 object JWTAuthentication {
     fun parse(token: String): String {
         return JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.toByteArray()))
-                .build()
-                .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                .subject
+            .build()
+            .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+            .subject
     }
 
     fun sign(claim: String): String {
         return JWT.create()
-                .withSubject(claim)
-                .withExpiresAt(Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(SecurityConstants.SECRET.toByteArray()))
+            .withSubject(claim)
+            .withExpiresAt(Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+            .sign(Algorithm.HMAC512(SecurityConstants.SECRET.toByteArray()))
     }
 
 }

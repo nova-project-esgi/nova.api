@@ -5,6 +5,6 @@ import java.util.*
 
 interface GameEventRepository : JpaRepository<GameEvent, UUID> {
     fun findAllByEventIdAndGameId(eventId: UUID, gameId: UUID): List<GameEvent>
-    fun findAllByGameId( gameId: UUID): List<GameEvent>
-    fun findAllByGameIdOrderByLinkTimeDesc( gameId: UUID): List<GameEvent>
+    fun findAllByGameId(gameId: UUID): List<GameEvent>
+    fun findAllByGameIdOrderByLinkTimeDesc(gameId: UUID): List<GameEvent>
 }

@@ -11,6 +11,7 @@ open class FindAllTranslatedEventsByLanguageFrequencyAndActiveStateHandler(priva
 
     @QueryHandler
     fun handle(query: FindAllTranslatedEventsByLanguageFrequencyAndActiveStateQuery): List<TranslatedEventView> {
-        return eventRepository.findAllByIsActiveAndIsDaily(query.isActive, query.isDaily).map {  it.toTranslatedEvent(query.language) }
+        return eventRepository.findAllByIsActiveAndIsDaily(query.isActive, query.isDaily)
+            .map { it.toTranslatedEvent(query.language) }
     }
 }

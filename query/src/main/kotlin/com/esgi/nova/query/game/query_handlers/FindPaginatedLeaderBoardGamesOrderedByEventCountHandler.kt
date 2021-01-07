@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component
 open class FindPaginatedLeaderBoardGamesOrderedByEventCountHandler(private val gameRepository: GameRepository) {
 
     @QueryHandler
-    fun handle(query: FindPaginatedLeaderBoardGamesOrderedByEventCountQuery): PageBase<LeaderBoardGameView>{
-        return gameRepository.findAllByIsEndedOrderByEventsCountDesc(isEnded = true, pageable = query.toPageable()).map {
-            it.toLeaderBoardGameView()
-        }.toStaticPage(query)
+    fun handle(query: FindPaginatedLeaderBoardGamesOrderedByEventCountQuery): PageBase<LeaderBoardGameView> {
+        return gameRepository.findAllByIsEndedOrderByEventsCountDesc(isEnded = true, pageable = query.toPageable())
+            .map {
+                it.toLeaderBoardGameView()
+            }.toStaticPage(query)
     }
 }
 

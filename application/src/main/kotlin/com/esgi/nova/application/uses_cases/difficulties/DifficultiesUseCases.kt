@@ -1,16 +1,23 @@
 package com.esgi.nova.application.uses_cases.difficulties
 
-import com.esgi.nova.application.axon.queryPage
+import com.esgi.nova.application.extensions.queryPage
+import com.esgi.nova.application.uses_cases.difficulties.exceptions.DifficultyNotFoundByIdException
+import com.esgi.nova.application.uses_cases.difficulties.exceptions.NoDefaultLanguageDifficultyTranslationException
 import com.esgi.nova.application.uses_cases.difficulties.models.DetailedDifficultyForEdition
 import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
-import com.esgi.nova.core_api.difficulty.commands.*
+import com.esgi.nova.application.uses_cases.languages.exceptions.LanguagesNotFoundByIdsException
+import com.esgi.nova.core_api.difficulty.DifficultyIdentifier
+import com.esgi.nova.core_api.difficulty.commands.CreateDifficultyCommand
+import com.esgi.nova.core_api.difficulty.commands.CreateDifficultyTranslationCommand
+import com.esgi.nova.core_api.difficulty.commands.DeleteDifficultyCommand
+import com.esgi.nova.core_api.difficulty.commands.UpdateDifficultyCommand
+import com.esgi.nova.core_api.difficulty.dtos.DifficultyTranslationEditionDto
 import com.esgi.nova.core_api.difficulty.queries.*
 import com.esgi.nova.core_api.difficulty.views.DetailedDifficultyView
 import com.esgi.nova.core_api.difficulty.views.DetailedDifficultyWithAvailableActionsView
 import com.esgi.nova.core_api.difficulty.views.DifficultyTranslationNameView
 import com.esgi.nova.core_api.difficulty.views.TranslatedDifficultyView
 import com.esgi.nova.core_api.languages.LanguageIdentifier
-import com.esgi.nova.core_api.languages.exceptions.LanguagesNotFoundByIdsException
 import com.esgi.nova.core_api.languages.queries.AllLanguagesExistsByIdsQuery
 import com.esgi.nova.core_api.pagination.PageBase
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -78,7 +85,7 @@ class DifficultiesUseCases(
         val languageIds = difficulty.translations.map { translation -> translation.languageId };
         val defaultLanguageId = languagesUseCases.getDefaultLanguageId()
         if (languageIds.none { it == defaultLanguageId }) {
-            throw NoDefaultLanguageDifficultyTranslation()
+            throw NoDefaultLanguageDifficultyTranslationException()
         }
         val languagesExists = queryGateway.query(
             AllLanguagesExistsByIdsQuery(languageIds = languageIds.map { LanguageIdentifier(it.toString()) }),

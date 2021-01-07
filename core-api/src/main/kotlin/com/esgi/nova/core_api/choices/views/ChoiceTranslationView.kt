@@ -1,6 +1,6 @@
 package com.esgi.nova.core_api.choices.views
 
-import com.esgi.nova.core_api.languages.queries.views.LanguageView
+import com.esgi.nova.core_api.languages.views.LanguageView
 import java.util.*
 
 data class ChoiceTranslationView(

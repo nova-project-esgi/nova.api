@@ -1,20 +1,25 @@
 package com.esgi.nova.application.uses_cases.resources
 
-import com.esgi.nova.application.axon.queryPage
+import com.esgi.nova.application.extensions.queryPage
 import com.esgi.nova.application.pagination.Link
 import com.esgi.nova.application.pagination.Relation
 import com.esgi.nova.application.services.files.FileService
 import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
+import com.esgi.nova.application.uses_cases.languages.exceptions.LanguagesNotFoundByIdsException
+import com.esgi.nova.application.uses_cases.resources.exceptions.CantDeleteResourceException
+import com.esgi.nova.application.uses_cases.resources.exceptions.NoDefaultLanguageResourceTranslationException
+import com.esgi.nova.application.uses_cases.resources.exceptions.ResourceIconNotFoundException
 import com.esgi.nova.application.uses_cases.resources.models.DetailedResourceForEdition
+import com.esgi.nova.application.uses_cases.resources.models.TranslatedResourceWithIconDto
 import com.esgi.nova.common.extensions.extractFileName
-import com.esgi.nova.core_api.difficulty.commands.DifficultyIdentifier
+import com.esgi.nova.core_api.difficulty.DifficultyIdentifier
 import com.esgi.nova.core_api.languages.LanguageIdentifier
-import com.esgi.nova.core_api.languages.exceptions.LanguagesNotFoundByIdsException
 import com.esgi.nova.core_api.languages.queries.AllLanguagesExistsByIdsQuery
 import com.esgi.nova.core_api.pagination.PageBase
-import com.esgi.nova.core_api.resources.commands.CreateResourceTranslationCommand
-import com.esgi.nova.core_api.resources.exceptions.NoDefaultLanguageResourceTranslation
+import com.esgi.nova.core_api.resources.ResourceIdentifier
 import com.esgi.nova.core_api.resources.commands.*
+import com.esgi.nova.core_api.resources.dtos.ResourceDifficultyEditionDto
+import com.esgi.nova.core_api.resources.dtos.ResourceTranslationEditionDto
 import com.esgi.nova.core_api.resources.queries.*
 import com.esgi.nova.core_api.resources.views.*
 import io.netty.handler.codec.http.HttpMethod
@@ -67,7 +72,7 @@ open class ResourcesUseCases(
         val languageIds = resourceWithTranslations.translations.map { translation -> translation.languageId };
         val defaultLanguageId = languageUsesCases.getDefaultLanguageId()
         if (languageIds.none { it == defaultLanguageId }) {
-            throw NoDefaultLanguageResourceTranslation()
+            throw NoDefaultLanguageResourceTranslationException()
         }
         val languagesExists = queryGateway.query(
             AllLanguagesExistsByIdsQuery(languageIds = languageIds.map { LanguageIdentifier(it.toString()) }),
@@ -151,8 +156,10 @@ open class ResourcesUseCases(
 
 
     fun deleteOneResourceById(id: UUID) {
-        val canDelete = this.queryGateway.query(CanDeleteResourceByIdQuery(ResourceIdentifier(id.toString())), Boolean::class.java).join()
-        if(!canDelete){
+        val canDelete =
+            this.queryGateway.query(CanDeleteResourceByIdQuery(ResourceIdentifier(id.toString())), Boolean::class.java)
+                .join()
+        if (!canDelete) {
             throw CantDeleteResourceException()
         }
         this.commandGateway
@@ -170,12 +177,13 @@ open class ResourcesUseCases(
                         name = it.name
                     )
                 },
-                difficulties = resourceForUpdate.difficulties.map{
+                difficulties = resourceForUpdate.difficulties.map {
                     ResourceDifficultyEditionDto(
-                    resourceId = ResourceIdentifier(id.toString()),
-                        startValue =  it.startValue,
+                        resourceId = ResourceIdentifier(id.toString()),
+                        startValue = it.startValue,
                         difficultyId = DifficultyIdentifier(it.difficultyId.toString())
-                ) }
+                    )
+                }
             )
         )
     }
@@ -183,18 +191,21 @@ open class ResourcesUseCases(
     fun loadAllStandardResourcesByLanguage(language: String, baseIconUrl: String): List<TranslatedResourceWithIconDto> {
         return queryGateway.queryMany<TranslatedResourceView, FindAllTranslatedResourcesByLanguageQuery>(
             FindAllTranslatedResourcesByLanguageQuery(
-            language = language
-        )).join().map { r -> TranslatedResourceWithIconDto(
-            id = r.id,
-            language = r.language,
-            name = r.name,
-            iconUrl = Link(Relation.ASSET, "$baseIconUrl/${r.id}/icon", HttpMethod.GET)
-        ) }
+                language = language
+            )
+        ).join().map { r ->
+            TranslatedResourceWithIconDto(
+                id = r.id,
+                language = r.language,
+                name = r.name,
+                iconUrl = Link(Relation.ASSET, "$baseIconUrl/${r.id}/icon", HttpMethod.GET)
+            )
+        }
     }
 
-    fun findAllResourcesByDifficulty(difficultyId: UUID): List<ResourceDifficultyView>{
+    fun findAllResourcesByDifficulty(difficultyId: UUID): List<ResourceDifficultyView> {
         return queryGateway.queryMany<ResourceDifficultyView, FindAllResourcesByDifficultyIdQuery>(
-            FindAllResourcesByDifficultyIdQuery(difficultyId = DifficultyIdentifier(difficultyId.toString()) )
+            FindAllResourcesByDifficultyIdQuery(difficultyId = DifficultyIdentifier(difficultyId.toString()))
         ).join()
     }
 

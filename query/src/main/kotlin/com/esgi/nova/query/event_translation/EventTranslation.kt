@@ -3,7 +3,6 @@ package com.esgi.nova.query.event_translation
 import com.esgi.nova.common.StringLength
 import com.esgi.nova.core_api.events.views.EventTranslationTitleView
 import com.esgi.nova.core_api.events.views.EventTranslationView
-import com.esgi.nova.core_api.events.views.TranslatedEventView
 import com.esgi.nova.query.event.Event
 import com.esgi.nova.query.language.Language
 import org.hibernate.annotations.Type
@@ -27,18 +26,17 @@ class EventTranslation(
 ) {
 
 
-
     fun toEventTranslationTitleView() = EventTranslationTitleView(
-            eventId = id.eventId,
-            languageId = id.languageId,
-            title = title
+        eventId = id.eventId,
+        languageId = id.languageId,
+        title = title
     )
 
     fun toEventTranslationView() = EventTranslationView(
-            eventId = event.id,
-            title = title,
-            description = description,
-            language = language.toLanguageView()
+        eventId = event.id,
+        title = title,
+        description = description,
+        language = language.toLanguageView()
     )
 
     override fun equals(other: Any?): Boolean {

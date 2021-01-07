@@ -2,8 +2,11 @@ package com.esgi.nova.web.controllers
 
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
-import com.esgi.nova.application.uses_cases.events.*
-import com.esgi.nova.application.uses_cases.events.models.*
+import com.esgi.nova.application.uses_cases.events.EventsUseCases
+import com.esgi.nova.application.uses_cases.events.models.DetailedChoiceForEdition
+import com.esgi.nova.application.uses_cases.events.models.DetailedChoiceForUpdate
+import com.esgi.nova.application.uses_cases.events.models.DetailedEventForEdition
+import com.esgi.nova.application.uses_cases.events.models.TranslatedEventsWithBackgroundDto
 import com.esgi.nova.core_api.events.views.DetailedEventView
 import com.esgi.nova.core_api.events.views.EventTranslationTitleView
 import com.esgi.nova.core_api.events.views.EventTranslationView
@@ -143,8 +146,6 @@ open class EventController constructor(
             )
         )
     }
-
-
 
 
 }

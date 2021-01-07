@@ -17,11 +17,11 @@ open class FindOneDifficultyWithAvailableActionsViewHandler(
     @QueryHandler
     fun handle(query: FindOneDifficultyWithAvailableActionsViewQuery): DetailedDifficultyWithAvailableActionsView? {
         val resourcesCount = resourceRepository.count()
-            difficultyRepository.findByIdOrNull(
-                query.id.toUUID()
-            )?.let {
-                return it.toDifficultyWithAvailableActions(it.difficultyResources.size == resourcesCount.toInt())
-            }
+        difficultyRepository.findByIdOrNull(
+            query.id.toUUID()
+        )?.let {
+            return it.toDifficultyWithAvailableActions(it.difficultyResources.size == resourcesCount.toInt())
+        }
         return null
     }
 }

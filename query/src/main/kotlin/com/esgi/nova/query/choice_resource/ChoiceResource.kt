@@ -9,19 +9,21 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "choice_resource")
-class ChoiceResource(@EmbeddedId
-                     var id: ChoiceResourceId,
-                     @ManyToOne
-                     @Type(type = "uuid-char")
-                     @JoinColumn(name = "choice_id", columnDefinition = "uniqueidentifier")
-                     @MapsId("choiceId")
-                     var choice: Choice,
-                     @ManyToOne
-                     @Type(type = "uuid-char")
-                     @JoinColumn(name = "resource_id", columnDefinition = "uniqueidentifier")
-                     @MapsId("resourceId")
-                     var resource: Resource,
-                     @Column(name = "change_value") var changeValue: Int = 0) {
+class ChoiceResource(
+    @EmbeddedId
+    var id: ChoiceResourceId,
+    @ManyToOne
+    @Type(type = "uuid-char")
+    @JoinColumn(name = "choice_id", columnDefinition = "uniqueidentifier")
+    @MapsId("choiceId")
+    var choice: Choice,
+    @ManyToOne
+    @Type(type = "uuid-char")
+    @JoinColumn(name = "resource_id", columnDefinition = "uniqueidentifier")
+    @MapsId("resourceId")
+    var resource: Resource,
+    @Column(name = "change_value") var changeValue: Int = 0
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -52,7 +54,8 @@ class ChoiceResource(@EmbeddedId
     )
 
     fun toTranslatedResourceView(language: String): TranslatedChoiceResourceView {
-        val translation =  resource.resourceTranslations.firstOrNull{ t -> t.language.concatenatedCodes == language  } ?: resource.resourceTranslations.first { t -> t.language.isDefault }
+        val translation = resource.resourceTranslations.firstOrNull { t -> t.language.concatenatedCodes == language }
+            ?: resource.resourceTranslations.first { t -> t.language.isDefault }
         return TranslatedChoiceResourceView(
             id = resource.id,
             language = translation.language.concatenatedCodes,

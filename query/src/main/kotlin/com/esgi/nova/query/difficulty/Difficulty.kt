@@ -3,7 +3,6 @@ package com.esgi.nova.query.difficulty
 import com.esgi.nova.core_api.difficulty.views.DetailedDifficultyView
 import com.esgi.nova.core_api.difficulty.views.DetailedDifficultyWithAvailableActionsView
 import com.esgi.nova.core_api.difficulty.views.TranslatedDifficultyView
-import com.esgi.nova.core_api.resources.views.TranslatedResourceView
 import com.esgi.nova.query.difficulty_ressource.DifficultyResource
 import com.esgi.nova.query.difficulty_translation.DifficultyTranslation
 import com.esgi.nova.query.game.Game
@@ -57,7 +56,7 @@ class Difficulty(
             id = id,
             language = translation.language.concatenatedCodes,
             name = translation.name,
-            resources = difficultyResources.map { difficultyResource -> difficultyResource.toDifficultyResourceView()}
+            resources = difficultyResources.map { difficultyResource -> difficultyResource.toDifficultyResourceView() }
         )
     }
 }

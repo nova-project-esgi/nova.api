@@ -6,7 +6,6 @@ import com.esgi.nova.core_api.difficulty.views.DifficultyTranslationView
 import com.esgi.nova.core_api.difficulty.views.DifficultyTranslationViewWithLanguage
 import com.esgi.nova.query.difficulty.Difficulty
 import com.esgi.nova.query.language.Language
-import com.esgi.nova.query.resource_translation.ResourceTranslationId
 import org.hibernate.annotations.Type
 import javax.persistence.*
 

@@ -20,7 +20,7 @@ open class FindPaginatedDetailedEventsByConcatenatedCodeAndTitleHandler(private 
                 query.concatenatedCode,
                 query.toPageable()
             )
-        return events.map{it.toDetailedEvent()}.toStaticPage(query)
+        return events.map { it.toDetailedEvent() }.toStaticPage(query)
     }
 }
 

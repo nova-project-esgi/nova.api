@@ -35,10 +35,11 @@ class ResourceTranslation(
         name = name
     )
 
-    fun toResourceTranslationViewWithLanguage(): ResourceTranslationViewWithLanguage = ResourceTranslationViewWithLanguage(
-        name = name,
-        language = language.toLanguageView()
-    )
+    fun toResourceTranslationViewWithLanguage(): ResourceTranslationViewWithLanguage =
+        ResourceTranslationViewWithLanguage(
+            name = name,
+            language = language.toLanguageView()
+        )
 
     fun toResourceTranslationNameView(): ResourceTranslationNameView = ResourceTranslationNameView(name = name)
 

@@ -9,7 +9,6 @@ import com.esgi.nova.query.event.Event
 import org.hibernate.annotations.Type
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "choice")
@@ -19,7 +18,7 @@ class Choice(
     @Column(name = "id", columnDefinition = "uniqueidentifier")
     var id: UUID,
 
-    @JoinColumn(name = "event_id",  columnDefinition = "uniqueidentifier" ,nullable = false)
+    @JoinColumn(name = "event_id", columnDefinition = "uniqueidentifier", nullable = false)
     @ManyToOne
     var event: Event
 ) {
@@ -31,16 +30,16 @@ class Choice(
     var choiceTranslations: MutableList<ChoiceTranslation> = mutableListOf()
 
     fun toChoiceView() = ChoiceView(
-            id = id,
-            eventId = event.id,
-            resourceIds = choiceResources.map { it.resource.id }
+        id = id,
+        eventId = event.id,
+        resourceIds = choiceResources.map { it.resource.id }
     )
 
     fun toDetailedChoiceView() = DetailedChoiceView(
         id = id,
         eventId = event.id,
         translations = choiceTranslations.map { it.toChoiceTranslationView() },
-        resources = choiceResources.map{it.toChoiceResourceView()}
+        resources = choiceResources.map { it.toChoiceResourceView() }
     )
 
     override fun equals(other: Any?): Boolean {
@@ -66,7 +65,8 @@ class Choice(
     }
 
     fun toTranslatedChoiceView(language: String): TranslatedChoiceView {
-        val translation =  choiceTranslations.firstOrNull{ t -> t.language.concatenatedCodes == language  } ?: choiceTranslations.first { t -> t.language.isDefault }
+        val translation = choiceTranslations.firstOrNull { t -> t.language.concatenatedCodes == language }
+            ?: choiceTranslations.first { t -> t.language.isDefault }
         return TranslatedChoiceView(
             id = id,
             language = translation.language.code,

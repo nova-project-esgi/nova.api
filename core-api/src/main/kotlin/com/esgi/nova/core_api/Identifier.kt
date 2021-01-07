@@ -4,7 +4,8 @@ import org.axonframework.common.IdentifierFactory
 import java.io.Serializable
 import java.util.*
 
-abstract class Identifier(open val identifier: String = IdentifierFactory.getInstance().generateIdentifier()) : Serializable {
+abstract class Identifier(open val identifier: String = IdentifierFactory.getInstance().generateIdentifier()) :
+    Serializable {
     fun toUUID(): UUID = UUID.fromString(identifier)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

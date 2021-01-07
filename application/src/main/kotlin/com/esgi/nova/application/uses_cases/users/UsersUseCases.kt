@@ -1,6 +1,7 @@
 package com.esgi.nova.application.uses_cases.users
 
-import com.esgi.nova.application.axon.queryPage
+import com.esgi.nova.application.extensions.queryPage
+import com.esgi.nova.application.uses_cases.users.exceptions.UserNotFoundByIdException
 import com.esgi.nova.application.uses_cases.users.models.ConnectedUser
 import com.esgi.nova.application.uses_cases.users.models.UserEdition
 import com.esgi.nova.application.uses_cases.users.models.UserLogin

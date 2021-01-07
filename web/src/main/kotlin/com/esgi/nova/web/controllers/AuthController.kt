@@ -1,9 +1,9 @@
 package com.esgi.nova.web.controllers
 
-import com.esgi.nova.application.uses_cases.users.models.ConnectedUser
-import com.esgi.nova.application.uses_cases.users.models.UserLogin
-import com.esgi.nova.application.uses_cases.users.models.UserEdition
 import com.esgi.nova.application.uses_cases.users.UsersUseCases
+import com.esgi.nova.application.uses_cases.users.models.ConnectedUser
+import com.esgi.nova.application.uses_cases.users.models.UserEdition
+import com.esgi.nova.application.uses_cases.users.models.UserLogin
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

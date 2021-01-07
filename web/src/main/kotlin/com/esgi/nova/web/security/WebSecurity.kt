@@ -1,6 +1,5 @@
 package com.esgi.nova.web.security
 
-import com.esgi.nova.common.extensions.mergeDiff
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
@@ -18,14 +17,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 open class WebSecurity(
-        private val authProvider: AuthTokenSecurityProvider) : WebSecurityConfigurerAdapter() {
+    private val authProvider: AuthTokenSecurityProvider
+) : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.csrf().disable().cors().and()
-                .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated()
+            .authorizeRequests()
+            .antMatchers("/auth/**").permitAll()
+            .anyRequest().authenticated()
         http.addFilterAfter(JWTAuthorizationFilter(super.authenticationManager()), JWTAuthenticationFilter::class.java)
     }
 

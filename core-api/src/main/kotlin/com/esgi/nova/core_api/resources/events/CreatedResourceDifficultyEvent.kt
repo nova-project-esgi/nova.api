@@ -1,7 +1,7 @@
 package com.esgi.nova.core_api.resources.events
 
-import com.esgi.nova.core_api.difficulty.commands.DifficultyIdentifier
-import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
+import com.esgi.nova.core_api.difficulty.DifficultyIdentifier
+import com.esgi.nova.core_api.resources.ResourceIdentifier
 import java.io.Serializable
 
 data class CreatedResourceDifficultyEvent(

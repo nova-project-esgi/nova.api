@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 open class FindOneGameViewBiIdHandler(private val gameRepository: GameRepository) {
 
     @QueryHandler
-    fun handle(query: FindOneGameViewByIdQuery): GameView?{
+    fun handle(query: FindOneGameViewByIdQuery): GameView? {
         return gameRepository.findByIdOrNull(query.id.toUUID())?.toGameView()
     }
 }

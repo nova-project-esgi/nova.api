@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component
 open class OnCreatedEventEvent constructor(private val eventRepository: EventRepository) {
     @EventHandler
     fun on(event: CreatedEventEvent) {
-        eventRepository.saveAndFlush(Event(id = event.eventId.toUUID(), isActive = event.isActive, isDaily = event.isDaily))
+        eventRepository.saveAndFlush(
+            Event(
+                id = event.eventId.toUUID(),
+                isActive = event.isActive,
+                isDaily = event.isDaily
+            )
+        )
     }
 }

@@ -1,6 +1,10 @@
 package com.esgi.nova.application.uses_cases.languages
 
-import com.esgi.nova.application.axon.queryPage
+import com.esgi.nova.application.extensions.queryPage
+import com.esgi.nova.application.uses_cases.languages.exceptions.CantUpdateDefaultLanguageException
+import com.esgi.nova.application.uses_cases.languages.exceptions.DefaultLanguageNotFoundException
+import com.esgi.nova.application.uses_cases.languages.exceptions.LanguageAlreadyExistException
+import com.esgi.nova.application.uses_cases.languages.exceptions.LanguageNotFoundByIdException
 import com.esgi.nova.application.uses_cases.languages.models.LanguageForCreation
 import com.esgi.nova.application.uses_cases.languages.models.LanguageForUpdate
 import com.esgi.nova.core_api.languages.LanguageIdentifier
@@ -8,16 +12,12 @@ import com.esgi.nova.core_api.languages.commands.CreateLanguageCommand
 import com.esgi.nova.core_api.languages.commands.DeleteLanguageCommand
 import com.esgi.nova.core_api.languages.commands.UpdateLanguageCommand
 import com.esgi.nova.core_api.languages.commands.UpdateLanguageDefaultCommand
-import com.esgi.nova.core_api.languages.exceptions.CantUpdateDefaultLanguageException
-import com.esgi.nova.core_api.languages.exceptions.DefaultLanguageNotFound
-import com.esgi.nova.core_api.languages.exceptions.LanguageAlreadyExistException
-import com.esgi.nova.core_api.languages.exceptions.LanguageNotFoundByIdException
 import com.esgi.nova.core_api.languages.queries.*
-import com.esgi.nova.core_api.languages.queries.views.LanguageView
-import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
+import com.esgi.nova.core_api.languages.views.LanguageView
+import com.esgi.nova.core_api.languages.views.LanguageViewWithAvailableActions
 import com.esgi.nova.core_api.pagination.PageBase
+import com.esgi.nova.core_api.resources.ResourceIdentifier
 import com.esgi.nova.core_api.resources.commands.CanDeleteResourceTranslationCommand
-import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
 import com.esgi.nova.core_api.resources.queries.FindAllResourcesWithTranslationIdsByLanguageIdQuery
 import com.esgi.nova.core_api.resources.views.ResourceWithTranslationIdsView
 import org.axonframework.commandhandling.gateway.CommandGateway
@@ -32,7 +32,7 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
 
     fun getDefaultLanguageId(): UUID {
         return queryGateway.query<LanguageView?, FindDefaultLanguageQuery>(FindDefaultLanguageQuery()).join()?.id
-            ?: throw DefaultLanguageNotFound()
+            ?: throw DefaultLanguageNotFoundException()
     }
 
     open fun create(language: LanguageForCreation): UUID {
@@ -122,7 +122,8 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
     fun languageExists(id: UUID): Boolean {
         return findLanguage(id) != null
     }
-    fun findLanguage(id: UUID): LanguageView?{
+
+    fun findLanguage(id: UUID): LanguageView? {
         return queryGateway
             .query<LanguageView, FindLanguageByIdQuery>(FindLanguageByIdQuery(LanguageIdentifier(id.toString())))
             .join()
@@ -169,8 +170,8 @@ open class LanguagesUseCases(private val commandGateway: CommandGateway, private
     fun update(language: LanguageForUpdate, id: UUID) {
         val existingLanguage = findLanguage(id) ?: throw LanguageNotFoundByIdException()
         val languageCount = getLanguageCount()
-        if(existingLanguage.isDefault && !language.isDefault){
-            if(languageCount == 1){
+        if (existingLanguage.isDefault && !language.isDefault) {
+            if (languageCount == 1) {
                 commandGateway.sendAndWait<LanguageIdentifier>(
                     UpdateLanguageDefaultCommand(
                         languageId = LanguageIdentifier(existingLanguage.id.toString()),

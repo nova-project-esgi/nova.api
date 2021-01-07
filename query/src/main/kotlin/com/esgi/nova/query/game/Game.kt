@@ -29,13 +29,13 @@ class Game(
     var isEnded: Boolean = false
 ) {
 
-    @Column(name="duration")
+    @Column(name = "duration")
     var duration: Int = 0
 
-    @OneToMany(mappedBy = "game",cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "game", cascade = [CascadeType.ALL])
     var gameResources: MutableList<GameResource> = mutableListOf()
 
-    @OneToMany(mappedBy = "game",cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "game", cascade = [CascadeType.ALL])
     var gameEvents: MutableList<GameEvent> = mutableListOf()
 
     fun toGameView() = GameView(
@@ -44,7 +44,7 @@ class Game(
         userId = user.id,
         difficultyId = difficulty.id,
         resourceIds = gameResources.map { it.id.resourceId },
-        eventIds= gameEvents.map{it.event.id},
+        eventIds = gameEvents.map { it.event.id },
         isEnded = isEnded
     )
 

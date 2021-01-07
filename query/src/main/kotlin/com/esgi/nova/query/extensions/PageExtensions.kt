@@ -8,10 +8,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 
 fun <T> Page<T>.toStaticPage(pagination: IPagination): PageBase<T> = StaticPage(
-        pageSize = pagination.size,
-        startPage = pagination.page,
-        elements = this.toList(),
-        total = this.totalElements.toInt()
+    pageSize = pagination.size,
+    startPage = pagination.page,
+    elements = this.toList(),
+    total = this.totalElements.toInt()
 )
 
 

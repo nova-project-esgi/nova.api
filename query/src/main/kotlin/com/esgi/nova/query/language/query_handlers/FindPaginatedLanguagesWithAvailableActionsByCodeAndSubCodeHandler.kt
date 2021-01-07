@@ -1,7 +1,7 @@
 package com.esgi.nova.query.language.query_handlers
 
 import com.esgi.nova.core_api.languages.queries.FindPaginatedLanguagesWithAvailableActionsByCodeAndSubCodeQuery
-import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
+import com.esgi.nova.core_api.languages.views.LanguageViewWithAvailableActions
 import com.esgi.nova.core_api.pagination.PageBase
 import com.esgi.nova.query.choice.ChoiceRepository
 import com.esgi.nova.query.event.EventRepository

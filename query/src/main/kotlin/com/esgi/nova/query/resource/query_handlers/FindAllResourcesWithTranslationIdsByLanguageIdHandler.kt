@@ -14,7 +14,7 @@ open class FindAllResourcesWithTranslationIdsByLanguageIdHandler(private val res
         return resourceRepository.findAllByResourceTranslationsLanguageId(
             languageId = query.languageId.toUUID()
         )
-            .map { it.toResourceWithTranslationIdsView()}
+            .map { it.toResourceWithTranslationIdsView() }
     }
 }
 

@@ -7,7 +7,8 @@ object CustomMediaType {
         const val ResourceName = "application/vnd+nova.resource_name+json"
         const val DifficultyName = "application/vnd+nova.difficulty_name+json"
         const val DetailedDifficulty = "application/vnd+nova.detailed_difficulty+json"
-        const val DetailedDifficultyWithAvailableActions = "application/vnd+nova.detailed_difficulty_with_available_actions+json"
+        const val DetailedDifficultyWithAvailableActions =
+            "application/vnd+nova.detailed_difficulty_with_available_actions+json"
         const val TranslatedDifficulty = "application/vnd+nova.translated_difficulty+json"
         const val UserUsername = "application/vnd+nova.user_username+json"
         const val UserAdminEdit = "application/vnd+nova.user_admin_edit+json"

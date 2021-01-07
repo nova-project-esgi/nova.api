@@ -11,7 +11,8 @@ open class FindAllTranslatedEventsByGameIdAndLanguageHandler(private val gameEve
 
     @QueryHandler
     fun handle(query: FindAllTranslatedEventsByGameIdAndLanguageQuery): List<TranslatedEventView> {
-        return gameEventRepository.findAllByGameId(query.gameId.toUUID()).map { it.event.toTranslatedEvent(language = query.language) }
+        return gameEventRepository.findAllByGameId(query.gameId.toUUID())
+            .map { it.event.toTranslatedEvent(language = query.language) }
     }
 }
 

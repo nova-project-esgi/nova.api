@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 open class InitTreatmentCommandHandler {
 
     @CommandHandler
-    open fun handle(cmd: InitTreatmentCommand){
+    open fun handle(cmd: InitTreatmentCommand) {
         println(cmd)
     }
 

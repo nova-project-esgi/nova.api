@@ -1,15 +1,15 @@
 package com.esgi.nova.web.controllers
 
+import com.esgi.nova.application.pagination.PageMetadata
+import com.esgi.nova.application.pagination.PaginationDefault
+import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
 import com.esgi.nova.application.uses_cases.languages.models.LanguageForCreation
 import com.esgi.nova.application.uses_cases.languages.models.LanguageForUpdate
-import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
-import com.esgi.nova.core_api.languages.queries.views.LanguageView
-import com.esgi.nova.core_api.languages.queries.views.LanguageViewWithAvailableActions
+import com.esgi.nova.core_api.languages.views.LanguageView
+import com.esgi.nova.core_api.languages.views.LanguageViewWithAvailableActions
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
-import com.esgi.nova.application.pagination.PageMetadata
-import com.esgi.nova.application.pagination.PaginationDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
@@ -33,7 +33,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
 
     @Secured("ROLE_ADMIN")
     @PutMapping("{id}")
-    open fun update(@RequestBody language: LanguageForUpdate, @PathVariable id: UUID): ResponseEntity<Any>{
+    open fun update(@RequestBody language: LanguageForUpdate, @PathVariable id: UUID): ResponseEntity<Any> {
         languagesUseCases.update(language, id)
         return ResponseEntity.noContent().build<Any>()
     }
@@ -53,7 +53,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
     }
 
     @GetMapping("{id}/canDelete")
-    open fun canDeleteById(@PathVariable id: UUID){
+    open fun canDeleteById(@PathVariable id: UUID) {
         languagesUseCases.canDelete(id)
     }
 
@@ -95,7 +95,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
             .let { pageBase -> return PageMetadata(pageBase) }
     }
 
-    @GetMapping(params = [ "code"])
+    @GetMapping(params = ["code"])
     open fun getPaginatedLanguagesByCodeAndSubCode(
         @RequestParam(value = "page", required = false, defaultValue = "${PaginationDefault.PAGE}") page: Int,
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,

@@ -19,7 +19,7 @@ open class OnCreatedResourceTranslationHandler constructor(
     fun on(event: CreatedResourceTranslationEvent) {
         val resource = resourceRepository.getOne(event.resourceId.toUUID())
         val language = languageRepository.getOne(event.translationId.toUUID())
-        try{
+        try {
             resourceTranslationRepository.save(
                 ResourceTranslation(
                     ResourceTranslationId(
@@ -29,7 +29,7 @@ open class OnCreatedResourceTranslationHandler constructor(
                     event.name, resource, language
                 )
             )
-        } catch (e: Exception){
+        } catch (e: Exception) {
             throw e
         }
 

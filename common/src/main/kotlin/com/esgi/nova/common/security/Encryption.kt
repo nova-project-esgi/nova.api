@@ -10,8 +10,8 @@ object Encryption {
 
     private fun hashString(type: String, input: String): String {
         val bytes = MessageDigest
-                .getInstance(type)
-                .digest(input.toByteArray())
+            .getInstance(type)
+            .digest(input.toByteArray())
         return DatatypeConverter.printHexBinary(bytes).toUpperCase()
     }
 }

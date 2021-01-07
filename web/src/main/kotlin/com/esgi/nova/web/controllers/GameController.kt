@@ -3,12 +3,11 @@ package com.esgi.nova.web.controllers
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
 import com.esgi.nova.application.uses_cases.events.models.TranslatedEventsWithBackgroundDto
-import com.esgi.nova.application.uses_cases.games.GameForCreation
-import com.esgi.nova.application.uses_cases.games.GameForUpdate
 import com.esgi.nova.application.uses_cases.games.GamesUseCases
+import com.esgi.nova.application.uses_cases.games.models.GameForCreation
+import com.esgi.nova.application.uses_cases.games.models.GameForUpdate
 import com.esgi.nova.core_api.games.views.GameView
 import com.esgi.nova.core_api.games.views.LeaderBoardGameView
-import com.esgi.nova.core_api.resources.views.ResourceTranslationNameView
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message

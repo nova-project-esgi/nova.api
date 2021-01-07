@@ -1,5 +1,8 @@
 package com.esgi.nova.core_api.games.commands
 
+import com.esgi.nova.core_api.games.GameIdentifier
+import com.esgi.nova.core_api.games.dtos.GameEventEditionDto
+import com.esgi.nova.core_api.games.dtos.GameResourceEditionDto
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 data class UpdateGameCommand(

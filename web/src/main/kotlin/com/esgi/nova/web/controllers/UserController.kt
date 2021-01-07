@@ -1,13 +1,13 @@
 package com.esgi.nova.web.controllers
 
-import com.esgi.nova.application.uses_cases.users.models.UserRole
+import com.esgi.nova.application.pagination.PageMetadata
+import com.esgi.nova.application.pagination.PaginationDefault
 import com.esgi.nova.application.uses_cases.users.UsersUseCases
+import com.esgi.nova.application.uses_cases.users.models.UserRole
 import com.esgi.nova.core_api.user.views.UserAdminEditView
 import com.esgi.nova.core_api.user.views.UserUsername
 import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
-import com.esgi.nova.application.pagination.PageMetadata
-import com.esgi.nova.application.pagination.PaginationDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*

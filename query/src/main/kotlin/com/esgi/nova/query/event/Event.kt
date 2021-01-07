@@ -34,13 +34,14 @@ class Event(
     )
 
     fun toTranslatedEvent(language: String): TranslatedEventView {
-        val translation =  eventTranslations.firstOrNull{ t -> t.language.concatenatedCodes == language  } ?: eventTranslations.first { t -> t.language.isDefault }
+        val translation = eventTranslations.firstOrNull { t -> t.language.concatenatedCodes == language }
+            ?: eventTranslations.first { t -> t.language.isDefault }
         return TranslatedEventView(
             id = id,
             description = translation.description,
             title = translation.title,
             language = translation.language.concatenatedCodes,
-            choices = choices.map { c -> c.toTranslatedChoiceView(language)}
+            choices = choices.map { c -> c.toTranslatedChoiceView(language) }
         )
     }
 
@@ -49,6 +50,7 @@ class Event(
         isDaily = isDaily,
         isActive = isActive
     )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

@@ -15,8 +15,13 @@ open class FindPaginatedEventTitlesByLanguageCodeAndSubCodeAndTitleHandler(priva
     @QueryHandler
     fun handle(query: FindPaginatedEventTitleByLanguageCodeSubCodeAndTitleQuery): PageBase<EventTranslationTitleView> {
         return eventTranslationRepository
-                .findEventTranslationByLanguageCodeAndLanguageSubCodeAndTitleStartingWith(query.code, query.subCode, query.title, query.toPageable())
-                .map { it.toEventTranslationTitleView() }
-                .toStaticPage(query)
+            .findEventTranslationByLanguageCodeAndLanguageSubCodeAndTitleStartingWith(
+                query.code,
+                query.subCode,
+                query.title,
+                query.toPageable()
+            )
+            .map { it.toEventTranslationTitleView() }
+            .toStaticPage(query)
     }
 }

@@ -1,7 +1,7 @@
 package com.esgi.nova.core_api.choices.commands
 
-import com.esgi.nova.core_api.choices.commands.ChoiceIdentifier
-import com.esgi.nova.core_api.resources.commands.ResourceIdentifier
+import com.esgi.nova.core_api.choices.ChoiceIdentifier
+import com.esgi.nova.core_api.resources.ResourceIdentifier
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 
 data class DeleteChoiceResourceCommand(

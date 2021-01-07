@@ -2,7 +2,6 @@ package com.esgi.nova.query.game_event
 
 import com.esgi.nova.query.event.Event
 import com.esgi.nova.query.game.Game
-import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 import java.util.*

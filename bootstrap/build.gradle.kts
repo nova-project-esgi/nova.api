@@ -25,5 +25,5 @@ dependencies {
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
-    args = mutableListOf("--spring.profiles.active=prod" )
+    args = mutableListOf("--spring.profiles.active=prod")
 }
