@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":core-api"))
     implementation(project(":web"))
     implementation(project(":file-manager"))
+    implementation(project(":files-write"))
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")
     implementation("org.springframework.boot:spring-boot-starter")

@@ -12,4 +12,5 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")
     implementation("org.axonframework.extensions.kotlin:axon-kotlin:0.1.0")
+
 }
