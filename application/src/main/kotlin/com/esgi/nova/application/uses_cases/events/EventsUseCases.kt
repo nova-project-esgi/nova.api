@@ -29,6 +29,7 @@ import com.esgi.nova.core_api.events.views.*
 import com.esgi.nova.core_api.languages.LanguageIdentifier
 import com.esgi.nova.core_api.pagination.PageBase
 import com.esgi.nova.core_api.resources.ResourceIdentifier
+import com.esgi.nova.files.infra.UploadSettings
 import io.netty.handler.codec.http.HttpMethod
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
@@ -45,9 +46,9 @@ open class EventsUseCases(
     private val queryGateway: QueryGateway,
     private val commandGateway: CommandGateway,
     private val fileService: FileService,
-    private val languageUsesCases: LanguagesUseCases
+    private val languageUsesCases: LanguagesUseCases,
+    private val uploadSettings: UploadSettings
 ) {
-    private val eventDir = "events"
 
 
     open fun getOneById(id: UUID): EventView {
@@ -220,14 +221,14 @@ open class EventsUseCases(
     fun setEventBackground(background: MultipartFile, id: UUID) {
         fileService.setFile(
             background,
-            eventDir,
+            uploadSettings.events,
             background.originalFilename?.replace(background.extractFileName(), id.toString())
         )
     }
 
     fun getEventBackground(id: UUID): Resource {
         try {
-            return fileService.loadFileAsResource(eventDir, id.toString())
+            return fileService.loadFileAsResource(uploadSettings.events, id.toString())
         } catch (e: FileNotFoundException) {
             throw ResourceIconNotFoundException()
         }

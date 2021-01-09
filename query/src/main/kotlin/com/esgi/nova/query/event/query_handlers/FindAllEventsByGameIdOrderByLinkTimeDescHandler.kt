@@ -15,3 +15,4 @@ open class FindAllEventsByGameIdOrderByLinkTimeDescHandler(private val gameEvent
             .map { it.event.toEventView() }
     }
 }
+

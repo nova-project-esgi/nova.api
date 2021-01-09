@@ -6,11 +6,11 @@ plugins {
 dependencies {
     implementation(kotlin("reflect"))
     implementation(kotlin("stdlib-jdk8"))
-    implementation(project(":core-api"))
-    implementation(project(":common"))
+    implementation(project(":files-core-api"))
     implementation(project(":files-infra"))
+    implementation(project(":common"))
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")
     implementation("org.axonframework.extensions.kotlin:axon-kotlin:0.1.0")
+
 }

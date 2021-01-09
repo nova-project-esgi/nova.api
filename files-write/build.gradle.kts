@@ -7,6 +7,7 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation(kotlin("stdlib-jdk8"))
 
+    implementation(project(":files-core-api"))
     implementation(project(":core-api"))
     implementation(project(":common"))
     implementation("org.springframework.boot:spring-boot-starter")

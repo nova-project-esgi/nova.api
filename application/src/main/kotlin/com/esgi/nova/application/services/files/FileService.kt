@@ -1,8 +1,8 @@
 package com.esgi.nova.application.services.files
 
+import com.esgi.nova.files.infra.UploadSettings
 import com.esgi.nova.application.services.files.exceptions.FileStorageException
 import com.esgi.nova.common.extensions.withoutExtension
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
 import org.springframework.stereotype.Service
@@ -17,13 +17,11 @@ import java.nio.file.StandardCopyOption
 
 
 @Service
-class FileService() {
+class FileService(private val uploadSettings: UploadSettings) {
 
-    @Value("\${app.upload.dir:\${user.home}}")
-    lateinit var uploadDir: String
 
     fun getFileByBaseName(baseName: String, subDir: String): File? {
-        val dir = File(Paths.get(uploadDir + File.separator + subDir).toUri())
+        val dir = File(Paths.get(uploadSettings.dir + File.separator + subDir).toUri())
         return dir.listFiles()?.firstOrNull { file ->
             baseName == file.name.withoutExtension()
         }
@@ -37,7 +35,7 @@ class FileService() {
         val fileName = newFileName ?: file.originalFilename
         try {
             fileName?.let {
-                getFileByBaseName(subDir ?: uploadDir, fileName)?.delete()
+                getFileByBaseName(subDir ?: uploadSettings.dir, fileName)?.delete()
                 uploadFile(file, subDir, newFileName);
             }
         } catch (e: Exception) {
@@ -55,10 +53,10 @@ class FileService() {
             fileName?.let {
                 val copyLocation: Path = if (subDir != null) {
                     Paths
-                        .get(uploadDir + File.separator + subDir + File.separator + cleanPath(fileName))
+                        .get(uploadSettings.dir + File.separator + subDir + File.separator + cleanPath(fileName))
                 } else {
                     Paths
-                        .get(uploadDir + File.separator + cleanPath(fileName))
+                        .get(uploadSettings.dir + File.separator + cleanPath(fileName))
                 }
                 Files.copy(file.inputStream, copyLocation, StandardCopyOption.REPLACE_EXISTING)
             }

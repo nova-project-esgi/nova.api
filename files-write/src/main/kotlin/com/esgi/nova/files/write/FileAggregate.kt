@@ -1,16 +1,10 @@
 package com.esgi.nova.files.write
 
-import com.esgi.nova.core_api.events.EventIdentifier
-import com.esgi.nova.core_api.events.commands.CreateEventCommand
-import com.esgi.nova.core_api.events.commands.DeleteEventCommand
-import com.esgi.nova.core_api.events.events.AddedChoiceEvent
-import com.esgi.nova.core_api.events.events.CreatedEventEvent
-import com.esgi.nova.core_api.events.events.DeletedEventEvent
-import com.esgi.nova.core_api.files.FileIdentifier
-import com.esgi.nova.core_api.files.commands.CreateFileCommand
-import com.esgi.nova.core_api.files.commands.DeleteFileCommand
-import com.esgi.nova.core_api.files.events.CreatedFileEvent
-import com.esgi.nova.core_api.files.events.DeletedFileEvent
+import com.esgi.nova.files.core.api.FileIdentifier
+import com.esgi.nova.files.core.api.commands.CreateFileCommand
+import com.esgi.nova.files.core.api.commands.DeleteFileCommand
+import com.esgi.nova.files.core.api.events.CreatedFileEvent
+import com.esgi.nova.files.core.api.events.DeletedFileEvent
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
@@ -43,7 +37,7 @@ class FileAggregate() {
 
     @CommandHandler
     fun handle(cmd: DeleteFileCommand) {
-        AggregateLifecycle.apply(DeletedFileEvent(fileId = cmd.fileId))
+        AggregateLifecycle.apply(DeletedFileEvent(fileId = cmd.fileId, path = path))
     }
 
     @EventSourcingHandler

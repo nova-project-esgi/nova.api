@@ -22,6 +22,7 @@ import com.esgi.nova.core_api.resources.dtos.ResourceDifficultyEditionDto
 import com.esgi.nova.core_api.resources.dtos.ResourceTranslationEditionDto
 import com.esgi.nova.core_api.resources.queries.*
 import com.esgi.nova.core_api.resources.views.*
+import com.esgi.nova.files.infra.UploadSettings
 import io.netty.handler.codec.http.HttpMethod
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
@@ -38,10 +39,10 @@ open class ResourcesUseCases(
     private val commandGateway: CommandGateway,
     private val queryGateway: QueryGateway,
     private val fileService: FileService,
-    private val languageUsesCases: LanguagesUseCases
+    private val languageUsesCases: LanguagesUseCases,
+    private val uploadSettings: UploadSettings
 ) {
 
-    private val resourcesDir = "resources"
 
     fun createResourceWithTranslations(resourceWithTranslations: DetailedResourceForEdition): UUID {
         validateResourceWithTranslationsForEdition(resourceWithTranslations)
@@ -97,14 +98,14 @@ open class ResourcesUseCases(
     fun setResourceIcon(icon: MultipartFile, id: UUID) {
         fileService.setFile(
             icon,
-            resourcesDir,
+            uploadSettings.resources,
             icon.originalFilename?.replace(icon.extractFileName(), id.toString())
         )
     }
 
     fun getResourceIcon(id: UUID): Resource {
         try {
-            return this.fileService.loadFileAsResource(resourcesDir, id.toString())
+            return this.fileService.loadFileAsResource(uploadSettings.resources, id.toString())
         } catch (e: FileNotFoundException) {
             throw ResourceIconNotFoundException()
         }
