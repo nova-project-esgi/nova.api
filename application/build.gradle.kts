@@ -8,7 +8,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":core-api"))
     implementation(project(":common"))
-    implementation(project(":files-infra"))
+    implementation(project(":files:files-infra"))
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")

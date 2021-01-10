@@ -13,29 +13,6 @@ class AxonConfig @Autowired constructor(private val configurer: EventProcessingC
 
     @PostConstruct
     fun registerErrorHandling() {
-//        configurer.registerTrackingEventProcessor()
         configurer.usingSubscribingEventProcessors()
-//        configurer.registerDefaultListenerInvocationErrorHandler {config ->
-//            ListenerInvocationErrorHandler(config)
-//        }
-//        configurer.registerDefaultErrorHandler {config ->
-//            NovaErrorHandler(config)
-//        }
     }
-}
-
-class ListenerInvocationErrorHandler constructor(private val config: org.axonframework.config.Configuration) :
-    ListenerInvocationErrorHandler {
-    override fun onError(exception: Exception?, event: EventMessage<*>?, eventHandler: EventMessageHandler?) {
-        println(exception)
-    }
-
-}
-
-class NovaErrorHandler constructor(private val config: org.axonframework.config.Configuration) : ErrorHandler {
-    override fun handleError(errorContext: ErrorContext?) {
-        println(errorContext)
-//        errorContext?.let { it.failedEveLanguageAggregate::class.javants().forEach { e -> e. } }
-    }
-
 }

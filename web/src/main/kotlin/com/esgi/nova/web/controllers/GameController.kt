@@ -2,10 +2,10 @@ package com.esgi.nova.web.controllers
 
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
-import com.esgi.nova.application.uses_cases.events.models.TranslatedEventsWithBackgroundDto
-import com.esgi.nova.application.uses_cases.games.GamesUseCases
-import com.esgi.nova.application.uses_cases.games.models.GameForCreation
-import com.esgi.nova.application.uses_cases.games.models.GameForUpdate
+import com.esgi.nova.application.services.events.models.TranslatedEventsWithBackgroundDto
+import com.esgi.nova.application.services.games.GamesService
+import com.esgi.nova.application.services.games.models.GameForCreation
+import com.esgi.nova.application.services.games.models.GameForUpdate
 import com.esgi.nova.core_api.games.views.GameView
 import com.esgi.nova.core_api.games.views.LeaderBoardGameView
 import com.esgi.nova.web.content_negociation.CustomMediaType
@@ -20,23 +20,23 @@ import javax.servlet.ServletContext
 @RestController
 @RequestMapping("games")
 open class GameController constructor(
-    private val gameUseCases: GamesUseCases,
+    private val gameService: GamesService,
     private val context: ServletContext
 ) {
     @GetMapping("{id}")
     fun getOneById(@PathVariable id: UUID): ResponseEntity<GameView> {
-        return ResponseEntity.ok(gameUseCases.findOneGameViewById(id))
+        return ResponseEntity.ok(gameService.findOneGameViewById(id))
     }
 
     @DeleteMapping("{id}")
     fun deleteOneById(@PathVariable id: UUID): ResponseEntity<Message> {
-        gameUseCases.deleteOneById(id)
+        gameService.deleteOneById(id)
         return ResponseEntity.noContent().build()
     }
 
     @PostMapping()
     open fun createOne(@RequestBody game: GameForCreation): ResponseEntity<Message> {
-        val id = gameUseCases.createGame(game)
+        val id = gameService.createGame(game)
         return ResponseEntity
             .created(
                 MvcUriComponentsBuilder.fromMethodName(GameController::class.java, "getOneById", id).build().toUri()
@@ -47,7 +47,7 @@ open class GameController constructor(
 
     @PutMapping("{id}")
     open fun createOne(@PathVariable id: UUID, @RequestBody game: GameForUpdate): ResponseEntity<Message> {
-        gameUseCases.updateGame(game, id)
+        gameService.updateGame(game, id)
         return ResponseEntity
             .noContent()
             .build()
@@ -61,7 +61,7 @@ open class GameController constructor(
             required = true
         ) language: String
     ): ResponseEntity<TranslatedEventsWithBackgroundDto?> {
-        gameUseCases.getOneDailyEvent(
+        gameService.getOneDailyEvent(
             language,
             id,
             MvcUriComponentsBuilder.fromController(EventController::class.java).toUriString()
@@ -75,7 +75,7 @@ open class GameController constructor(
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
         @RequestParam(value = "difficultyId", required = false) difficultyId: UUID?
     ): PageMetadata<LeaderBoardGameView> {
-        return gameUseCases.getPaginatedLeaderBoardGamesOrderedByEventCount(
+        return gameService.getPaginatedLeaderBoardGamesOrderedByEventCount(
             page,
             size,
             difficultyId

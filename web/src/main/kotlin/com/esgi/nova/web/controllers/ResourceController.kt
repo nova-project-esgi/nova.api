@@ -2,9 +2,9 @@ package com.esgi.nova.web.controllers
 
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
-import com.esgi.nova.application.uses_cases.resources.ResourcesUseCases
-import com.esgi.nova.application.uses_cases.resources.models.DetailedResourceForEdition
-import com.esgi.nova.application.uses_cases.resources.models.TranslatedResourceWithIconDto
+import com.esgi.nova.application.services.resources.ResourcesService
+import com.esgi.nova.application.services.resources.models.DetailedResourceForEdition
+import com.esgi.nova.application.services.resources.models.TranslatedResourceWithIconDto
 import com.esgi.nova.core_api.resources.views.ResourceTranslationNameView
 import com.esgi.nova.core_api.resources.views.ResourceView
 import com.esgi.nova.core_api.resources.views.ResourceWithAvailableActionsView
@@ -24,17 +24,17 @@ import javax.servlet.ServletContext
 
 @RestController
 @RequestMapping("resources")
-open class ResourceController(private val resourcesUseCases: ResourcesUseCases, private val context: ServletContext) {
+open class ResourceController(private val resourcesService: ResourcesService, private val context: ServletContext) {
 
 
     @GetMapping("{id}")
     fun getOneById(@PathVariable id: UUID): ResponseEntity<ResourceView> {
-        return ResponseEntity.ok(resourcesUseCases.getOneResourceById(id))
+        return ResponseEntity.ok(resourcesService.getOneResourceById(id))
     }
 
     @DeleteMapping("{id}")
     fun deleteOneById(@PathVariable id: UUID): ResponseEntity<Any> {
-        resourcesUseCases.deleteOneResourceById(id)
+        resourcesService.deleteOneResourceById(id)
         return ResponseEntity.noContent().build();
     }
 
@@ -43,7 +43,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
     fun createResourceWithTranslations(
         @RequestBody resource: DetailedResourceForEdition
     ): ResponseEntity<Message> {
-        val id = this.resourcesUseCases.createResourceWithTranslations(resource)
+        val id = this.resourcesService.createResourceWithTranslations(resource)
         return ResponseEntity
             .created(
                 MvcUriComponentsBuilder.fromMethodName(ResourceController::class.java, "getOneById", id).build().toUri()
@@ -56,7 +56,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
         @PathVariable id: UUID,
         @RequestBody resource: DetailedResourceForEdition
     ): ResponseEntity<Any> {
-        this.resourcesUseCases.updateResourceWithTranslations(id, resource)
+        this.resourcesService.updateResourceWithTranslations(id, resource)
         return ResponseEntity
             .noContent()
             .build()
@@ -70,7 +70,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
         @RequestParam(value = "language") language: String
     ): ResponseEntity<PageMetadata<ResourceWithAvailableActionsView>> {
         return ResponseEntity.ok(
-            resourcesUseCases.getPaginatedResourcesWithTranslationsByNameAndConcatenatedCodes(
+            resourcesService.getPaginatedResourcesWithTranslationsByNameAndConcatenatedCodes(
                 page,
                 size,
                 name,
@@ -85,7 +85,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int
     ): ResponseEntity<PageMetadata<ResourceWithAvailableActionsView>> {
         return ResponseEntity.ok(
-            resourcesUseCases.getPaginatedResourcesWithTranslations(
+            resourcesService.getPaginatedResourcesWithTranslations(
                 page,
                 size
             ).toPageMetadata()
@@ -95,7 +95,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
 
     @PostMapping("{id}/icon")
     fun setIcon(@RequestParam("file") file: MultipartFile, @PathVariable id: UUID): ResponseEntity<Any> {
-        this.resourcesUseCases.setResourceIcon(file, id)
+        this.resourcesService.setResourceIcon(file, id)
         return ResponseEntity
             .created(
                 MvcUriComponentsBuilder.fromMethodName(ResourceController::class.java, "getIcon", id).build().toUri()
@@ -107,7 +107,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
     @GetMapping("{id}/icon")
     fun getIcon(@PathVariable id: UUID): ResponseEntity<Resource> {
 
-        val icon = resourcesUseCases.getResourceIcon(id)
+        val icon = resourcesService.getResourceIcon(id)
         val contentType = context.getMimeType(icon.file.absolutePath)
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType(contentType))
@@ -125,7 +125,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
         @RequestParam(value = "name") name: String,
         @RequestParam(value = "language") language: String
     ): PageMetadata<ResourceTranslationNameView> {
-        return resourcesUseCases.getPaginatedResourcesByNameLanguageCodeAndSubCode(
+        return resourcesService.getPaginatedResourcesByNameLanguageCodeAndSubCode(
             page,
             size,
             name,
@@ -141,7 +141,7 @@ open class ResourceController(private val resourcesUseCases: ResourcesUseCases, 
         ) language: String
     ): ResponseEntity<List<TranslatedResourceWithIconDto>> {
         return ResponseEntity.ok(
-            resourcesUseCases.loadAllStandardResourcesByLanguage(
+            resourcesService.loadAllStandardResourcesByLanguage(
                 language,
                 MvcUriComponentsBuilder.fromController(ResourceController::class.java).toUriString()
             )

@@ -1,7 +1,7 @@
 package com.esgi.nova.web.security
 
 
-import com.esgi.nova.application.uses_cases.users.UsersUseCases
+import com.esgi.nova.application.services.users.UsersService
 import com.esgi.nova.core_api.user.Role
 import com.esgi.nova.core_api.user.exceptions.UserNotFoundByUsernameException
 import org.springframework.security.authentication.AuthenticationProvider
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class AuthTokenSecurityProvider(private val usersUseCases: UsersUseCases) : AuthenticationProvider {
+class AuthTokenSecurityProvider(private val usersService: UsersService) : AuthenticationProvider {
     @Throws(AuthenticationException::class)
     override fun authenticate(auth: Authentication?): Authentication? {
         if (auth == null) {
@@ -26,7 +26,7 @@ class AuthTokenSecurityProvider(private val usersUseCases: UsersUseCases) : Auth
         }
         val grantedAuths: MutableList<GrantedAuthority> = ArrayList()
         try {
-            val userResume = usersUseCases.getResumeByUsername(name)
+            val userResume = usersService.getResumeByUsername(name)
             userResume.let {
                 grantedAuths.clear()
                 when (userResume.role) {

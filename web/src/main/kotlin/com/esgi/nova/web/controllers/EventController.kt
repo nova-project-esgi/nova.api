@@ -2,11 +2,11 @@ package com.esgi.nova.web.controllers
 
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
-import com.esgi.nova.application.uses_cases.events.EventsUseCases
-import com.esgi.nova.application.uses_cases.events.models.DetailedChoiceForEdition
-import com.esgi.nova.application.uses_cases.events.models.DetailedChoiceForUpdate
-import com.esgi.nova.application.uses_cases.events.models.DetailedEventForEdition
-import com.esgi.nova.application.uses_cases.events.models.TranslatedEventsWithBackgroundDto
+import com.esgi.nova.application.services.events.EventsService
+import com.esgi.nova.application.services.events.models.DetailedChoiceForEdition
+import com.esgi.nova.application.services.events.models.DetailedChoiceForUpdate
+import com.esgi.nova.application.services.events.models.DetailedEventForEdition
+import com.esgi.nova.application.services.events.models.TranslatedEventsWithBackgroundDto
 import com.esgi.nova.core_api.events.views.DetailedEventView
 import com.esgi.nova.core_api.events.views.EventTranslationTitleView
 import com.esgi.nova.core_api.events.views.EventTranslationView
@@ -27,17 +27,17 @@ import javax.servlet.ServletContext
 @RestController
 @RequestMapping("events")
 open class EventController constructor(
-    private val eventsUseCases: EventsUseCases,
+    private val eventsService: EventsService,
     private val context: ServletContext
 ) {
     @GetMapping("{id}")
     fun getOneById(@PathVariable id: UUID): ResponseEntity<EventView> {
-        return ResponseEntity.ok(eventsUseCases.getOneById(id))
+        return ResponseEntity.ok(eventsService.getOneById(id))
     }
 
     @GetMapping("{id}", produces = [CustomMediaType.Application.DetailedEvent])
     fun getOneDetailedById(@PathVariable id: UUID): ResponseEntity<DetailedEventView> {
-        return ResponseEntity.ok(eventsUseCases.getOneDetailedById(id))
+        return ResponseEntity.ok(eventsService.getOneDetailedById(id))
     }
 
     @GetMapping(produces = [CustomMediaType.Application.DetailedEvent])
@@ -47,7 +47,7 @@ open class EventController constructor(
         @RequestParam(value = "language", required = true) concatenatedCode: String,
         @RequestParam(value = "title", required = true) title: String
     ): PageMetadata<DetailedEventView> {
-        return eventsUseCases.getPaginatedTranslatedEventsByConcatenatedCodeAndTitle(
+        return eventsService.getPaginatedTranslatedEventsByConcatenatedCodeAndTitle(
             page,
             size,
             concatenatedCode,
@@ -57,13 +57,13 @@ open class EventController constructor(
 
     @DeleteMapping("{id}")
     open fun deleteEvent(@PathVariable id: UUID): ResponseEntity<Any> {
-        eventsUseCases.deleteOneEventById(id)
+        eventsService.deleteOneEventById(id)
         return ResponseEntity.noContent().build()
     }
 
     @PostMapping(consumes = [CustomMediaType.Application.DetailedEvent])
     open fun createDetailedEvent(@RequestBody event: DetailedEventForEdition<DetailedChoiceForEdition>): ResponseEntity<Message> {
-        val id = eventsUseCases.createEvent(event)
+        val id = eventsService.createEvent(event)
         return ResponseEntity
             .created(
                 MvcUriComponentsBuilder.fromMethodName(EventController::class.java, "getOneById", id).build().toUri()
@@ -76,7 +76,7 @@ open class EventController constructor(
         @PathVariable id: UUID,
         @RequestBody event: DetailedEventForEdition<DetailedChoiceForUpdate>
     ): ResponseEntity<Any> {
-        eventsUseCases.updateEvent(id, event)
+        eventsService.updateEvent(id, event)
         return ResponseEntity
             .noContent()
             .build()
@@ -89,7 +89,7 @@ open class EventController constructor(
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
         @RequestParam(value = "languageIds") languageIds: List<UUID>
     ): PageMetadata<EventTranslationView> {
-        return eventsUseCases.getTranslationsByEventAndLanguages(id, page, size, languageIds).toPageMetadata()
+        return eventsService.getTranslationsByEventAndLanguages(id, page, size, languageIds).toPageMetadata()
     }
 
 
@@ -100,7 +100,7 @@ open class EventController constructor(
         @RequestParam(value = "language", required = true) concatenatedCode: String,
         @RequestParam(value = "title", required = true) title: String
     ): PageMetadata<EventTranslationTitleView> {
-        return eventsUseCases.getPaginatedTranslatedEventTitlesByConcatenatedCodeAndTitle(
+        return eventsService.getPaginatedTranslatedEventTitlesByConcatenatedCodeAndTitle(
             page,
             size,
             concatenatedCode,
@@ -110,7 +110,7 @@ open class EventController constructor(
 
     @PostMapping("{id}/background")
     fun setBackground(@RequestParam("file") file: MultipartFile, @PathVariable id: UUID): ResponseEntity<Any> {
-        this.eventsUseCases.setEventBackground(file, id);
+        this.eventsService.setEventBackground(file, id);
         return ResponseEntity
             .created(
                 MvcUriComponentsBuilder.fromMethodName(EventController::class.java, "getBackground", id).build().toUri()
@@ -121,7 +121,7 @@ open class EventController constructor(
     @GetMapping("{id}/background")
     fun getBackground(@PathVariable id: UUID): ResponseEntity<Resource> {
 
-        val background = eventsUseCases.getEventBackground(id)
+        val background = eventsService.getEventBackground(id)
         val contentType = context.getMimeType(background.file.absolutePath)
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType(contentType))
@@ -140,7 +140,7 @@ open class EventController constructor(
         ) language: String
     ): ResponseEntity<List<TranslatedEventsWithBackgroundDto>> {
         return ResponseEntity.ok(
-            eventsUseCases.loadAllStandardEventsByLanguage(
+            eventsService.loadAllStandardEventsByLanguage(
                 language,
                 MvcUriComponentsBuilder.fromController(EventController::class.java).toUriString()
             )

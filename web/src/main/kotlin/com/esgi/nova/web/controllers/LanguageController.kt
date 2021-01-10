@@ -2,9 +2,9 @@ package com.esgi.nova.web.controllers
 
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
-import com.esgi.nova.application.uses_cases.languages.LanguagesUseCases
-import com.esgi.nova.application.uses_cases.languages.models.LanguageForCreation
-import com.esgi.nova.application.uses_cases.languages.models.LanguageForUpdate
+import com.esgi.nova.application.services.languages.LanguagesService
+import com.esgi.nova.application.services.languages.models.LanguageForCreation
+import com.esgi.nova.application.services.languages.models.LanguageForUpdate
 import com.esgi.nova.core_api.languages.views.LanguageView
 import com.esgi.nova.core_api.languages.views.LanguageViewWithAvailableActions
 import com.esgi.nova.web.content_negociation.CustomMediaType
@@ -18,12 +18,12 @@ import java.util.*
 
 @RestController
 @RequestMapping("languages")
-open class LanguageController(private val languagesUseCases: LanguagesUseCases) {
+open class LanguageController(private val languagesService: LanguagesService) {
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     open fun create(@RequestBody language: LanguageForCreation): ResponseEntity<Any> {
-        val id = languagesUseCases.create(language)
+        val id = languagesService.create(language)
         return ResponseEntity
             .created(
                 MvcUriComponentsBuilder.fromMethodName(LanguageController::class.java, "getOneById", id).build().toUri()
@@ -34,7 +34,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
     @Secured("ROLE_ADMIN")
     @PutMapping("{id}")
     open fun update(@RequestBody language: LanguageForUpdate, @PathVariable id: UUID): ResponseEntity<Any> {
-        languagesUseCases.update(language, id)
+        languagesService.update(language, id)
         return ResponseEntity.noContent().build<Any>()
     }
 
@@ -43,24 +43,24 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
         @RequestParam(value = "page", required = false, defaultValue = "${PaginationDefault.PAGE}") page: Int,
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int
     ): PageMetadata<LanguageView> {
-        return languagesUseCases.getAllPaginated(page, size).toPageMetadata()
+        return languagesService.getAllPaginated(page, size).toPageMetadata()
     }
 
 
     @GetMapping("{id}")
     open fun getOneById(@PathVariable id: UUID): LanguageView? {
-        return languagesUseCases.getOneById(id)
+        return languagesService.getOneById(id)
     }
 
     @GetMapping("{id}/canDelete")
     open fun canDeleteById(@PathVariable id: UUID) {
-        languagesUseCases.canDelete(id)
+        languagesService.canDelete(id)
     }
 
 
     @DeleteMapping("{id}")
     open fun delete(@PathVariable id: UUID): ResponseEntity<Message> {
-        languagesUseCases.deleteOneById(id)
+        languagesService.deleteOneById(id)
         return ResponseEntity.noContent().build()
     }
 
@@ -71,7 +71,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
         @RequestParam(value = "language") concatenatedCode: String
     ): PageMetadata<LanguageView> {
-        languagesUseCases.getPaginatedLanguagesByConcatenatedCode(
+        languagesService.getPaginatedLanguagesByConcatenatedCode(
             page,
             size,
             concatenatedCode
@@ -86,7 +86,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
         @RequestParam(value = "code") code: String,
         @RequestParam(value = "subCode", required = false) subCode: String?
     ): PageMetadata<LanguageViewWithAvailableActions> {
-        languagesUseCases.getPaginatedLanguagesWithActionsByCodeAndSubCode(
+        languagesService.getPaginatedLanguagesWithActionsByCodeAndSubCode(
             page,
             size,
             code = code,
@@ -102,7 +102,7 @@ open class LanguageController(private val languagesUseCases: LanguagesUseCases) 
         @RequestParam(value = "code") code: String,
         @RequestParam(value = "subCode", required = false) subCode: String?
     ): PageMetadata<LanguageView> {
-        return languagesUseCases.getPaginatedLanguagesByCodeAndSubCode(
+        return languagesService.getPaginatedLanguagesByCodeAndSubCode(
             page,
             size,
             code,

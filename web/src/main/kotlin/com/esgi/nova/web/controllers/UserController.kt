@@ -2,8 +2,8 @@ package com.esgi.nova.web.controllers
 
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
-import com.esgi.nova.application.uses_cases.users.UsersUseCases
-import com.esgi.nova.application.uses_cases.users.models.UserRole
+import com.esgi.nova.application.services.users.UsersService
+import com.esgi.nova.application.services.users.models.UserRole
 import com.esgi.nova.core_api.user.views.UserAdminEditView
 import com.esgi.nova.core_api.user.views.UserUsername
 import com.esgi.nova.web.content_negociation.CustomMediaType
@@ -15,12 +15,12 @@ import java.util.*
 
 @RestController
 @RequestMapping("users")
-open class UserController(private val usersUseCases: UsersUseCases) {
+open class UserController(private val usersService: UsersService) {
 
     @Secured("ROLE_USER")
     @DeleteMapping("{id}")
     open fun delete(@PathVariable(value = "id") id: UUID) {
-        usersUseCases.delete(id)
+        usersService.delete(id)
     }
 
 
@@ -30,7 +30,7 @@ open class UserController(private val usersUseCases: UsersUseCases) {
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
         @RequestParam(value = "username") username: String
     ): PageMetadata<UserUsername> {
-        return usersUseCases.getPaginatedUserUsernamesByUsername(
+        return usersService.getPaginatedUserUsernamesByUsername(
             page,
             size,
             username
@@ -44,7 +44,7 @@ open class UserController(private val usersUseCases: UsersUseCases) {
         @RequestParam(value = "size", required = false, defaultValue = "${PaginationDefault.SIZE}") size: Int,
         @RequestParam(value = "username") username: String
     ): PageMetadata<UserAdminEditView> {
-        return usersUseCases.getPaginatedUserUserAdminEditsByUsername(
+        return usersService.getPaginatedUserUserAdminEditsByUsername(
             page,
             size,
             username
@@ -55,7 +55,7 @@ open class UserController(private val usersUseCases: UsersUseCases) {
     open fun updateUserRole(
         @PathVariable id: UUID, @RequestBody userRole: UserRole
     ): ResponseEntity<Any> {
-        usersUseCases.updateUserRole(
+        usersService.updateUserRole(
             id,
             userRole
         )

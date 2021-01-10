@@ -118,5 +118,5 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-files/events/
-files/resources/
+upload/events/
+upload/resources/

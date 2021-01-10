@@ -2,8 +2,8 @@ package com.esgi.nova.web.controllers
 
 import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
-import com.esgi.nova.application.uses_cases.difficulties.DifficultiesUseCases
-import com.esgi.nova.application.uses_cases.difficulties.models.DetailedDifficultyForEdition
+import com.esgi.nova.application.services.difficulties.DifficultiesService
+import com.esgi.nova.application.services.difficulties.models.DetailedDifficultyForEdition
 import com.esgi.nova.core_api.difficulty.views.DetailedDifficultyView
 import com.esgi.nova.core_api.difficulty.views.DetailedDifficultyWithAvailableActionsView
 import com.esgi.nova.core_api.difficulty.views.DifficultyTranslationNameView
@@ -20,7 +20,7 @@ import javax.servlet.ServletContext
 @RestController
 @RequestMapping("difficulties")
 open class DifficultyController constructor(
-    private val difficultiesUsesCases: DifficultiesUseCases,
+    private val difficultiesUsesCases: DifficultiesService,
     private val context: ServletContext
 ) {
     @GetMapping("{id}", produces = [CustomMediaType.Application.DetailedDifficultyWithAvailableActions])
