@@ -99,8 +99,8 @@ open class DifficultyController constructor(
         ).toPageMetadata()
     }
 
-    @GetMapping(produces = [CustomMediaType.Application.TranslatedDifficulty])
-    fun getAllStandardTranslatedDifficulties(
+    @GetMapping("load", produces = [CustomMediaType.Application.TranslatedDifficulty])
+    fun loadAllStandardTranslatedDifficulties(
         @RequestParam(
             value = "language",
             required = true

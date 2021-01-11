@@ -133,8 +133,8 @@ open class ResourceController(private val resourcesService: ResourcesService, pr
         ).toPageMetadata()
     }
 
-    @GetMapping(produces = [CustomMediaType.Application.TranslatedResource])
-    fun getAllStandardTranslatedResources(
+    @GetMapping("load",produces = [CustomMediaType.Application.TranslatedResource])
+    fun loadAllStandardTranslatedResources(
         @RequestParam(
             value = "language",
             required = true

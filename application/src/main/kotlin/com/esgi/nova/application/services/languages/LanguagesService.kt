@@ -217,4 +217,8 @@ open class LanguagesService(private val commandGateway: CommandGateway, private 
             )
         )
     }
+
+    fun getAll(): List<LanguageView> {
+        return queryGateway.queryMany<LanguageView, GetAllLanguagesQuery>(GetAllLanguagesQuery()).join()
+    }
 }

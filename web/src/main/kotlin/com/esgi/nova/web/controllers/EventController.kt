@@ -132,8 +132,8 @@ open class EventController constructor(
             .body<Resource>(background)
     }
 
-    @GetMapping(produces = [CustomMediaType.Application.TranslatedEvent])
-    fun getAllStandardTranslatedEvents(
+    @GetMapping("load",produces = [CustomMediaType.Application.TranslatedEvent])
+    fun loadAllStandardTranslatedEvents(
         @RequestParam(
             value = "language",
             required = true

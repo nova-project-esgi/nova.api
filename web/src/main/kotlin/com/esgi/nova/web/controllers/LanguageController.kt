@@ -11,8 +11,10 @@ import com.esgi.nova.web.content_negociation.CustomMediaType
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.ok
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.function.EntityResponse
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder
 import java.util.*
 
@@ -108,5 +110,10 @@ open class LanguageController(private val languagesService: LanguagesService) {
             code,
             subCode
         ).toPageMetadata()
+    }
+    
+    @GetMapping("load")
+    open fun loadAllLanguages(): List<LanguageView>{
+        return languagesService.getAll()
     }
 }
