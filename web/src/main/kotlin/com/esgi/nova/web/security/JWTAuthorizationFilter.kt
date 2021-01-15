@@ -25,6 +25,10 @@ class JWTAuthorizationFilter(private val authManager: AuthenticationManager) : G
                 return
             }
             val authentication = getAuthentication(req)
+            if(authentication == null){
+                res?.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                return
+            }
             val authCool = authManager.authenticate(authentication)
             SecurityContextHolder.getContext().authentication = authCool
             chain?.doFilter(req, res)
@@ -36,10 +40,13 @@ class JWTAuthorizationFilter(private val authManager: AuthenticationManager) : G
         val token = request.getHeader(HEADER_STRING)
         if (token != null) {
             // parse the token.
-            val user = JWTAuthentication.parse(token)
-            return if (user != null) {
-                UsernamePasswordAuthenticationToken(user, null, ArrayList())
-            } else null
+            try {
+                val user = JWTAuthentication.parse(token)
+                return UsernamePasswordAuthenticationToken(user, null, ArrayList())
+            } catch (e: Exception) {
+                return null
+            }
+
         }
         return null
     }
