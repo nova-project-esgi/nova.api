@@ -20,5 +20,6 @@ object CustomMediaType {
         const val TranslatedResource = "application/vnd+nova.translated_resource+json"
         const val LanguageWithAvailableActions = "application/vnd+nova.language_with_available_actions+json"
         const val LeaderBoardGame = "application/vnd+nova.leader_board_game+json"
+        const val GameState = "application/vnd+nova.game_state+json"
     }
 }

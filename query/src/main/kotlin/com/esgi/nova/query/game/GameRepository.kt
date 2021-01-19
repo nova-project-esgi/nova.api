@@ -25,4 +25,5 @@ interface GameRepository : JpaRepository<Game, UUID> {
         pageable: Pageable
     ): Page<Game>
 
+
 }

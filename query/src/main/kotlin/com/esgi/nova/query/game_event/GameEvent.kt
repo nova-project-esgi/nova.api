@@ -1,5 +1,6 @@
 package com.esgi.nova.query.game_event
 
+import com.esgi.nova.core_api.games.views.GameEventView
 import com.esgi.nova.query.event.Event
 import com.esgi.nova.query.game.Game
 import org.hibernate.annotations.Type
@@ -48,5 +49,9 @@ class GameEvent(
         return result
     }
 
+    fun toGameEventView() = GameEventView(
+        eventId = event.id,
+        linkTime = linkTime
+    )
 
 }

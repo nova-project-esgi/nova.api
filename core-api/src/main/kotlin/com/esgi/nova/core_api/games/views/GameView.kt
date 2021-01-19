@@ -11,3 +11,4 @@ data class GameView(
     val isEnded: Boolean,
     val eventIds: List<UUID>
 )
+

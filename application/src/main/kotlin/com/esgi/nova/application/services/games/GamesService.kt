@@ -8,6 +8,7 @@ import com.esgi.nova.application.services.games.exceptions.GameNotFoundByIdExcep
 import com.esgi.nova.application.services.games.models.GameForCreation
 import com.esgi.nova.application.services.games.models.GameForUpdate
 import com.esgi.nova.application.services.resources.ResourcesService
+import com.esgi.nova.application.services.users.UsersService
 import com.esgi.nova.core_api.difficulty.DifficultyIdentifier
 import com.esgi.nova.core_api.events.EventIdentifier
 import com.esgi.nova.core_api.events.queries.FindAllEventsByGameIdOrderByLinkTimeDescQuery
@@ -23,7 +24,10 @@ import com.esgi.nova.core_api.games.commands.DeleteGameCommand
 import com.esgi.nova.core_api.games.commands.UpdateGameCommand
 import com.esgi.nova.core_api.games.dtos.GameEventEditionDto
 import com.esgi.nova.core_api.games.dtos.GameResourceEditionDto
+import com.esgi.nova.core_api.games.queries.FindLastActiveGameResumeByUserIdQuery
 import com.esgi.nova.core_api.games.queries.FindOneGameViewByIdQuery
+import com.esgi.nova.core_api.games.queries.GetAllGameIdsQuery
+import com.esgi.nova.core_api.games.views.GameStateView
 import com.esgi.nova.core_api.games.views.GameView
 import com.esgi.nova.core_api.games.views.LeaderBoardGameView
 import com.esgi.nova.core_api.pagination.PageBase
@@ -45,13 +49,20 @@ import java.util.*
 open class GamesService(
     private val queryGateway: QueryGateway,
     private val commandGateway: CommandGateway,
-    private val resourcesUsesCases: ResourcesService
+    private val resourcesUsesCases: ResourcesService,
+    private val userService: UsersService
 ) {
 
     fun findOneGameViewById(id: UUID): GameView {
         return queryGateway.query<GameView?, FindOneGameViewByIdQuery>(
             FindOneGameViewByIdQuery(GameIdentifier(id.toString()))
         ).join() ?: throw GameNotFoundByIdException()
+    }
+
+    fun deleteAll() {
+        queryGateway.queryMany<UUID, GetAllGameIdsQuery>(GetAllGameIdsQuery()).join().forEach { id ->
+            deleteOneById(id)
+        }
     }
 
     fun deleteOneById(id: UUID) {
@@ -154,6 +165,13 @@ open class GamesService(
         return queryGateway.queryPage<LeaderBoardGameView, FindPaginatedLeaderBoardGamesOrderedByEventCountQuery>(
             FindPaginatedLeaderBoardGamesOrderedByEventCountQuery(page = page, size = size)
         ).join()
+    }
+
+    fun findLastActiveGameForUser(username: String): GameStateView? {
+        return queryGateway.query<GameStateView?, FindLastActiveGameResumeByUserIdQuery>(
+            FindLastActiveGameResumeByUserIdQuery(userId = UserIdentifier(userService.getResumeByUsername(username).id.toString()))
+        ).join()
+
     }
 }
 

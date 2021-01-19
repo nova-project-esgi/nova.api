@@ -58,7 +58,8 @@ open class UsersService(private val commandGateway: CommandGateway, private val 
                     email = user.email,
                     role = user.role,
                     username = user.username,
-                    token = JWTAuthentication.sign(user.username)
+                    token = JWTAuthentication.sign(user.username),
+                    id = user.id
                 )
 
             }
@@ -79,8 +80,8 @@ open class UsersService(private val commandGateway: CommandGateway, private val 
                     email = user.email,
                     role = user.role,
                     username = user.username,
-                    token = JWTAuthentication.sign(user.username)
-
+                    token = JWTAuthentication.sign(user.username),
+                    id = user.id
                 )
             }
         throw UserNotFoundByUsernameAndPasswordException(credentials.username, credentials.password)
@@ -106,12 +107,13 @@ open class UsersService(private val commandGateway: CommandGateway, private val 
                 role = role,
                 password = Encryption.md5(user.password)
             )
-        ).let {
+        ).let { userId ->
             return ConnectedUser(
                 email = user.email,
                 role = role,
                 username = user.username,
-                token = JWTAuthentication.sign(user.username)
+                token = JWTAuthentication.sign(user.username),
+                id = userId.toUUID()
             )
         }
 

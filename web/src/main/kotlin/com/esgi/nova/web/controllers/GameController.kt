@@ -6,6 +6,7 @@ import com.esgi.nova.application.services.events.models.TranslatedEventsWithBack
 import com.esgi.nova.application.services.games.GamesService
 import com.esgi.nova.application.services.games.models.GameForCreation
 import com.esgi.nova.application.services.games.models.GameForUpdate
+import com.esgi.nova.core_api.games.views.GameStateView
 import com.esgi.nova.core_api.games.views.GameView
 import com.esgi.nova.core_api.games.views.LeaderBoardGameView
 import com.esgi.nova.web.content_negociation.CustomMediaType
@@ -34,6 +35,12 @@ open class GameController constructor(
         return ResponseEntity.noContent().build()
     }
 
+    @DeleteMapping()
+    fun deleteAll(): ResponseEntity<Message> {
+        gameService.deleteAll()
+        return ResponseEntity.noContent().build()
+    }
+
     @PostMapping()
     open fun createOne(@RequestBody game: GameForCreation): ResponseEntity<Message> {
         val id = gameService.createGame(game)
@@ -46,7 +53,7 @@ open class GameController constructor(
 
 
     @PutMapping("{id}")
-    open fun createOne(@PathVariable id: UUID, @RequestBody game: GameForUpdate): ResponseEntity<Message> {
+    open fun updateGame(@PathVariable id: UUID, @RequestBody game: GameForUpdate): ResponseEntity<Message> {
         gameService.updateGame(game, id)
         return ResponseEntity
             .noContent()
@@ -80,6 +87,11 @@ open class GameController constructor(
             size,
             difficultyId
         ).toPageMetadata()
+    }
+
+    @GetMapping(produces = [CustomMediaType.Application.GameState])
+    open fun loadLastActiveGameForUser(@PathVariable(name = "username", required = true) username: String): ResponseEntity<GameStateView>? {
+        return gameService.findLastActiveGameForUser(username)?.let { ResponseEntity.ok(it) }
     }
 
 

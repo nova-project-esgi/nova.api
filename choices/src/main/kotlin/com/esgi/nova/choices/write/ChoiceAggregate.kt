@@ -150,7 +150,7 @@ class ChoiceAggregate() {
                 choiceResourcesForUpdate.add(choiceResourceEdition)
             }
         }
-        if (choiceResourcesDeleteIds.size == this.choiceResources.size || cmd.resources.isEmpty()) {
+        if ((choiceResourcesDeleteIds.size == this.choiceResources.size && choiceResourcesForCreation.isEmpty())|| cmd.resources.isEmpty()) {
             throw ChoiceResourcesMinimalSizeException()
         } else {
             choiceResourcesDeleteIds.forEach { choiceResourceId ->

@@ -1,5 +1,6 @@
 package com.esgi.nova.query.game
 
+import com.esgi.nova.core_api.games.views.GameStateView
 import com.esgi.nova.core_api.games.views.GameView
 import com.esgi.nova.core_api.games.views.LeaderBoardGameView
 import com.esgi.nova.query.difficulty.Difficulty
@@ -55,6 +56,17 @@ class Game(
         difficultyId = difficulty.id,
         resources = gameResources.map { it.toGameResourceView() },
         eventCount = gameEvents.size
+    )
+
+    fun toGameStateView() = GameStateView(
+        id = id,
+        userId = user.id,
+        duration = duration,
+        isEnded = isEnded,
+        difficultyId = difficulty.id,
+        resources = gameResources.map { it.toGameResourceView() },
+        events = gameEvents.map { it.toGameEventView() }
+
     )
 
 }

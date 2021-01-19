@@ -3,7 +3,6 @@ package com.esgi.nova.application.services.events
 import com.esgi.nova.application.extensions.queryPage
 import com.esgi.nova.application.pagination.Link
 import com.esgi.nova.application.pagination.Relation
-import com.esgi.nova.application.services.files.FileService
 import com.esgi.nova.application.services.events.exceptions.ChoiceWithoutResourcesException
 import com.esgi.nova.application.services.events.exceptions.EventWithoutChoicesException
 import com.esgi.nova.application.services.events.exceptions.NoDefaultLanguageChoiceTranslationException
@@ -12,6 +11,7 @@ import com.esgi.nova.application.services.events.models.DetailedChoiceForEdition
 import com.esgi.nova.application.services.events.models.DetailedChoiceForUpdate
 import com.esgi.nova.application.services.events.models.DetailedEventForEdition
 import com.esgi.nova.application.services.events.models.TranslatedEventsWithBackgroundDto
+import com.esgi.nova.application.services.files.FileService
 import com.esgi.nova.application.services.languages.LanguagesService
 import com.esgi.nova.application.services.resources.exceptions.ResourceIconNotFoundException
 import com.esgi.nova.common.extensions.extractFileName
@@ -65,7 +65,7 @@ open class EventsService(
                 eventId = EventIdentifier()
             )
         )
-        createChoicesForEvent(event, eventId)
+        createChoicesForEvent(eventId, *event.choices.toTypedArray())
         event.translations.forEach { translation ->
             commandGateway.sendAndWait(
                 CreateEventTranslationCommand(
@@ -81,7 +81,7 @@ open class EventsService(
 
     open fun updateEvent(id: UUID, event: DetailedEventForEdition<DetailedChoiceForUpdate>): UUID {
         validateEventEdition(event)
-        updateChoices(event)
+        upsertChoices(id, event)
         commandGateway.sendAndWait<EventIdentifier>(
             UpdateEventCommand(
                 isActive = event.isActive,
@@ -100,38 +100,45 @@ open class EventsService(
     }
 
 
-    private fun updateChoices(event: DetailedEventForEdition<DetailedChoiceForUpdate>) {
+    private fun upsertChoices(eventId: UUID, event: DetailedEventForEdition<DetailedChoiceForUpdate>) {
         event.choices.forEach {
-            commandGateway.sendAndWait<ChoiceIdentifier>(UpdateChoiceCommand(
-                choiceId = ChoiceIdentifier(it.id.toString()),
-                translations = it.translations.map { t ->
-                    ChoiceTranslationEditionDto(
-                        translationId = LanguageIdentifier(
-                            t.languageId.toString()
-                        ), title = t.title, description = t.description
-                    )
-                },
-                resources = it.resources.map { r ->
-                    ChoiceResourceEditionDto(
-                        choiceResourceId = ResourceIdentifier(r.resourceId.toString()),
-                        changeValue = r.changeValue
-                    )
-                }
-            ))
+            if (it.id != null) {
+                commandGateway.sendAndWait<ChoiceIdentifier>(UpdateChoiceCommand(
+                    choiceId = ChoiceIdentifier(it.id.toString()),
+                    translations = it.translations.map { t ->
+                        ChoiceTranslationEditionDto(
+                            translationId = LanguageIdentifier(
+                                t.languageId.toString()
+                            ), title = t.title, description = t.description
+                        )
+                    },
+                    resources = it.resources.map { r ->
+                        ChoiceResourceEditionDto(
+                            choiceResourceId = ResourceIdentifier(r.resourceId.toString()),
+                            changeValue = r.changeValue
+                        )
+                    }
+                ))
+            } else {
+                it.id = createChoicesForEvent(EventIdentifier(eventId.toString()), it).firstOrNull()
+            }
+
         }
     }
 
     private fun createChoicesForEvent(
-        event: DetailedEventForEdition<DetailedChoiceForEdition>,
-        eventId: EventIdentifier
-    ) {
-        event.choices.forEach { choice ->
+        eventId: EventIdentifier,
+        vararg choices: DetailedChoiceForEdition
+    ): List<UUID> {
+        val ids = mutableListOf<UUID>()
+        choices.forEach { choice ->
             val choiceId = commandGateway.sendAndWait<ChoiceIdentifier>(
                 CreateChoiceCommand(
                     choiceId = ChoiceIdentifier(),
                     eventId = eventId
                 )
             )
+            ids += choiceId.toUUID()
             choice.translations.forEach { translation ->
                 commandGateway.sendAndWait(
                     CreateChoiceTranslationCommand(
@@ -152,6 +159,7 @@ open class EventsService(
                 )
             }
         }
+        return ids
     }
 
 

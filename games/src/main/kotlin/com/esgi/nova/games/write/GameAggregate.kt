@@ -11,6 +11,8 @@ import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.modelling.command.AggregateMember
 import org.axonframework.spring.stereotype.Aggregate
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 @Aggregate
@@ -21,6 +23,7 @@ class GameAggregate() {
     var duration: Int = 0
     lateinit var difficultyId: DifficultyIdentifier
     var isEnded: Boolean = false
+    var logger: Logger = LoggerFactory.getLogger(GameAggregate::class.java)
 
     @AggregateMember
     var gameResources = mutableListOf<GameResourceEntity>()
@@ -122,14 +125,15 @@ class GameAggregate() {
 
     @CommandHandler
     fun handle(cmd: UpdateGameCommand) {
+        logger.info("Update game Command $cmd")
         AggregateLifecycle.apply(UpdatedGameEvent(gameId = id, duration = cmd.duration, isEnded = cmd.isEnded))
+        logger.info("Update game resources")
         cmd.resources.forEach { r ->
             AggregateLifecycle.apply(UpdatedGameResourceEvent(gameId = id, resourceId = r.resourceId, total = r.total))
         }
+        logger.info("Add game events")
         cmd.events.forEach { e ->
-            if (gameEvents.none { gameEvent -> gameEvent.id === e.eventId }) {
-                AggregateLifecycle.apply(AddedGameEventEvent(gameId = id, eventId = e.eventId, linkTime = e.linkTime))
-            }
+            AggregateLifecycle.apply(AddedGameEventEvent(gameId = id, eventId = e.eventId, linkTime = e.linkTime))
         }
     }
 
