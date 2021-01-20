@@ -15,3 +15,4 @@ open class FindLastActiveGameResumeByUserIdHandler(private val gameEventReposito
     }
 }
 
+

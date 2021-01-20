@@ -277,6 +277,28 @@ open class EventsService(
         }
     }
 
+    fun loadOneStandardEventsByLanguage(
+        language: String,
+        eventId: UUID,
+        backgroundBaseUrl: String
+    ): TranslatedEventsWithBackgroundDto? {
+        return queryGateway.query<TranslatedEventView?, FindOneTranslatedEventByLanguageAndId>(
+            FindOneTranslatedEventByLanguageAndId(
+                language = language,
+                eventId = EventIdentifier(eventId.toString())
+            )
+        ).join()?.let { e ->
+            TranslatedEventsWithBackgroundDto(
+                id = e.id,
+                language = e.language,
+                description = e.description,
+                title = e.title,
+                choices = e.choices,
+                backgroundUrl = Link(Relation.ASSET, "$backgroundBaseUrl/${e.id}/background", HttpMethod.GET)
+            )
+        }
+    }
+
 
 }
 

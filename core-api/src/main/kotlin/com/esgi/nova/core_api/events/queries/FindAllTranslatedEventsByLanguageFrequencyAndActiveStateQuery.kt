@@ -6,3 +6,5 @@ data class FindAllTranslatedEventsByLanguageFrequencyAndActiveStateQuery(
     val isDaily: Boolean
 )
 
+
+

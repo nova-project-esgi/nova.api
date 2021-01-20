@@ -17,13 +17,16 @@ import com.esgi.nova.core_api.events.queries.FindPaginatedLeaderBoardGamesByDiff
 import com.esgi.nova.core_api.events.queries.FindPaginatedLeaderBoardGamesOrderedByEventCountQuery
 import com.esgi.nova.core_api.events.views.EventView
 import com.esgi.nova.core_api.events.views.TranslatedEventView
+import com.esgi.nova.core_api.games.GameEventIdentifier
 import com.esgi.nova.core_api.games.GameIdentifier
+import com.esgi.nova.core_api.games.UpdateGameStatusCommand
 import com.esgi.nova.core_api.games.commands.AddGameResourceCommand
 import com.esgi.nova.core_api.games.commands.CreateGameCommand
 import com.esgi.nova.core_api.games.commands.DeleteGameCommand
 import com.esgi.nova.core_api.games.commands.UpdateGameCommand
 import com.esgi.nova.core_api.games.dtos.GameEventEditionDto
 import com.esgi.nova.core_api.games.dtos.GameResourceEditionDto
+import com.esgi.nova.core_api.games.queries.FindAllActiveGamesIdsByUserIdQuery
 import com.esgi.nova.core_api.games.queries.FindLastActiveGameResumeByUserIdQuery
 import com.esgi.nova.core_api.games.queries.FindOneGameViewByIdQuery
 import com.esgi.nova.core_api.games.queries.GetAllGameIdsQuery
@@ -74,6 +77,19 @@ open class GamesService(
             queryGateway.query<UserResume?, FindUserByUsernameQuery>(FindUserByUsernameQuery(game.username)).join()
                 ?: throw UserNotFoundByUsernameException()
         val resources = resourcesUsesCases.findAllResourcesByDifficulty(game.difficultyId)
+
+        queryGateway.queryMany<UUID, FindAllActiveGamesIdsByUserIdQuery>(
+            FindAllActiveGamesIdsByUserIdQuery(
+                userId = UserIdentifier(
+                    user.id.toString()
+                )
+            )
+        ).join().forEach { activeGameId ->
+            commandGateway.sendAndWait<GameIdentifier>(
+                UpdateGameStatusCommand(gameId = GameIdentifier(activeGameId.toString()), isEnded = true)
+            )
+        }
+
         val gameId = commandGateway.sendAndWait<GameIdentifier>(
             CreateGameCommand(
                 gameId = GameIdentifier(),
@@ -90,6 +106,7 @@ open class GamesService(
                 )
             )
         }
+
         return gameId.toUUID()
     }
 
@@ -108,7 +125,8 @@ open class GamesService(
                 events = game.events.map { e ->
                     GameEventEditionDto(
                         eventId = EventIdentifier(e.eventId.toString()),
-                        linkTime = e.linkTime ?: LocalDateTime.now()
+                        linkTime = e.linkTime ?: LocalDateTime.now(),
+                        id = GameEventIdentifier(e.id.toString())
                     )
                 }
             )

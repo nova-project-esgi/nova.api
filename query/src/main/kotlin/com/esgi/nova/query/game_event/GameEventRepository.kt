@@ -1,6 +1,7 @@
 package com.esgi.nova.query.game_event
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import java.util.*
 
 interface GameEventRepository : JpaRepository<GameEvent, UUID> {
@@ -8,4 +9,6 @@ interface GameEventRepository : JpaRepository<GameEvent, UUID> {
     fun findAllByGameId(gameId: UUID): List<GameEvent>
     fun findAllByGameIdOrderByLinkTimeDesc(gameId: UUID): List<GameEvent>
     fun findFirstByGameUserIdOrderByLinkTimeDesc(userId: UUID): GameEvent?
+
+
 }

@@ -132,7 +132,7 @@ open class EventController constructor(
             .body<Resource>(background)
     }
 
-    @GetMapping("load",produces = [CustomMediaType.Application.TranslatedEvent])
+    @GetMapping("load", produces = [CustomMediaType.Application.TranslatedEvent])
     fun loadAllStandardTranslatedEvents(
         @RequestParam(
             value = "language",
@@ -147,5 +147,24 @@ open class EventController constructor(
         )
     }
 
+    @GetMapping("load/{eventId}", produces = [CustomMediaType.Application.TranslatedEvent])
+    fun loadOneTranslatedEventById(
+        @PathVariable eventId: UUID,
+        @RequestParam(
+            value = "language",
+            required = true
+        ) language: String
+    ): ResponseEntity<TranslatedEventsWithBackgroundDto> {
+        val event = eventsService.loadOneStandardEventsByLanguage(
+            language,
+            eventId,
+            MvcUriComponentsBuilder.fromController(EventController::class.java).toUriString()
+        )
+        if (event != null) {
+            return ResponseEntity.ok(event)
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+    }
 
 }

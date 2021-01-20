@@ -15,3 +15,5 @@ open class FindAllTranslatedEventsByLanguageFrequencyAndActiveStateHandler(priva
             .map { it.toTranslatedEvent(query.language) }
     }
 }
+
+

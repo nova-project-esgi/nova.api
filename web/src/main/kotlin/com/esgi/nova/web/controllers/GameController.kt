@@ -90,8 +90,17 @@ open class GameController constructor(
     }
 
     @GetMapping(produces = [CustomMediaType.Application.GameState])
-    open fun loadLastActiveGameForUser(@PathVariable(name = "username", required = true) username: String): ResponseEntity<GameStateView>? {
-        return gameService.findLastActiveGameForUser(username)?.let { ResponseEntity.ok(it) }
+    open fun loadLastActiveGameForUser(
+        @RequestParam(
+            name = "username",
+            required = true
+        ) username: String
+    ): ResponseEntity<GameStateView?> {
+        val game = gameService.findLastActiveGameForUser(username)
+        if (game != null) {
+            return ResponseEntity.ok(game)
+        }
+        return ResponseEntity.notFound().build()
     }
 
 

@@ -26,4 +26,9 @@ interface GameRepository : JpaRepository<Game, UUID> {
     ): Page<Game>
 
 
+    @Query(
+        value = "SELECT g FROM Game g WHERE  g.user.id = ?1  AND g.isEnded = ?2 "
+    )
+    fun findAllByUserIdAndIsEnded(userId: UUID, isEnded: Boolean): List<Game>
+
 }
