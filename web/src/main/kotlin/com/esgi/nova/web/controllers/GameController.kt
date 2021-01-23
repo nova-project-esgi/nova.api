@@ -4,6 +4,7 @@ import com.esgi.nova.application.pagination.PageMetadata
 import com.esgi.nova.application.pagination.PaginationDefault
 import com.esgi.nova.application.services.events.models.TranslatedEventsWithBackgroundDto
 import com.esgi.nova.application.services.games.GamesService
+import com.esgi.nova.application.services.games.exceptions.GameNotFoundByIdException
 import com.esgi.nova.application.services.games.models.GameForCreation
 import com.esgi.nova.application.services.games.models.GameForUpdate
 import com.esgi.nova.core_api.games.views.GameStateView
@@ -54,7 +55,11 @@ open class GameController constructor(
 
     @PutMapping("{id}")
     open fun updateGame(@PathVariable id: UUID, @RequestBody game: GameForUpdate): ResponseEntity<Message> {
-        gameService.updateGame(game, id)
+        try{
+            gameService.updateGame(game, id)
+        } catch (e: GameNotFoundByIdException){
+            return ResponseEntity.notFound().build()
+        }
         return ResponseEntity
             .noContent()
             .build()

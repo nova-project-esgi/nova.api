@@ -17,7 +17,6 @@ import com.esgi.nova.core_api.events.queries.FindPaginatedLeaderBoardGamesByDiff
 import com.esgi.nova.core_api.events.queries.FindPaginatedLeaderBoardGamesOrderedByEventCountQuery
 import com.esgi.nova.core_api.events.views.EventView
 import com.esgi.nova.core_api.events.views.TranslatedEventView
-import com.esgi.nova.core_api.games.GameEventIdentifier
 import com.esgi.nova.core_api.games.GameIdentifier
 import com.esgi.nova.core_api.games.UpdateGameStatusCommand
 import com.esgi.nova.core_api.games.commands.AddGameResourceCommand
@@ -26,10 +25,7 @@ import com.esgi.nova.core_api.games.commands.DeleteGameCommand
 import com.esgi.nova.core_api.games.commands.UpdateGameCommand
 import com.esgi.nova.core_api.games.dtos.GameEventEditionDto
 import com.esgi.nova.core_api.games.dtos.GameResourceEditionDto
-import com.esgi.nova.core_api.games.queries.FindAllActiveGamesIdsByUserIdQuery
-import com.esgi.nova.core_api.games.queries.FindLastActiveGameResumeByUserIdQuery
-import com.esgi.nova.core_api.games.queries.FindOneGameViewByIdQuery
-import com.esgi.nova.core_api.games.queries.GetAllGameIdsQuery
+import com.esgi.nova.core_api.games.queries.*
 import com.esgi.nova.core_api.games.views.GameStateView
 import com.esgi.nova.core_api.games.views.GameView
 import com.esgi.nova.core_api.games.views.LeaderBoardGameView
@@ -111,6 +107,9 @@ open class GamesService(
     }
 
     fun updateGame(game: GameForUpdate, id: UUID) {
+        if(!queryGateway.query(GameExistsQuery(GameIdentifier(id.toString())), Boolean::class.java).join()){
+            throw GameNotFoundByIdException()
+        }
         commandGateway.sendAndWait<GameIdentifier>(
             UpdateGameCommand(
                 gameId = GameIdentifier(id.toString()),
@@ -125,8 +124,7 @@ open class GamesService(
                 events = game.events.map { e ->
                     GameEventEditionDto(
                         eventId = EventIdentifier(e.eventId.toString()),
-                        linkTime = e.linkTime ?: LocalDateTime.now(),
-                        id = GameEventIdentifier(e.id.toString())
+                        linkTime = e.linkTime ?: LocalDateTime.now()
                     )
                 }
             )

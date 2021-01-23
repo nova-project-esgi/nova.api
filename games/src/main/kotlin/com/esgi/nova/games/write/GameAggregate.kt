@@ -118,23 +118,27 @@ class GameAggregate() {
     }
 
 
-    @CommandHandler
+    @EventSourcingHandler
     fun on(event: AddedGameEventEvent) {
         gameEvents.add(GameEventEntity(id = event.eventId, linkTime = event.linkTime))
     }
 
     @CommandHandler
     fun handle(cmd: UpdateGameCommand) {
-        logger.info("Update game Command $cmd")
+        logger.trace("Update game Command $cmd")
+        logger.trace("GameEvents : $gameEvents")
+        logger.trace("GameResources : $gameResources")
         AggregateLifecycle.apply(UpdatedGameEvent(gameId = id, duration = cmd.duration, isEnded = cmd.isEnded))
-        logger.info("Update game resources")
+        logger.trace("Update game resources")
         cmd.resources.forEach { r ->
             AggregateLifecycle.apply(UpdatedGameResourceEvent(gameId = id, resourceId = r.resourceId, total = r.total))
         }
-        logger.info("Add game events")
-        cmd.events.forEach { e ->
-            AggregateLifecycle.apply(AddedGameEventEvent(gameId = id, eventId = e.eventId, linkTime = e.linkTime))
-        }
+        logger.trace("Add game events")
+        cmd.events
+            .filter { e -> !gameEvents.any { gameEvent -> gameEvent.linkTime == e.linkTime } }
+            .forEach { e ->
+                AggregateLifecycle.apply(AddedGameEventEvent(gameId = id, eventId = e.eventId, linkTime = e.linkTime))
+            }
     }
 
     @EventSourcingHandler

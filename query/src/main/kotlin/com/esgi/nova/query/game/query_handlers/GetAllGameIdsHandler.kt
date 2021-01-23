@@ -14,3 +14,4 @@ open class GetAllGameIdsHandler(private val gameRepository: GameRepository) {
         return gameRepository.findAll().map { it.id }
     }
 }
+
