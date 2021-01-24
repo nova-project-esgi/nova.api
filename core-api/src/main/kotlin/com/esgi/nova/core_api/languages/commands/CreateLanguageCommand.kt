@@ -6,5 +6,5 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 data class CreateLanguageCommand(
     @TargetAggregateIdentifier val languageId: LanguageIdentifier,
     val code: String,
-    val subCode: String?
+    val subCode: String
 )

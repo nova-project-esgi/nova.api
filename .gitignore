@@ -120,3 +120,6 @@ gradle-app.setting
 
 upload/events/
 upload/resources/
+archi_cloud_api.pem
+deploy.sh
+execute_commands_on_ec2.sh

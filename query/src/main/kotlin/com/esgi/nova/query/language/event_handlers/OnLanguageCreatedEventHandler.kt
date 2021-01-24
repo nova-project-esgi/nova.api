@@ -15,7 +15,7 @@ open class OnLanguageCreatedEventHandler constructor(private val languageReposit
             Language(
                 event.languageId.toUUID(),
                 event.code,
-                if (event.subCode.isNullOrBlank()) null else event.subCode
+                event.subCode
             )
         )
     }

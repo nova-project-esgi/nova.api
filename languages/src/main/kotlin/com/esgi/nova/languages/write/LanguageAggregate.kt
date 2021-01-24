@@ -21,15 +21,12 @@ class LanguageAggregate constructor() {
     @AggregateIdentifier
     private lateinit var id: LanguageIdentifier
     private lateinit var code: String
-    private var subCode: String? = null
+    private lateinit var subCode: String
     private var isDefault: Boolean = false
 
     val concatenatedCode: String
         get() {
-            subCode?.let {
-                return "${code}-${subCode}"
-            }
-            return code
+            return "${code}-${subCode}"
         }
 
     @CommandHandler

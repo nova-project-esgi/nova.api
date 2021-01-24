@@ -26,7 +26,7 @@ class Language(
     @Column(length = StringLength.SHORT_STRING)
     var code: String,
     @Column(length = StringLength.SHORT_STRING, name = "sub_code")
-    var subCode: String? = null,
+    var subCode: String,
     @Column(name = "is_default")
     var isDefault: Boolean = false
 ) {
@@ -43,8 +43,8 @@ class Language(
     @OneToMany(mappedBy = "language", cascade = [CascadeType.ALL])
     var difficultyTranslations: MutableList<DifficultyTranslation> = mutableListOf()
 
-    @Formula(value = "iif(sub_code IS NULL , code, concat(code, '-', sub_code))")
-    val concatenatedCodes = if (!subCode.isNullOrBlank()) "${code}-${subCode}" else code
+    @Formula(value = "concat(code, '-', sub_code)")
+    val concatenatedCodes =  "${code}-${subCode}"
 
     fun toLanguageView() = LanguageView(
         id = id,

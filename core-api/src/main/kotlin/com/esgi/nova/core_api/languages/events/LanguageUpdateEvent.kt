@@ -6,6 +6,6 @@ import java.io.Serializable
 data class LanguageUpdateEvent(
     val languageId: LanguageIdentifier,
     val code: String,
-    val subCode: String?,
+    val subCode: String,
     val isDefault: Boolean
 ) : Serializable

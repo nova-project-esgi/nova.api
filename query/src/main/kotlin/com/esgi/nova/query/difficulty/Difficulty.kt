@@ -56,6 +56,7 @@ class Difficulty(
             id = id,
             language = translation.language.concatenatedCodes,
             name = translation.name,
+            rank = rank,
             resources = difficultyResources.map { difficultyResource -> difficultyResource.toDifficultyResourceView() }
         )
     }
