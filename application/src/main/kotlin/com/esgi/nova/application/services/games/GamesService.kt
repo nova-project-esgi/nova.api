@@ -157,7 +157,8 @@ open class GamesService(
                     backgroundUrl = Link(Relation.ASSET, "$backgroundBaseUrl/${dE.id}/background", HttpMethod.GET),
                     choices = dE.choices,
                     title = dE.title,
-                    description = dE.description
+                    description = dE.description,
+                    isDaily = dE.isDaily
                 )
             }
         }

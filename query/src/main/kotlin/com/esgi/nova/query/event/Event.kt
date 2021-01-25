@@ -41,6 +41,7 @@ class Event(
             description = translation.description,
             title = translation.title,
             language = translation.language.concatenatedCodes,
+            isDaily = isDaily,
             choices = choices.map { c -> c.toTranslatedChoiceView(language) }
         )
     }

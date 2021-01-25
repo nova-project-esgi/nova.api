@@ -272,6 +272,7 @@ open class EventsService(
                 description = e.description,
                 title = e.title,
                 choices = e.choices,
+                isDaily = e.isDaily,
                 backgroundUrl = Link(Relation.ASSET, "$backgroundBaseUrl/${e.id}/background", HttpMethod.GET)
             )
         }
@@ -294,6 +295,7 @@ open class EventsService(
                 description = e.description,
                 title = e.title,
                 choices = e.choices,
+                isDaily = e.isDaily,
                 backgroundUrl = Link(Relation.ASSET, "$backgroundBaseUrl/${e.id}/background", HttpMethod.GET)
             )
         }

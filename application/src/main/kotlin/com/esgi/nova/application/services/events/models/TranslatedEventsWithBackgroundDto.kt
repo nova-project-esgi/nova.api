@@ -9,6 +9,7 @@ data class TranslatedEventsWithBackgroundDto(
     val title: String,
     val description: String,
     val language: String,
+    val isDaily: Boolean,
     val choices: List<TranslatedChoiceView>,
     val backgroundUrl: Link
 )
