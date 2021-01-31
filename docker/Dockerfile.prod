@@ -5,9 +5,10 @@ RUN gradle build --no-daemon
 
 FROM openjdk:11-jre-slim
 
+WORKDIR app
 EXPOSE 8001
-
-RUN mkdir /app
+ENV SPRING_PROFILES_ACTIVE=prod
+VOLUME /app/upload
 
 COPY --from=build /home/gradle/src/bootstrap/build/libs/*.jar /app/nova-api.jar
 
