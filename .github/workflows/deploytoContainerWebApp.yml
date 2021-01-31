@@ -21,7 +21,7 @@ jobs:
     - name: Build and push image to ACR
       id: build-image
       run: |
-        docker build "$GITHUB_WORKSPACE/" -f  "docker/Dockerfile.prod" -t novacloudregistry.azurecr.io/novacloudapi-img:${{ github.sha }}
+        docker build "$GITHUB_WORKSPACE/" -f  "docker/Dockerfile.cloud" -t novacloudregistry.azurecr.io/novacloudapi-img:${{ github.sha }}
         docker push novacloudregistry.azurecr.io/novacloudapi-img:${{ github.sha }}
 
     - name: Set Web App ACR authentication
