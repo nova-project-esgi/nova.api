@@ -27,7 +27,7 @@ jobs:
     - name: Set Web App ACR authentication
       uses: Azure/appservice-settings@v1
       with: 
-        app-name: nova-cloud-webapp
+        app-name: nova-cloud-api
         app-settings-json: | 
           [
             {
