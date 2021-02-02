@@ -4,20 +4,20 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: 'Checkout Github Action' 
+    - name: 'Checkout Github Action'
       uses: actions/checkout@master
-    
+
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
+
     - uses: azure/docker-login@v1
       with:
         login-server: novacloudregistry.azurecr.io
         username: ${{ secrets.acr_novacloudregistry_username }}
         password: ${{ secrets.acr_novacloudregistry_password }}
-    
+
     - name: Build and push image to ACR
       id: build-image
       run: |
@@ -26,9 +26,9 @@ jobs:
 
     - name: Set Web App ACR authentication
       uses: Azure/appservice-settings@v1
-      with: 
-        app-name: nova-cloud-webapp
-        app-settings-json: | 
+      with:
+        app-name: nova-cloud-api
+        app-settings-json: |
           [
             {
               "name": "DOCKER_REGISTRY_SERVER_URL",
@@ -44,10 +44,10 @@ jobs:
               "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
               "value": "${{ secrets.acr_novacloudregistry_password }}",
               "slotSetting": false
-            }            
+            }
           ]
-      
+
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: nova-cloud-webapp
+        app-name: nova-cloud-api
         images: novacloudregistry.azurecr.io/novacloudapi-img:${{ github.sha }}
