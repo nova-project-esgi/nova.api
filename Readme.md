@@ -1,10 +1,10 @@
 ## Create docker image
 
 ```shell
-./gradlew bootBuildImage --imageName=nova/nova-api
+./gradlew bootBuildImage --imageName=nova/nova-webapp
 ```
 
 ## Deploy on AWS 
 ```shell
-. deploy.sh
+. axon-server-deploy.sh
 ```

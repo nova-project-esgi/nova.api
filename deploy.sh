@@ -7,7 +7,7 @@ echo "Deleted build/ folder"
 echo "Generating jar file"
 
 #Copy execute_commands_on_ec2.sh file which has commands to be executed on server... Here we are copying this file
-# every time to automate this process through 'deploy.sh' so that whenever that file changes, it's taken care of
+# every time to automate this process through 'axon-server-deploy.sh' so that whenever that file changes, it's taken care of
 scp -i "archi_cloud_api.pem" execute_commands_on_ec2.sh ec2-user@ec2-34-247-34-111.eu-west-1.compute.amazonaws.com:/home/ec2-user
 echo "Copied latest 'execute_commands_on_ec2.sh' file from local machine to ec2 instance"
 
