@@ -6,7 +6,7 @@ RUN gradle build --no-daemon
 FROM openjdk:11-jre-slim
 
 WORKDIR app
-EXPOSE 8001
+EXPOSE 80
 ENV SPRING_PROFILES_ACTIVE=cloud
 VOLUME /app/upload
 
