@@ -11,6 +11,7 @@ import com.esgi.nova.core_api.games.views.GameStateView
 import com.esgi.nova.core_api.games.views.GameView
 import com.esgi.nova.core_api.games.views.LeaderBoardGameView
 import com.esgi.nova.web.content_negociation.CustomMediaType
+import com.esgi.nova.web.extensions.buildSslAwareness
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import org.springframework.http.ResponseEntity
@@ -47,7 +48,7 @@ open class GameController constructor(
         val id = gameService.createGame(game)
         return ResponseEntity
             .created(
-                MvcUriComponentsBuilder.fromMethodName(GameController::class.java, "getOneById", id).build().toUri()
+                MvcUriComponentsBuilder.fromMethodName(GameController::class.java, "getOneById", id).buildSslAwareness().toUri()
             )
             .build()
     }

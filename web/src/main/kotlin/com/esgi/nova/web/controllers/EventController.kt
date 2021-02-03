@@ -12,6 +12,7 @@ import com.esgi.nova.core_api.events.views.EventTranslationTitleView
 import com.esgi.nova.core_api.events.views.EventTranslationView
 import com.esgi.nova.core_api.events.views.EventView
 import com.esgi.nova.web.content_negociation.CustomMediaType
+import com.esgi.nova.web.extensions.buildSslAwareness
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import org.springframework.core.io.Resource
@@ -66,7 +67,7 @@ open class EventController constructor(
         val id = eventsService.createEvent(event)
         return ResponseEntity
             .created(
-                MvcUriComponentsBuilder.fromMethodName(EventController::class.java, "getOneById", id).build().toUri()
+                MvcUriComponentsBuilder.fromMethodName(EventController::class.java, "getOneById", id).buildSslAwareness().toUri()
             )
             .build()
     }
@@ -113,7 +114,7 @@ open class EventController constructor(
         this.eventsService.setEventBackground(file, id);
         return ResponseEntity
             .created(
-                MvcUriComponentsBuilder.fromMethodName(EventController::class.java, "getBackground", id).build().toUri()
+                MvcUriComponentsBuilder.fromMethodName(EventController::class.java, "getBackground", id).buildSslAwareness().toUri()
             )
             .build()
     }

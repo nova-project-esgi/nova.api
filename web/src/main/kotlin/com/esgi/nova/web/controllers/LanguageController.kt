@@ -8,6 +8,7 @@ import com.esgi.nova.application.services.languages.models.LanguageForUpdate
 import com.esgi.nova.core_api.languages.views.LanguageView
 import com.esgi.nova.core_api.languages.views.LanguageViewWithAvailableActions
 import com.esgi.nova.web.content_negociation.CustomMediaType
+import com.esgi.nova.web.extensions.buildSslAwareness
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import org.springframework.http.ResponseEntity
@@ -28,7 +29,7 @@ open class LanguageController(private val languagesService: LanguagesService) {
         val id = languagesService.create(language)
         return ResponseEntity
             .created(
-                MvcUriComponentsBuilder.fromMethodName(LanguageController::class.java, "getOneById", id).build().toUri()
+                MvcUriComponentsBuilder.fromMethodName(LanguageController::class.java, "getOneById", id).buildSslAwareness().toUri()
             )
             .build()
     }

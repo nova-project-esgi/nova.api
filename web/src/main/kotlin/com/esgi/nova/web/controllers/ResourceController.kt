@@ -9,6 +9,7 @@ import com.esgi.nova.core_api.resources.views.ResourceTranslationNameView
 import com.esgi.nova.core_api.resources.views.ResourceView
 import com.esgi.nova.core_api.resources.views.ResourceWithAvailableActionsView
 import com.esgi.nova.web.content_negociation.CustomMediaType
+import com.esgi.nova.web.extensions.buildSslAwareness
 import com.esgi.nova.web.extensions.toPageMetadata
 import com.esgi.nova.web.io.output.Message
 import org.springframework.core.io.Resource
@@ -46,7 +47,7 @@ open class ResourceController(private val resourcesService: ResourcesService, pr
         val id = this.resourcesService.createResourceWithTranslations(resource)
         return ResponseEntity
             .created(
-                MvcUriComponentsBuilder.fromMethodName(ResourceController::class.java, "getOneById", id).build().toUri()
+                MvcUriComponentsBuilder.fromMethodName(ResourceController::class.java, "getOneById", id).buildSslAwareness().toUri()
             )
             .build()
     }
@@ -98,7 +99,7 @@ open class ResourceController(private val resourcesService: ResourcesService, pr
         this.resourcesService.setResourceIcon(file, id)
         return ResponseEntity
             .created(
-                MvcUriComponentsBuilder.fromMethodName(ResourceController::class.java, "getIcon", id).build().toUri()
+                MvcUriComponentsBuilder.fromMethodName(ResourceController::class.java, "getIcon", id).buildSslAwareness().toUri()
             )
             .build()
     }
