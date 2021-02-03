@@ -21,5 +21,7 @@ VOLUME /app/upload
 
 COPY --from=build /home/gradle/src/bootstrap/build/libs/*.jar /app/nova-api.jar
 COPY sshd_config /etc/ssh/
+COPY init.sh /usr/local/bin/
+RUN chmod u+x /usr/local/bin/init.sh
 
-ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/nova-api.jar"]
+ENTRYPOINT ["init.sh"]
