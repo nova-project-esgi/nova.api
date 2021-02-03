@@ -4,12 +4,18 @@ WORKDIR /home/gradle/src
 RUN gradle build --no-daemon
 
 FROM openjdk:11-jre-slim
-
+USER root
 WORKDIR app
-EXPOSE 80
-ENV SPRING_PROFILES_ACTIVE=cloud
+EXPOSE 80 2222
+ENV SPRING_PROFILES_ACTIVE=cloud SSH_PASSWD="root:Docker!"
+RUN apt-get update \
+        && apt-get install -y --no-install-recommends dialog \
+        && apt-get update \
+  && apt-get install -y --no-install-recommends openssh-server \
+  && echo "$SSH_PASSWD" | chpasswd
 VOLUME /app/upload
 
 COPY --from=build /home/gradle/src/bootstrap/build/libs/*.jar /app/nova-api.jar
+COPY sshd_config /etc/ssh/
 
 ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/nova-api.jar"]
