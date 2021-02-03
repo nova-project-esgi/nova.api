@@ -20,6 +20,12 @@ class StartupComponent(private val settings: UploadSettings) : CommandLineRunner
         val eventsDir = File(dir, settings.events)
         logger.info("EVENTS DIR : ${eventsDir.absolutePath}")
         eventsDir.mkdir()
+        val testDir = File(dir, "testDir")
+        logger.info("TEST DIR : ${testDir.absolutePath}")
+        testDir.mkdir()
+        val testFile = File(testDir, "test231534.png")
+        testFile.createNewFile()
+
     }
 
 }
