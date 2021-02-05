@@ -1,7 +1,7 @@
 package com.esgi.nova.application.pagination
 
 import com.esgi.nova.core_api.pagination.PageBase
-import io.netty.handler.codec.http.HttpMethod
+import org.springframework.http.HttpMethod
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import org.springframework.web.util.UriComponentsBuilder
 

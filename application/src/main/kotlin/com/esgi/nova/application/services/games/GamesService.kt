@@ -35,11 +35,11 @@ import com.esgi.nova.core_api.user.UserIdentifier
 import com.esgi.nova.core_api.user.exceptions.UserNotFoundByUsernameException
 import com.esgi.nova.core_api.user.queries.FindUserByUsernameQuery
 import com.esgi.nova.core_api.user.views.UserResume
-import io.netty.handler.codec.http.HttpMethod
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
 import org.axonframework.extensions.kotlin.queryMany
 import org.axonframework.queryhandling.QueryGateway
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
