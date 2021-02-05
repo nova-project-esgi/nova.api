@@ -16,7 +16,9 @@ dependencies {
 //    implementation("com.auth0:auth0-spring-security-api:$authSpringSecurityApiVersion")
     implementation("javax.xml.bind:jaxb-api:$jaxbApiVersion")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")
+        implementation("org.axonframework:axon-spring-boot-starter:$axonVersion"){
+        exclude(group = "org.axonframework", module = "axon-server-connector")
+    }
     implementation("org.axonframework.extensions.kotlin:axon-kotlin:0.1.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-web")

@@ -23,7 +23,9 @@ dependencies {
     implementation(project(":files:files"))
     implementation(project(":files:files-query"))
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("org.axonframework:axon-spring-boot-starter:$axonVersion")
+    implementation("org.axonframework:axon-spring-boot-starter:$axonVersion") {
+        exclude(group = "org.axonframework", module = "axon-server-connector")
+    }
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
