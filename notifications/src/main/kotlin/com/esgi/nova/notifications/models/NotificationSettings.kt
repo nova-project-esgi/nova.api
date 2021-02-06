@@ -1,5 +1,6 @@
-package com.esgi.nova.notifications.services
+package com.esgi.nova.notifications.models
 
+import com.esgi.nova.notifications.models.ConnectionString
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import java.net.URI

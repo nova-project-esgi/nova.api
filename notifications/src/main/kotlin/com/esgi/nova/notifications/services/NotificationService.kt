@@ -1,14 +1,14 @@
 package com.esgi.nova.notifications.services
 
 import com.esgi.nova.notifications.dtos.NotificationDto
+import com.esgi.nova.notifications.models.AndroidNotification
+import com.esgi.nova.notifications.models.AndroidNotificationMessage
+import com.esgi.nova.notifications.models.NotificationSettings
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.windowsazure.messaging.Notification
 import com.windowsazure.messaging.NotificationHub
 import org.springframework.stereotype.Service
 
-
-data class AndroidNotification(val title: String?, val body: String?)
-data class AndroidNotificationMessage(val notification: AndroidNotification, val data: Map<String, String>)
 
 @Service
 open class NotificationService(notificationSettings: NotificationSettings) {

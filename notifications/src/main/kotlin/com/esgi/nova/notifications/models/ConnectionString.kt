@@ -1,4 +1,4 @@
-package com.esgi.nova.notifications.services
+package com.esgi.nova.notifications.models
 
 import java.net.URI
 
