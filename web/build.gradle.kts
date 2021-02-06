@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":core-api"))
     implementation(project(":application"))
+    implementation(project(":notifications"))
     implementation("com.auth0:java-jwt:$javaJwtVersion")
 //    implementation("com.auth0:auth0-spring-security-api:$authSpringSecurityApiVersion")
     implementation("javax.xml.bind:jaxb-api:$jaxbApiVersion")

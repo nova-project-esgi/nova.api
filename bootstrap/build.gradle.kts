@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":query"))
     implementation(project(":core-api"))
     implementation(project(":web"))
+    implementation(project(":notifications"))
     implementation(project(":files:files-manager"))
     implementation(project(":files:files"))
     implementation(project(":files:files-query"))

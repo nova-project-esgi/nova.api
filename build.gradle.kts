@@ -56,6 +56,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     apply(plugin = "io.spring.dependency-management")
