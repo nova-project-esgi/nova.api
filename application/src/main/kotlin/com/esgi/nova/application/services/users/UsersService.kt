@@ -37,14 +37,12 @@ open class UsersService(private val commandGateway: CommandGateway, private val 
     }
 
     open fun getCredentialByUsername(username: String): UserCredential {
-        queryGateway
         queryGateway.query<UserCredential, FindUserByUsernameQuery>(FindUserByUsernameQuery(username = username))
             .join()?.let { return it }
         throw UserNotFoundByUsernameException()
     }
 
     open fun getResumeByUsername(username: String): UserResume {
-        queryGateway
         queryGateway.query<UserResume, FindUserByUsernameQuery>(FindUserByUsernameQuery(username = username))
             .join()?.let { return it }
         throw UserNotFoundByUsernameException()
