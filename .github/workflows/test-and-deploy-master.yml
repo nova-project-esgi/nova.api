@@ -6,7 +6,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-11, windows-2019]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -14,11 +14,11 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v1
         with:
-          java-version: 8
+          java-version: 11
       - name: Run gradlew test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: test
+          arguments: test --stacktrace --scan
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
