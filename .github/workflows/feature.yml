@@ -17,7 +17,7 @@ jobs:
       - name: Run gradlew test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: test
+          arguments: test --stacktrace
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
