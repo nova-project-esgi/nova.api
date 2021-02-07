@@ -1,6 +1,6 @@
 ## Run local image
 
-###Install SqlServer service
+### Install SqlServer service
 ```shell
 mkdir nova-db
 docker run  --restart=always \
@@ -12,7 +12,7 @@ docker run  --restart=always \
       --env MSSQL_PID=Express \
       mcr.microsoft.com/mssql/server:2017-latest
 ```
-###Install Api instance
+### Install Api instance
 ```shell
 mkdir nova-api-upload
 docker build -f docker/Dockerfile.prod . -t nova/nova-api 
