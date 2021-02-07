@@ -1,0 +1,17 @@
+FROM gradle:6.7.1-jdk8 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build --no-daemon
+
+FROM openjdk:11-jre-slim
+USER root
+WORKDIR app
+EXPOSE 8001
+
+ENV SPRING_PROFILES_ACTIVE=prod
+
+VOLUME /app/upload
+
+COPY --from=build /home/gradle/src/bootstrap/build/libs/*.jar /app/nova-api.jar
+
+ENTRYPOINT ["java", "-jar","nova-api.jar"]
