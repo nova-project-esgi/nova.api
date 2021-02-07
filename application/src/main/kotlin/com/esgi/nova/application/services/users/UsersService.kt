@@ -37,20 +37,20 @@ open class UsersService(private val commandGateway: CommandGateway, private val 
     }
 
     open fun getCredentialByUsername(username: String): UserCredential {
-        queryGateway.query<UserCredential, FindUserByUsernameQuery>(FindUserByUsernameQuery(username = username))
+        queryGateway.query(FindUserByUsernameQuery(username = username), UserCredential::class.java)
             .join()?.let { return it }
         throw UserNotFoundByUsernameException()
     }
 
     open fun getResumeByUsername(username: String): UserResume {
-        queryGateway.query<UserResume, FindUserByUsernameQuery>(FindUserByUsernameQuery(username = username))
+        queryGateway.query(FindUserByUsernameQuery(username = username), UserResume::class.java)
             .join()?.let { return it }
         throw UserNotFoundByUsernameException()
     }
 
     open fun getByToken(token: String): ConnectedUser {
         val username = JWTAuthentication.parse(token)
-        queryGateway.query<UserResume, FindUserByUsernameQuery>(FindUserByUsernameQuery(username = username)).join()
+        queryGateway.query(FindUserByUsernameQuery(username = username), UserResume::class.java).join()
             ?.let { user ->
                 return ConnectedUser(
                     email = user.email,

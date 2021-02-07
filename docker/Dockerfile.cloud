@@ -1,4 +1,4 @@
-FROM gradle:6.7.1-jdk8 AS build
+FROM gradle:6.7.1-jdk11 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle build --no-daemon
@@ -12,10 +12,10 @@ ENV SPRING_PROFILES_ACTIVE=cloud \
     SSH_PASSWD="root:Docker!"
 
 RUN apt-get update \
-        && apt-get install -y --no-install-recommends dialog \
-        && apt-get update \
-        && apt-get install -y --no-install-recommends openssh-server \
-        && echo "$SSH_PASSWD" | chpasswd
+    && apt-get install -y --no-install-recommends dialog \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends openssh-server \
+    && echo "$SSH_PASSWD" | chpasswd
 
 VOLUME /app/upload
 

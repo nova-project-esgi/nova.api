@@ -16,6 +16,9 @@ dependencies {
     }
     implementation("org.axonframework.extensions.kotlin:axon-kotlin:0.1.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-//    testImplementation("org.mockito:mockito-core:3.3.3")
+    //testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+
+            //testImplementation("org.mockito:mockito-core:3.3.3")
+
+    testImplementation ("io.mockk:mockk:1.10.5")
 }
