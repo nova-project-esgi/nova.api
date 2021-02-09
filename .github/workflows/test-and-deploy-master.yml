@@ -1,3 +1,5 @@
+name: Test and deploy master
+
 on:
   push:
     branches:
