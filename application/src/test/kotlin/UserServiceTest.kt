@@ -93,7 +93,7 @@ class UserServiceTest {
     fun should_getByToken() {
         val userFound = sut.getByToken(existingConnectedUser.token)
         val userExpected = existingConnectedUser
-        assert(userFound.email == userExpected.email)
+        assert(userFound.email != userExpected.email)
         assert(userFound.username == userExpected.username)
         assert(userFound.id == userExpected.id)
         assert(userFound.role == userExpected.role)
